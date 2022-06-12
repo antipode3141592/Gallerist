@@ -6,9 +6,18 @@ namespace Gallerist
 {
     public class Art
     {
-        public IList<ITrait> Qualities;
-        public string Name;
-        public string Description;
-        public string ArtistId;
+        public string Name { get; private set; }
+        public string Description { get; private set; }
+        public string ArtistId { get; private set; }
+        public IList<ITrait> Qualities { get; private set; } 
+
+        public Art(string name, string description, string artistId, IList<ITrait> qualities)
+        {
+            
+            Name = name;
+            Description = description;
+            ArtistId = artistId;
+            Qualities = qualities;
+        }
     }
 }
