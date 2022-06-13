@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Gallerist
 {
-    public interface ITrait
+    public class ArtistTrait : ITrait
     {
         public TraitType Type { get; set; }
         public string Name { get; set; }
