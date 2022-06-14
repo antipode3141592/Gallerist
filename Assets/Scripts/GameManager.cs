@@ -9,14 +9,19 @@ namespace Gallerist
     {
         public Artist Artist { get; set; }
         public List<Art> ArtPieces { get; set; }
+        public List<Patron> Patrons { get; set; }
         public List<string> AestheticTraits { get; set; }
         public List<string> EmotiveTraits { get; set; }
+
+        public List<string> FirstNames { get; set; }
 
         private void Awake()
         {
             ArtPieces = new List<Art>();
+            Patrons = new List<Patron>();
             AestheticTraits = new List<string>();
             EmotiveTraits = new List<string>();
+            FirstNames = new List<string>();
         }
 
         void Start()
@@ -24,25 +29,27 @@ namespace Gallerist
             //load trait lists
             var _aestheticWords = Resources.Load<TextAsset>("Gallerist - Aesthetics");
             var _emotiveWords = Resources.Load<TextAsset>("Gallerist - Emotive");
+            var _firstNames = Resources.Load<TextAsset>("Gallerist - FirstNames");
 
 
-
-            AestheticTraits.AddRange(_aestheticWords.text.Split(',','\n').ToList());
-            EmotiveTraits.AddRange(_emotiveWords.text.Split(',','\n').ToList());
+            AestheticTraits.AddRange(_aestheticWords.text.Split(',', '\n').ToList());
+            EmotiveTraits.AddRange(_emotiveWords.text.Split(',', '\n').ToList());
+            FirstNames.AddRange(_firstNames.text.Split(',', '\n').ToList());
 
             Debug.Log($"AT count : {AestheticTraits.Count}, ET count : {EmotiveTraits.Count}");
+            Debug.Log($"FirstNames count: {FirstNames.Count}");
 
-            GenerateArtist("Rand O. Morrigan", "Rand", new List<ITrait>());
+            GenerateArtist("Rand O. Morrigan", "Rand");
             GenerateArt();
-            foreach (var art in ArtPieces) {
-                Debug.Log($"Art:  {art.Name} , {art.Description}");
-                foreach (var trait in art.Traits)
-                {
-                    Debug.Log($"    {trait.Name} {trait.Value}");
-                }
-            }
+            DebugArt();
+            GeneratePatron();
+            GeneratePatron();
+            GeneratePatron();
+            GeneratePatron();
+            DebugPatron();
+            
         }
-                
+
         void Update()
         {
             
@@ -50,9 +57,9 @@ namespace Gallerist
         }
 
 
-        void GenerateArtist(string name, string id, IList<ITrait> favoredTraits)
+        void GenerateArtist(string name, string id)
         {
-            Artist = new Artist(name: name, id: id, favoredTraits: favoredTraits);
+            Artist = new Artist(name: name, id: id, favoredTraits: GenerateTraits(3,typeof(ArtistTrait)));
         }
 
         void GenerateArt()
@@ -75,7 +82,31 @@ namespace Gallerist
             return ("RandomDescription");
         }
 
-        string GetRandomTrait(List<string> traitList)
+        void GeneratePatron()
+        {
+            var newPatron = new Patron(
+                name: GenerateRandomPatronName(FirstNames), 
+                isSubscriber: true, 
+                preferences: GenerateTraits(5, typeof(PatronTrait)), 
+                acquisitions: new List<string>(), 
+                aestheticThreshold: 9, 
+                emotiveThreshold: 10);
+            Patrons.Add(newPatron);
+        }
+        
+        string GenerateRandomPatronName(List<string> firstNameList)
+        {
+            int randomIndex = UnityEngine.Random.Range(0, firstNameList.Count);
+            return firstNameList[randomIndex] + " " + RandomLastNameLetter();
+        }
+
+        string RandomLastNameLetter()
+        {
+            int randomIndex = UnityEngine.Random.Range(65, 90); //https://www.dotnetperls.com/ascii-table
+            return $"{(char)randomIndex}.";
+        }
+        
+        string GetRandomTraitName(List<string> traitList)
         {
             int randomIndex = UnityEngine.Random.Range(0, traitList.Count);
             return traitList[randomIndex];
@@ -89,12 +120,57 @@ namespace Gallerist
                 if (traitType == typeof(ArtTrait))
                 {
                     Debug.Log($"ArtTrait Requested...");
-                    traits.Add(new ArtTrait(GetRandomTrait(AestheticTraits), true));
-                    traits.Add(new ArtTrait(GetRandomTrait(EmotiveTraits), true));
+                    traits.Add(new ArtTrait(GetRandomTraitName(AestheticTraits), true, TraitType.Aesthetic));
+                    traits.Add(new ArtTrait(GetRandomTraitName(EmotiveTraits), true, TraitType.Emotive));
+                } else if (traitType == typeof(ArtistTrait)){
+                    Debug.Log($"ArtistTrait Requested...");
+                    traits.Add(new ArtistTrait(GetRandomTraitName(AestheticTraits), true, TraitType.Aesthetic));
+                    traits.Add(new ArtistTrait(GetRandomTraitName(EmotiveTraits), true, TraitType.Emotive));
+                }
+                else if (traitType == typeof(PatronTrait))
+                {
+                    Debug.Log($"PatronTrait Requested...");
+                    traits.Add(new PatronTrait(GetRandomTraitName(AestheticTraits), true, TraitType.Aesthetic));
+                    traits.Add(new PatronTrait(GetRandomTraitName(EmotiveTraits), true, TraitType.Emotive));
+                } else
+                {
+                    return null;
                 }
             }
-            
             return traits;
         }
+
+        #region Debugging
+        void DebugArt()
+        {
+            foreach (var art in ArtPieces)
+            {
+                Debug.Log($"Art:  {art.Name} , {art.Description}");
+                foreach (var trait in art.Traits)
+                {
+                    string _known = trait.IsKnown ? "Is Known" : "Is Not Known";
+                    Debug.Log($"    [{trait.Type.Name}, {trait.TraitType}] {trait.Name} {trait.Value} ({_known})");
+                }
+            }
+        }
+
+        void DebugArtist()
+        {
+
+        }
+
+        void DebugPatron()
+        {
+            foreach (var patron in Patrons)
+            {
+                Debug.Log($"Patron:  {patron.Name}");
+                foreach (var trait in patron.Preferences)
+                {
+                    string _known = trait.IsKnown ? "Is Known" : "Is Not Known";
+                    Debug.Log($"    [{trait.Type.Name}, {trait.TraitType}] {trait.Name} {trait.Value} ({_known})");
+                }
+            }
+        }
+        #endregion
     }
 }
