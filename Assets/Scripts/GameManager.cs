@@ -2,11 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Gallerist.UI;
 
 namespace Gallerist
 {
     public class GameManager : MonoBehaviour
     {
+        [SerializeField] ArtCard artCardPrefab;
+        [SerializeField] Transform artCardBackground;
+
         public Artist Artist { get; set; }
         public List<Art> ArtPieces { get; set; }
         public List<Patron> Patrons { get; set; }
@@ -31,6 +35,8 @@ namespace Gallerist
             var _emotiveWords = Resources.Load<TextAsset>("Gallerist - Emotive");
             var _firstNames = Resources.Load<TextAsset>("Gallerist - FirstNames");
 
+            var artCard = Instantiate<ArtCard>(artCardPrefab, artCardBackground);
+            artCard.transform.localPosition = Vector3.zero;
 
             AestheticTraits.AddRange(_aestheticWords.text.Split(',', '\n').ToList());
             EmotiveTraits.AddRange(_emotiveWords.text.Split(',', '\n').ToList());
@@ -41,7 +47,10 @@ namespace Gallerist
 
             GenerateArtist("Rand O. Morrigan", "Rand");
             GenerateArt();
+            
             DebugArt();
+            Art art = ArtPieces[0];
+            artCard.LoadArtCardData(art);
             GeneratePatron();
             GeneratePatron();
             GeneratePatron();
@@ -50,23 +59,16 @@ namespace Gallerist
 
             foreach(var patron in Patrons)
             {
-                if (patron.EvaluateArt(ArtPieces[0]))
+                if (patron.EvaluateArt(art))
                 {
-                    Debug.Log($"{patron.Name} would love to purchase {ArtPieces[0].Name}");
+                    Debug.Log($"{patron.Name} would love to purchase {art.Name}");
                 } else
                 {
-                    Debug.Log($"{patron.Name} is not interested in {ArtPieces[0].Name}");
+                    Debug.Log($"{patron.Name} is not interested in {art.Name}");
                 }
             }
             
         }
-
-        void Update()
-        {
-            
-            
-        }
-
 
         void GenerateArtist(string name, string id)
         {
@@ -120,7 +122,7 @@ namespace Gallerist
         string GetRandomTraitName(List<string> traitList)
         {
             int randomIndex = UnityEngine.Random.Range(0, traitList.Count);
-            return traitList[randomIndex];
+            return traitList[randomIndex].Replace("\n","").Replace("\r","");
         }
 
         List<ITrait> GenerateTraits(int totalTraits, Type traitType)
