@@ -47,6 +47,17 @@ namespace Gallerist
             GeneratePatron();
             GeneratePatron();
             DebugPatron();
+
+            foreach(var patron in Patrons)
+            {
+                if (patron.EvaluateArt(ArtPieces[0]))
+                {
+                    Debug.Log($"{patron.Name} would love to purchase {ArtPieces[0].Name}");
+                } else
+                {
+                    Debug.Log($"{patron.Name} is not interested in {ArtPieces[0].Name}");
+                }
+            }
             
         }
 
@@ -87,7 +98,7 @@ namespace Gallerist
             var newPatron = new Patron(
                 name: GenerateRandomPatronName(FirstNames), 
                 isSubscriber: true, 
-                preferences: GenerateTraits(5, typeof(PatronTrait)), 
+                traits: GenerateTraits(5, typeof(PatronTrait)), 
                 acquisitions: new List<string>(), 
                 aestheticThreshold: 9, 
                 emotiveThreshold: 10);
@@ -112,24 +123,24 @@ namespace Gallerist
             return traitList[randomIndex];
         }
 
-        IList<ITrait> GenerateTraits(int totalTraits, Type traitType)
+        List<ITrait> GenerateTraits(int totalTraits, Type traitType)
         {
             List<ITrait> traits = new List<ITrait>();
             for (int i = 0; i < totalTraits; i++)
             {
                 if (traitType == typeof(ArtTrait))
                 {
-                    Debug.Log($"ArtTrait Requested...");
+                    //Debug.Log($"ArtTrait Requested...");
                     traits.Add(new ArtTrait(GetRandomTraitName(AestheticTraits), true, TraitType.Aesthetic));
                     traits.Add(new ArtTrait(GetRandomTraitName(EmotiveTraits), true, TraitType.Emotive));
                 } else if (traitType == typeof(ArtistTrait)){
-                    Debug.Log($"ArtistTrait Requested...");
+                    //Debug.Log($"ArtistTrait Requested...");
                     traits.Add(new ArtistTrait(GetRandomTraitName(AestheticTraits), true, TraitType.Aesthetic));
                     traits.Add(new ArtistTrait(GetRandomTraitName(EmotiveTraits), true, TraitType.Emotive));
                 }
                 else if (traitType == typeof(PatronTrait))
                 {
-                    Debug.Log($"PatronTrait Requested...");
+                    //Debug.Log($"PatronTrait Requested...");
                     traits.Add(new PatronTrait(GetRandomTraitName(AestheticTraits), true, TraitType.Aesthetic));
                     traits.Add(new PatronTrait(GetRandomTraitName(EmotiveTraits), true, TraitType.Emotive));
                 } else
@@ -163,8 +174,8 @@ namespace Gallerist
         {
             foreach (var patron in Patrons)
             {
-                Debug.Log($"Patron:  {patron.Name}");
-                foreach (var trait in patron.Preferences)
+                Debug.Log($"Patron:  {patron.Name}, Pr: {patron.PerceptionRange}");
+                foreach (var trait in patron.Traits)
                 {
                     string _known = trait.IsKnown ? "Is Known" : "Is Not Known";
                     Debug.Log($"    [{trait.Type.Name}, {trait.TraitType}] {trait.Name} {trait.Value} ({_known})");
