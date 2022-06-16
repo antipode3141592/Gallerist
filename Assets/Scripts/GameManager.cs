@@ -39,7 +39,7 @@ namespace Gallerist
             var _aestheticWords = Resources.Load<TextAsset>("Gallerist - Aesthetics");
             var _emotiveWords = Resources.Load<TextAsset>("Gallerist - Emotive");
             var _firstNames = Resources.Load<TextAsset>("Gallerist - FirstNames");
-            Sprite[] _portraits = Resources.LoadAll<Sprite>("PatronSprites");
+            var _portraits = Resources.LoadAll<Sprite>("PatronSprites").ToList<Sprite>();
 
             var artCard = Instantiate<ArtCard>(artCardPrefab, artCardBackground);
             artCard.transform.localPosition = Vector3.zero;
@@ -50,7 +50,7 @@ namespace Gallerist
             AestheticTraits.AddRange(_aestheticWords.text.Split(',', '\n').ToList());
             EmotiveTraits.AddRange(_emotiveWords.text.Split(',', '\n').ToList());
             FirstNames.AddRange(_firstNames.text.Split(',', '\n').ToList());
-            PatronPortaits.AddRange(_portraits);
+            PatronPortaits.AddRange(_portraits.Where<Sprite>(x=> x.name.Contains("_0")));
 
             Debug.Log($"AT count : {AestheticTraits.Count}, ET count : {EmotiveTraits.Count}");
             Debug.Log($"FirstNames count: {FirstNames.Count}");
