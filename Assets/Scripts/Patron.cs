@@ -7,9 +7,10 @@ namespace Gallerist
 {
     public class Patron
     {
-        public Patron(string name, bool isSubscriber, List<ITrait> traits, List<string> acquisitions, int aestheticThreshold, int emotiveThreshold)
+        public Patron(string name, Sprite portrait, bool isSubscriber, List<ITrait> traits, List<string> acquisitions, int aestheticThreshold, int emotiveThreshold)
         {
             Name = name;
+            Portrait = portrait;
             IsSubscriber = isSubscriber;
             Acquisitions = acquisitions;
             Traits = traits;
@@ -18,8 +19,8 @@ namespace Gallerist
             EmotiveThreshold = emotiveThreshold;
         }
 
+        public Sprite Portrait { get; private set; }
         public string Name { get; private set; }
-        public string Id { get; private set; }
         public bool IsSubscriber { get; private set; }
         public List<string> Acquisitions { get; private set; }
         public List<ITrait> Traits { get; private set; }

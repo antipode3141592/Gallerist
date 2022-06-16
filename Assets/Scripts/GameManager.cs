@@ -11,9 +11,13 @@ namespace Gallerist
         [SerializeField] ArtCard artCardPrefab;
         [SerializeField] Transform artCardBackground;
 
+        [SerializeField] PatronCard patronCardPrefab;
+        [SerializeField] Transform patronCardBackground;
+
         public Artist Artist { get; set; }
         public List<Art> ArtPieces { get; set; }
         public List<Patron> Patrons { get; set; }
+        public List<Sprite> PatronPortaits { get; set; }
         public List<string> AestheticTraits { get; set; }
         public List<string> EmotiveTraits { get; set; }
 
@@ -23,6 +27,7 @@ namespace Gallerist
         {
             ArtPieces = new List<Art>();
             Patrons = new List<Patron>();
+            PatronPortaits = new List<Sprite>();
             AestheticTraits = new List<string>();
             EmotiveTraits = new List<string>();
             FirstNames = new List<string>();
@@ -34,13 +39,18 @@ namespace Gallerist
             var _aestheticWords = Resources.Load<TextAsset>("Gallerist - Aesthetics");
             var _emotiveWords = Resources.Load<TextAsset>("Gallerist - Emotive");
             var _firstNames = Resources.Load<TextAsset>("Gallerist - FirstNames");
+            Sprite[] _portraits = Resources.LoadAll<Sprite>("PatronSprites");
 
             var artCard = Instantiate<ArtCard>(artCardPrefab, artCardBackground);
             artCard.transform.localPosition = Vector3.zero;
 
+            var patronCard = Instantiate<PatronCard>(patronCardPrefab, patronCardBackground);
+            patronCard.transform.localPosition = Vector3.zero;
+
             AestheticTraits.AddRange(_aestheticWords.text.Split(',', '\n').ToList());
             EmotiveTraits.AddRange(_emotiveWords.text.Split(',', '\n').ToList());
             FirstNames.AddRange(_firstNames.text.Split(',', '\n').ToList());
+            PatronPortaits.AddRange(_portraits);
 
             Debug.Log($"AT count : {AestheticTraits.Count}, ET count : {EmotiveTraits.Count}");
             Debug.Log($"FirstNames count: {FirstNames.Count}");
@@ -56,6 +66,8 @@ namespace Gallerist
             GeneratePatron();
             GeneratePatron();
             DebugPatron();
+
+            patronCard.LoadPatronCardData(Patrons[0]);
 
             foreach(var patron in Patrons)
             {
@@ -98,19 +110,27 @@ namespace Gallerist
         void GeneratePatron()
         {
             var newPatron = new Patron(
-                name: GenerateRandomPatronName(FirstNames), 
+                name: GenerateRandomPatronName(FirstNames),
+                portrait: GeneratePortrait(),
                 isSubscriber: true, 
                 traits: GenerateTraits(5, typeof(PatronTrait)), 
                 acquisitions: new List<string>(), 
                 aestheticThreshold: 9, 
                 emotiveThreshold: 10);
+            //  add a check for duplicates before adding to Patrons list
             Patrons.Add(newPatron);
         }
-        
+
+        Sprite GeneratePortrait()
+        {
+            int randomIndex = UnityEngine.Random.Range(0, PatronPortaits.Count);
+            return PatronPortaits[randomIndex];
+        }
+
         string GenerateRandomPatronName(List<string> firstNameList)
         {
             int randomIndex = UnityEngine.Random.Range(0, firstNameList.Count);
-            return firstNameList[randomIndex] + " " + RandomLastNameLetter();
+            return firstNameList[randomIndex].Trim() + " " + RandomLastNameLetter();
         }
 
         string RandomLastNameLetter()
@@ -122,7 +142,7 @@ namespace Gallerist
         string GetRandomTraitName(List<string> traitList)
         {
             int randomIndex = UnityEngine.Random.Range(0, traitList.Count);
-            return traitList[randomIndex].Replace("\n","").Replace("\r","");
+            return traitList[randomIndex].Trim();
         }
 
         List<ITrait> GenerateTraits(int totalTraits, Type traitType)
@@ -176,7 +196,7 @@ namespace Gallerist
         {
             foreach (var patron in Patrons)
             {
-                Debug.Log($"Patron:  {patron.Name}, Pr: {patron.PerceptionRange}");
+                Debug.Log($"Patron:  {patron.Name}, Pr: {patron.PerceptionRange}, Sprite: {patron.Portrait.name}");
                 foreach (var trait in patron.Traits)
                 {
                     string _known = trait.IsKnown ? "Is Known" : "Is Not Known";
