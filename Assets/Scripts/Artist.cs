@@ -9,13 +9,15 @@ namespace Gallerist
         public string Name { get; private set; }
         public string Id { get; private set; }
 
-        public IList<ITrait> FavoredTraits { get; private set; }
+        public IList<ITrait> FavoredAestheticTraits { get; private set; }
+        public IList<ITrait> FavoredEmotiveTraits { get; private set; }
 
-        public Artist(string name, string id, IList<ITrait> favoredTraits)
+        public Artist(string name, string id, IList<ITrait> favoredAestheticTraits, IList<ITrait> favoredEmotiveTraits)
         {
             Name = name;
             Id = id;
-            FavoredTraits = favoredTraits;
+            FavoredAestheticTraits = favoredAestheticTraits;
+            FavoredEmotiveTraits = favoredEmotiveTraits;
         }
     }
 }

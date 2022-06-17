@@ -8,7 +8,8 @@ namespace Gallerist.UI
 {
     public class ArtCard : MonoBehaviour
     {
-        [SerializeField] TraitDisplay traitDisplayPrefab;
+        [SerializeField] List<TraitDisplay> aestheticTraitDisplays;
+        [SerializeField] List<TraitDisplay> emotiveTraitDisplays;
 
         [SerializeField] TextMeshProUGUI titleText;
         [SerializeField] TextMeshProUGUI artistText;
@@ -24,24 +25,18 @@ namespace Gallerist.UI
             artistText.text = art.ArtistId;
             descriptionText.text = art.Description;
 
-            foreach(var trait in art.Traits)
+
+            for (int i = 0; i < aestheticTraitDisplays.Count; i++)
             {
-                var traitDisplay = Instantiate<TraitDisplay>(traitDisplayPrefab);
+                var trait = art.AestheticTraits[i];
                 string traitText = trait.IsKnown ? $"{trait.Name} {trait.Value}" : $"(unknown)";
-                traitDisplay.UpdateText(traitText);
-                if (trait.TraitType == TraitType.Aesthetic)
-                {
-                    traitDisplay.transform.SetParent(aestheticTraitsBackground.transform);
-                    traitDisplay.transform.localPosition = Vector3.zero;
-                } else if (trait.TraitType == TraitType.Emotive)
-                {
-                    traitDisplay.transform.SetParent(emotiveTraitsBackground.transform);
-                    traitDisplay.transform.localPosition = Vector3.zero;
-                }
-                else
-                {
-                    Destroy(traitDisplay);
-                }
+                aestheticTraitDisplays[i].UpdateText(traitText);
+            }
+            for (int i = 0; i < emotiveTraitDisplays.Count; i++)
+            {
+                var trait = art.EmotiveTraits[i];
+                string traitText = trait.IsKnown ? $"{trait.Name} {trait.Value}" : $"(unknown)";
+                emotiveTraitDisplays[i].UpdateText(traitText);
             }
         }
     }

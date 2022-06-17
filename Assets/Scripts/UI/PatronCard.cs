@@ -8,7 +8,8 @@ namespace Gallerist.UI
 {
     public class PatronCard : MonoBehaviour
     {
-        [SerializeField] TraitDisplay traitDisplayPrefab;
+        [SerializeField] List<TraitDisplay> aestheticTraits;
+        [SerializeField] List<TraitDisplay> emotiveTraits;
 
         [SerializeField] TextMeshProUGUI nameText;
         [SerializeField] Toggle isSubscriberToggle;  //noninteractable 
@@ -23,25 +24,17 @@ namespace Gallerist.UI
             isSubscriberToggle.isOn = patron.IsSubscriber;
             portraitImage.sprite = patron.Portrait;
 
-            foreach (var trait in patron.Traits)
+            for (int i = 0; i < patron.AestheticTraits.Count; i++)
             {
-                var traitDisplay = Instantiate<TraitDisplay>(traitDisplayPrefab);
+                var trait = patron.AestheticTraits[i];
                 string traitText = trait.IsKnown ? $"{trait.Name} {trait.Value}" : $"(unknown)";
-                traitDisplay.UpdateText(traitText);
-                if (trait.TraitType == TraitType.Aesthetic)
-                {
-                    traitDisplay.transform.SetParent(aestheticTraitsBackground.transform);
-                    traitDisplay.transform.localPosition = Vector3.zero;
-                }
-                else if (trait.TraitType == TraitType.Emotive)
-                {
-                    traitDisplay.transform.SetParent(emotiveTraitsBackground.transform);
-                    traitDisplay.transform.localPosition = Vector3.zero;
-                }
-                else
-                {
-                    Destroy(traitDisplay);
-                }
+                aestheticTraits[i].UpdateText(traitText);
+            }
+            for (int i = 0; i < patron.EmotiveTraits.Count; i++)
+            {
+                var trait = patron.EmotiveTraits[i];
+                string traitText = trait.IsKnown ? $"{trait.Name} {trait.Value}" : $"(unknown)";
+                emotiveTraits[i].UpdateText(traitText);
             }
         }
     }
