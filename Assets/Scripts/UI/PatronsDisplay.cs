@@ -42,7 +42,8 @@ namespace Gallerist.UI
             Patron patron = _gameManager.Patrons.Find(x => x.Name == e);
             if (patron is null) return;
             //highlight patronportraitbackground
-
+            var portrait = sender as ClickableImage;
+            if (portrait is not null) portrait.HighlightBackground();
             PatronCard.LoadPatronCardData(patron: patron);
 
         }
@@ -58,6 +59,7 @@ namespace Gallerist.UI
                     sprite: _gameManager.Patrons[patronIndex].Portrait, 
                     name: _gameManager.Patrons[patronIndex].Name);
             }
+            PatronPortraits[0].HighlightBackground();
             PatronCard.LoadPatronCardData(patron: _gameManager.Patrons[pageSize * currentPage]);
         }
 
