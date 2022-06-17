@@ -22,9 +22,10 @@ namespace Gallerist.UI
         public void LoadArtCardData(Art art)
         {
             titleText.text = art.Name;
-            artistText.text = art.ArtistId;
+            artistText.text = art.ArtistName;
             descriptionText.text = art.Description;
 
+            artImage.sprite = art.Image;
 
             for (int i = 0; i < aestheticTraitDisplays.Count; i++)
             {

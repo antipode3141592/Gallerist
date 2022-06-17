@@ -8,18 +8,20 @@ namespace Gallerist
     {
         public string Name { get; private set; }
         public string Description { get; private set; }
-        public string ArtistId { get; private set; }
+        public string ArtistName { get; private set; }
         public List<ITrait> AestheticTraits { get; private set; } 
         public List<ITrait> EmotiveTraits { get; private set; }
+        public Sprite Image { get; set; }
 
-        public Art(string name, string description, string artistId, List<ITrait> aestheticQualities, List<ITrait> emotiveQualities)
+        public Art(string name, string description, string artistName, List<ITrait> aestheticQualities, List<ITrait> emotiveQualities, Sprite image)
         {
             
             Name = name;
             Description = description;
-            ArtistId = artistId;
+            ArtistName = artistName;
             AestheticTraits = aestheticQualities;
             EmotiveTraits = emotiveQualities;
+            Image = image;
         }
     }
 }

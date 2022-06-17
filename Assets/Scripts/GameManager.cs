@@ -15,9 +15,11 @@ namespace Gallerist
         public List<Art> ArtPieces { get; set; }
         public List<Patron> Patrons { get; set; }
         public List<Sprite> PatronPortaits { get; set; }
+        public List<Sprite> ArtSprites { get; set; }
         public List<string> AestheticTraits { get; set; }
         public List<string> EmotiveTraits { get; set; }
         public List<string> FirstNames { get; set; }
+        public List<string> LastNames { get; set; }
 
         PatronsDisplay _patronsDisplay;
 
@@ -27,9 +29,11 @@ namespace Gallerist
             ArtPieces = new List<Art>();
             Patrons = new List<Patron>();
             PatronPortaits = new List<Sprite>();
-            AestheticTraits = new List<string>();
-            EmotiveTraits = new List<string>();
-            FirstNames = new List<string>();
+            ArtSprites = new List<Sprite>();
+            AestheticTraits = new ();
+            EmotiveTraits = new ();
+            FirstNames = new ();
+            LastNames = new ();
         }
 
         void Start()
@@ -38,15 +42,22 @@ namespace Gallerist
             var _aestheticWords = Resources.Load<TextAsset>("Gallerist - Aesthetics");
             var _emotiveWords = Resources.Load<TextAsset>("Gallerist - Emotive");
             var _firstNames = Resources.Load<TextAsset>("Gallerist - FirstNames");
+            var _lastNames = Resources.Load<TextAsset>("Gallerist - LastNames");
             var _portraits = Resources.LoadAll<Sprite>("PatronSprites").ToList<Sprite>();
+            var _artSprites = Resources.LoadAll<Sprite>("ArtSprites/Gallerist - Art").ToList<Sprite>();
 
             AestheticTraits.AddRange(_aestheticWords.text.Split(',', '\n').ToList());
             EmotiveTraits.AddRange(_emotiveWords.text.Split(',', '\n').ToList());
             FirstNames.AddRange(_firstNames.text.Split(',', '\n').ToList());
+            LastNames.AddRange(_lastNames.text.Split(',', '\n').ToList());
             PatronPortaits.AddRange(_portraits.Where<Sprite>(x=> x.name.Contains("_0")));
+            ArtSprites.AddRange(_artSprites);
 
             Debug.Log($"AT count : {AestheticTraits.Count}, ET count : {EmotiveTraits.Count}");
             Debug.Log($"FirstNames count: {FirstNames.Count}");
+            Debug.Log($"LastNames count: {LastNames.Count}");
+            Debug.Log($"ArtSprites count: {ArtSprites.Count}");
+            Debug.Log($"PatronPortraits count: {PatronPortaits.Count}");
 
             GenerateArtist("Rand O. Morrigan", "Rand");
             GenerateArt();
@@ -54,11 +65,7 @@ namespace Gallerist
             DebugArt();
             Art art = ArtPieces[0];
             artCard.LoadArtCardData(art);
-            GeneratePatron();
-            GeneratePatron();
-            GeneratePatron();
-            GeneratePatron();
-            GeneratePatron();
+            GeneratePatrons(10);
             DebugPatron();
 
             _patronsDisplay.SetPatrons();
@@ -80,9 +87,10 @@ namespace Gallerist
             var newArt = new Art(
                 name: GenerateArtName(), 
                 description: GenerateArtDescription(), 
-                artistId: Artist.Id, 
+                artistName: Artist.Name, 
                 aestheticQualities: GenerateAestheticTraits(3, typeof(ArtTrait)),
-                emotiveQualities: GenerateEmotiveTraits(3, typeof(ArtTrait))
+                emotiveQualities: GenerateEmotiveTraits(3, typeof(ArtTrait)),
+                image: GenerateArtImage()
                 );
             //stats are based on Artist favoredTraits (ex: artist specializing in landscapes will tend to create landscapes)
 
@@ -98,6 +106,12 @@ namespace Gallerist
         string GenerateArtDescription()
         {
             return ("RandomDescription");
+        }
+
+        void GeneratePatrons(int total)
+        {
+            for (int i = 0; i < total; i++)
+                GeneratePatron();
         }
 
         void GeneratePatron()
@@ -119,6 +133,12 @@ namespace Gallerist
         {
             int randomIndex = UnityEngine.Random.Range(0, PatronPortaits.Count);
             return PatronPortaits[randomIndex];
+        }
+
+        Sprite GenerateArtImage()
+        {
+            int randomIndex = UnityEngine.Random.Range(0, ArtSprites.Count);
+            return ArtSprites[randomIndex];
         }
 
         string GenerateRandomPatronName(List<string> firstNameList)
