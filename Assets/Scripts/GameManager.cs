@@ -181,18 +181,24 @@ namespace Gallerist
         List<ITrait> GenerateAestheticTraits(int totalTraits, Type traitType)
         {
             List<ITrait> traits = new();
+            List<string> traitNames = new();
 
             for (int i = 0; i < totalTraits; i++)
             {
+                string traitName;
+                do { traitName = GetRandomTraitName(AestheticTraits); }
+                while (traitNames.Contains(traitName));
+                traitNames.Add(traitName);
+
                 if (traitType == typeof(ArtTrait))
                 {
-                    traits.Add(new ArtTrait(GetRandomTraitName(AestheticTraits), true, TraitType.Aesthetic));
+                    traits.Add(new ArtTrait(traitName, true, TraitType.Aesthetic));
                 } else if (traitType == typeof(ArtistTrait)){
-                    traits.Add(new ArtistTrait(GetRandomTraitName(AestheticTraits), true, TraitType.Aesthetic));
+                    traits.Add(new ArtistTrait(traitName, true, TraitType.Aesthetic));
                 }
                 else if (traitType == typeof(PatronTrait))
                 {
-                    traits.Add(new PatronTrait(GetRandomTraitName(AestheticTraits), Utilities.RandomBool(), TraitType.Aesthetic));
+                    traits.Add(new PatronTrait(traitName, true, TraitType.Aesthetic));
                 } else
                 {
                     return null;
@@ -204,19 +210,25 @@ namespace Gallerist
         List<ITrait> GenerateEmotiveTraits(int totalTraits, Type traitType)
         {
             List<ITrait> traits = new();
+            List<string> traitNames = new();
             for (int i = 0; i < totalTraits; i++)
             {
+                string traitName;
+                do { traitName = GetRandomTraitName(EmotiveTraits); }
+                while (traitNames.Contains(traitName));
+                traitNames.Add(traitName);
+
                 if (traitType == typeof(ArtTrait))
                 {
-                    traits.Add(new ArtTrait(GetRandomTraitName(EmotiveTraits), true, TraitType.Emotive));
+                    traits.Add(new ArtTrait(traitName, true, TraitType.Emotive));
                 }
                 else if (traitType == typeof(ArtistTrait))
                 {
-                    traits.Add(new ArtistTrait(GetRandomTraitName(EmotiveTraits), true, TraitType.Emotive));
+                    traits.Add(new ArtistTrait(traitName, true, TraitType.Emotive));
                 }
                 else if (traitType == typeof(PatronTrait))
                 {
-                    traits.Add(new PatronTrait(GetRandomTraitName(EmotiveTraits), Utilities.RandomBool(), TraitType.Emotive));
+                    traits.Add(new PatronTrait(traitName, Utilities.RandomBool(), TraitType.Emotive));
                 }
                 else
                 {
