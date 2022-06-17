@@ -22,10 +22,12 @@ namespace Gallerist
         public List<string> LastNames { get; set; }
 
         PatronsDisplay _patronsDisplay;
+        ArtPiecesDisplay _artPiecesDisplay;
 
         private void Awake()
         {
             _patronsDisplay = FindObjectOfType<PatronsDisplay>();
+            _artPiecesDisplay = FindObjectOfType<ArtPiecesDisplay>();
             ArtPieces = new List<Art>();
             Patrons = new List<Patron>();
             PatronPortaits = new List<Sprite>();
@@ -59,26 +61,36 @@ namespace Gallerist
             Debug.Log($"ArtSprites count: {ArtSprites.Count}");
             Debug.Log($"PatronPortraits count: {PatronPortaits.Count}");
 
-            GenerateArtist("Rand O. Morrigan", "Rand");
-            GenerateArt();
+            GenerateArtist();
+
+            GenerateArts(10);
             
             DebugArt();
-            Art art = ArtPieces[0];
-            artCard.LoadArtCardData(art);
-            GeneratePatrons(10);
+
+            GeneratePatrons(20);
+
             DebugPatron();
 
             _patronsDisplay.SetPatrons();
+            _artPiecesDisplay.SetThumbnails();
         }
 
-        void GenerateArtist(string name, string id)
+        void GenerateArtist()
         {
             Artist = new Artist(
-                name: name, 
-                id: id, 
+                name: GenerateRandomArtistName(), 
                 favoredAestheticTraits: GenerateAestheticTraits(3,typeof(ArtistTrait)),
-                favoredEmotiveTraits: GenerateEmotiveTraits(3,typeof(ArtistTrait))
+                favoredEmotiveTraits: GenerateEmotiveTraits(3,typeof(ArtistTrait)),
+                portrait: GeneratePortrait()
                 );
+        }
+
+        void GenerateArts(int total)
+        {
+            for(int i = 0; i < total; i++)
+            {
+                GenerateArt();
+            }
         }
 
         void GenerateArt()
@@ -100,12 +112,12 @@ namespace Gallerist
 
         string GenerateArtName()
         {
-            return ("RandomName");
+            return ($"RandomName_{UnityEngine.Random.Range(0,1000)}");
         }
 
         string GenerateArtDescription()
         {
-            return ("RandomDescription");
+            return ($"RandomDescription_{UnityEngine.Random.Range(0, 1000)}");
         }
 
         void GeneratePatrons(int total)
@@ -117,7 +129,7 @@ namespace Gallerist
         void GeneratePatron()
         {
             var newPatron = new Patron(
-                name: GenerateRandomPatronName(FirstNames),
+                name: GenerateRandomPatronName(),
                 portrait: GeneratePortrait(),
                 isSubscriber: false, 
                 aestheticTraits: GenerateAestheticTraits(5, typeof(PatronTrait)), 
@@ -141,10 +153,17 @@ namespace Gallerist
             return ArtSprites[randomIndex];
         }
 
-        string GenerateRandomPatronName(List<string> firstNameList)
+        string GenerateRandomPatronName()
         {
-            int randomIndex = UnityEngine.Random.Range(0, firstNameList.Count);
-            return firstNameList[randomIndex].Trim() + " " + RandomLastNameLetter();
+            int randomIndex = UnityEngine.Random.Range(0, FirstNames.Count);
+            return FirstNames[randomIndex].Trim() + " " + RandomLastNameLetter();
+        }
+
+        string GenerateRandomArtistName()
+        {
+            int randomIndex1 = UnityEngine.Random.Range(0, FirstNames.Count);
+            int randomIndex2 = UnityEngine.Random.Range(0, LastNames.Count);
+            return FirstNames[randomIndex1].Trim() + " " + RandomLastNameLetter() + " " + LastNames[randomIndex2].Trim();
         }
 
         string RandomLastNameLetter()

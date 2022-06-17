@@ -60,6 +60,7 @@ namespace Gallerist.UI
                     name: _gameManager.Patrons[patronIndex].Name);
             }
             PatronPortraits[0].HighlightBackground();
+            paginationText.text = $"{1 + pageSize*currentPage} to {pageSize} of {_gameManager.Patrons.Count}";
             PatronCard.LoadPatronCardData(patron: _gameManager.Patrons[pageSize * currentPage]);
         }
 
