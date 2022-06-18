@@ -49,6 +49,7 @@ namespace Gallerist.UI
 
         public void SetThumbnails()
         {
+            foreach (var image in ArtThumbnails) { image.ResetBackground(); }
             int pageSize = ArtThumbnails.Count;
             for (int i = 0; i < pageSize; i++)
             {
@@ -59,7 +60,7 @@ namespace Gallerist.UI
                     name: _gameManager.ArtPieces[artIndex].Name);
             }
             ArtThumbnails[0].HighlightBackground();
-            paginationText.text = $"{1 + pageSize * currentPage} to {pageSize} of {_gameManager.ArtPieces.Count}";
+            paginationText.text = $"{1 + pageSize * currentPage} to {pageSize * (1 + currentPage)} of {_gameManager.ArtPieces.Count}";
             ArtCard.LoadArtCardData(art: _gameManager.ArtPieces[pageSize * currentPage]);
         }
 
@@ -68,18 +69,26 @@ namespace Gallerist.UI
             int _currentPage = currentPage;
             currentPage++;
             int lastPage = Mathf.CeilToInt(_gameManager.PatronPortaits.Count / ArtThumbnails.Count);
-            if (currentPage > lastPage) currentPage = lastPage;
-            if (currentPage != _currentPage)
-                SetThumbnails();
+            if (currentPage >= lastPage)
+            {
+                currentPage = lastPage;
+                return;
+            }
+            //if (currentPage != _currentPage)
+            SetThumbnails();
         }
 
         public void PageLeft()
         {
             int _currentPage = currentPage;
             currentPage--;
-            if (currentPage < 0) currentPage = 0;
-            if (currentPage != _currentPage)
-                SetThumbnails();
+            if (currentPage <= 0)
+            {
+                currentPage = 0;
+                return;
+            }
+            //if (currentPage != _currentPage)
+            SetThumbnails();
         }
     }
 }

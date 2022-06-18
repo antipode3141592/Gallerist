@@ -36,7 +36,7 @@ namespace Gallerist
             return n;
         }
 
-        public bool EvaluateArt(Art art)
+        public EvaluationResultTypes EvaluateArt(Art art)
         {
             int aestheticTotal = 0;
             int emotiveTotal = 0;
@@ -47,13 +47,15 @@ namespace Gallerist
             }
             foreach(var trait in art.EmotiveTraits)
             {
-                aestheticTotal += trait.Value + PatronEmotiveTraitValue(trait) + PerceptionRange;
+                emotiveTotal += trait.Value + PatronEmotiveTraitValue(trait) + PerceptionRange;
             }
 
             Debug.Log($"A: {aestheticTotal} At: {AestheticThreshold}, E: {emotiveTotal} Et: {EmotiveThreshold}");
             if (aestheticTotal >= AestheticThreshold && emotiveTotal >= EmotiveThreshold)
-                return true;
-            return false;
+                return EvaluationResultTypes.Original;
+            else if (aestheticTotal >= AestheticThreshold || emotiveTotal >= EmotiveThreshold)
+                return EvaluationResultTypes.Print;
+            return EvaluationResultTypes.None;
         }
 
         int PatronAestheticTraitValue(ITrait trait)

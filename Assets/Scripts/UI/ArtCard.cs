@@ -19,8 +19,11 @@ namespace Gallerist.UI
         [SerializeField] Image aestheticTraitsBackground;
         [SerializeField] Image emotiveTraitsBackground;
 
+        public Art SelectedArt;
+
         public void LoadArtCardData(Art art)
         {
+            SelectedArt = art;
             titleText.text = art.Name;
             artistText.text = art.ArtistName;
             descriptionText.text = art.Description;

@@ -17,6 +17,7 @@ namespace Gallerist.UI
         [SerializeField] TextMeshProUGUI searchText;
 
         int currentPage;
+
         
         GameManager _gameManager;
 
@@ -50,6 +51,7 @@ namespace Gallerist.UI
 
         public void SetPatrons()
         {
+            foreach (var image in PatronPortraits) { image.ResetBackground(); }
             int pageSize = PatronPortraits.Count;
             for (int i = 0; i < pageSize; i++)
             {
@@ -60,7 +62,7 @@ namespace Gallerist.UI
                     name: _gameManager.Patrons[patronIndex].Name);
             }
             PatronPortraits[0].HighlightBackground();
-            paginationText.text = $"{1 + pageSize*currentPage} to {pageSize} of {_gameManager.Patrons.Count}";
+            paginationText.text = $"{1 + pageSize*currentPage} to {pageSize * (1 + currentPage)} of {_gameManager.Patrons.Count}";
             PatronCard.LoadPatronCardData(patron: _gameManager.Patrons[pageSize * currentPage]);
         }
 
@@ -69,18 +71,26 @@ namespace Gallerist.UI
             int _currentPage = currentPage;
             currentPage++;
             int lastPage = Mathf.CeilToInt(_gameManager.PatronPortaits.Count / PatronPortraits.Count);
-            if (currentPage > lastPage) currentPage = lastPage;
-            if (currentPage != _currentPage)
-                SetPatrons();
+            if (currentPage >= lastPage) 
+            { 
+                currentPage = lastPage;
+                return;
+            }
+            //if (currentPage != _currentPage)
+            SetPatrons();
         }
 
         public void PageLeft()
         {
             int _currentPage = currentPage;
             currentPage--;
-            if (currentPage < 0) currentPage = 0;
-            if (currentPage != _currentPage)
-                SetPatrons();
+            if (currentPage <= 0)
+            {
+                currentPage = 0;
+                return;
+            }
+            //if (currentPage != _currentPage)
+            SetPatrons();
         }
         
     }

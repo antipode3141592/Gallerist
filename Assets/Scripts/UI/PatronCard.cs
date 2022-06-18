@@ -18,8 +18,11 @@ namespace Gallerist.UI
         [SerializeField] Image aestheticTraitsBackground;
         [SerializeField] Image emotiveTraitsBackground;
 
+        public Patron SelectedPatron;
+
         public void LoadPatronCardData(Patron patron)
         {
+            SelectedPatron = patron;
             nameText.text = patron.Name;
             isSubscriberToggle.isOn = patron.IsSubscriber;
             portraitImage.sprite = patron.Portrait;

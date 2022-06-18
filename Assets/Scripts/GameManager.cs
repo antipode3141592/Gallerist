@@ -11,6 +11,9 @@ namespace Gallerist
         [SerializeField] ArtCard artCard;
         [SerializeField] PatronCard patronCard;
 
+        public int SelectedArtPieceIndex;
+        public int SelectedPatronPieceIndex;
+
         public Artist Artist { get; set; }
         public List<Art> ArtPieces { get; set; }
         public List<Patron> Patrons { get; set; }
@@ -73,6 +76,24 @@ namespace Gallerist
 
             _patronsDisplay.SetPatrons();
             _artPiecesDisplay.SetThumbnails();
+        }
+
+        public void Evaluate()
+        {
+            //current Patron selection evaluates current Art selection
+            var result = patronCard.SelectedPatron.EvaluateArt(artCard.SelectedArt);
+            switch (result)
+            {
+                case EvaluationResultTypes.Original:
+                    Debug.Log($"Patron {patronCard.SelectedPatron.Name} loves {artCard.SelectedArt.Name} and will buy the original!");
+                    break;
+                case EvaluationResultTypes.Print:
+                    Debug.Log($"Patron {patronCard.SelectedPatron.Name} likes {artCard.SelectedArt.Name} and will buy a print!");
+                    break;
+                case EvaluationResultTypes.None:
+                    Debug.Log($"Patron {patronCard.SelectedPatron.Name} is not particularly drawn to {artCard.SelectedArt.Name}, but will take a business card.");
+                    break;
+            }
         }
 
         void GenerateArtist()
@@ -198,7 +219,7 @@ namespace Gallerist
                 }
                 else if (traitType == typeof(PatronTrait))
                 {
-                    traits.Add(new PatronTrait(traitName, true, TraitType.Aesthetic));
+                    traits.Add(new PatronTrait(traitName, false, TraitType.Aesthetic));
                 } else
                 {
                     return null;
@@ -228,7 +249,7 @@ namespace Gallerist
                 }
                 else if (traitType == typeof(PatronTrait))
                 {
-                    traits.Add(new PatronTrait(traitName, Utilities.RandomBool(), TraitType.Emotive));
+                    traits.Add(new PatronTrait(traitName, false, TraitType.Emotive));
                 }
                 else
                 {
