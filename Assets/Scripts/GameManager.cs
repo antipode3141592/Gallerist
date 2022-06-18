@@ -3,16 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Gallerist.UI;
+using TMPro;
 
 namespace Gallerist
 {
     public class GameManager : MonoBehaviour
     {
+
         [SerializeField] ArtCard artCard;
         [SerializeField] PatronCard patronCard;
+        [SerializeField] TextMeshProUGUI evaluationsText;
+        [SerializeField] TextMeshProUGUI evaluationResultsText;
 
-        public int SelectedArtPieceIndex;
-        public int SelectedPatronPieceIndex;
+        [SerializeField] int maximumEvaluations = 5;
+
+        [SerializeField] GameObject ArtPiecesPanel;
+        [SerializeField] GameObject PatronsPanel;
+
+        int totalEvaluations = 0;
+        int originalsSold = 0;
+        int printsSold = 0;
 
         public Artist Artist { get; set; }
         public List<Art> ArtPieces { get; set; }
@@ -26,6 +36,9 @@ namespace Gallerist
 
         PatronsDisplay _patronsDisplay;
         ArtPiecesDisplay _artPiecesDisplay;
+
+        GameStates currentGameState = GameStates.Start;
+        public event EventHandler<GameStates> GameStateChanged;
 
         private void Awake()
         {
@@ -55,7 +68,7 @@ namespace Gallerist
             EmotiveTraits.AddRange(_emotiveWords.text.Split(',', '\n').ToList());
             FirstNames.AddRange(_firstNames.text.Split(',', '\n').ToList());
             LastNames.AddRange(_lastNames.text.Split(',', '\n').ToList());
-            PatronPortaits.AddRange(_portraits.Where<Sprite>(x=> x.name.Contains("_0")));
+            PatronPortaits.AddRange(_portraits.Where<Sprite>(x => x.name.Contains("_0")));
             ArtSprites.AddRange(_artSprites);
 
             Debug.Log($"AT count : {AestheticTraits.Count}, ET count : {EmotiveTraits.Count}");
@@ -67,7 +80,7 @@ namespace Gallerist
             GenerateArtist();
 
             GenerateArts(10);
-            
+
             DebugArt();
 
             GeneratePatrons(20);
@@ -76,24 +89,37 @@ namespace Gallerist
 
             _patronsDisplay.SetPatrons();
             _artPiecesDisplay.SetThumbnails();
+            UpdateEvaluationText();
+            currentGameState = GameStates.Preparation;
+            GameStateChanged?.Invoke(this, GameStates.Preparation);
         }
 
+        //game states
+
+        //Start
+
+
+        //closing
         public void Evaluate()
         {
+            totalEvaluations++;
             //current Patron selection evaluates current Art selection
             var result = patronCard.SelectedPatron.EvaluateArt(artCard.SelectedArt);
             switch (result)
             {
                 case EvaluationResultTypes.Original:
                     Debug.Log($"Patron {patronCard.SelectedPatron.Name} loves {artCard.SelectedArt.Name} and will buy the original!");
+                    originalsSold++;
                     break;
                 case EvaluationResultTypes.Print:
                     Debug.Log($"Patron {patronCard.SelectedPatron.Name} likes {artCard.SelectedArt.Name} and will buy a print!");
+                    printsSold++;
                     break;
                 case EvaluationResultTypes.None:
                     Debug.Log($"Patron {patronCard.SelectedPatron.Name} is not particularly drawn to {artCard.SelectedArt.Name}, but will take a business card.");
                     break;
             }
+            UpdateEvaluationText();
         }
 
         void GenerateArtist()
@@ -257,6 +283,13 @@ namespace Gallerist
                 }
             }
             return traits;
+        }
+
+        //TODO convert text update to observer model
+        void UpdateEvaluationText()
+        {
+            evaluationsText.text = $"{totalEvaluations} of {maximumEvaluations} Evaluations";
+            evaluationResultsText.text = $"Originals Sold: {originalsSold} , Prints Sold: {printsSold}";
         }
 
         #region Debugging
