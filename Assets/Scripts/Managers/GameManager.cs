@@ -31,7 +31,11 @@ namespace Gallerist
         public List<Art> ArtPieces { get; set; }
         public List<Patron> Patrons { get; set; }
         public List<Sprite> PatronPortaits { get; set; }
+        
         public List<Sprite> ArtSprites { get; set; }
+        
+        public Bag ArtSpriteBag;
+
         public List<string> AestheticTraits { get; set; }
         public List<string> EmotiveTraits { get; set; }
         public List<string> FirstNames { get; set; }
@@ -58,6 +62,7 @@ namespace Gallerist
             Patrons = new List<Patron>();
             PatronPortaits = new List<Sprite>();
             ArtSprites = new List<Sprite>();
+            ArtSpriteBag = new Bag();
             AestheticTraits = new ();
             EmotiveTraits = new ();
             FirstNames = new ();
@@ -84,6 +89,7 @@ namespace Gallerist
             LastNames.AddRange(_lastNames.text.Split(',', '\n').ToList());
             PatronPortaits.AddRange(_portraits.Where<Sprite>(x => x.name.Contains("_0")));
             ArtSprites.AddRange(_artSprites);
+            ArtSpriteBag.ResetBag(ArtSprites.Count);
 
             Debug.Log($"AT count : {AestheticTraits.Count}, ET count : {EmotiveTraits.Count}");
             Debug.Log($"FirstNames count: {FirstNames.Count}");
@@ -330,7 +336,8 @@ namespace Gallerist
 
         Sprite GenerateArtImage()
         {
-            int randomIndex = UnityEngine.Random.Range(0, ArtSprites.Count);
+            //int randomIndex = UnityEngine.Random.Range(0, ArtSprites.Count);
+            int randomIndex = ArtSpriteBag.DrawFromBag();
             return ArtSprites[randomIndex];
         }
 
