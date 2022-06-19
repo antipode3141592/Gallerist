@@ -22,6 +22,11 @@ namespace Gallerist
         int originalsSold = 0;
         int printsSold = 0;
 
+
+        public int MaximumEvaluations => maximumEvaluations;
+        public int OriginalsSold => originalsSold;
+        public int PrintsSold => printsSold;
+
         public Artist Artist { get; set; }
         public List<Art> ArtPieces { get; set; }
         public List<Patron> Patrons { get; set; }
@@ -37,6 +42,8 @@ namespace Gallerist
         [SerializeField] SchmoozeDisplay _schmoozeDisplay;
         [SerializeField] PreparationDisplay _preparationDisplay;
         [SerializeField] MainEventDisplay _mainEventDisplay;
+        [SerializeField] ClosingDisplay _closingDisplay;
+        [SerializeField] EndDisplay _endDisplay;
 
         GameStates currentGameState = GameStates.End;
         public event EventHandler<GameStates> GameStateChanged;
@@ -119,6 +126,7 @@ namespace Gallerist
                     LoadClosingUI();
                     break;
                 case GameStates.End:
+                    LoadEndUI();
                     break;
                 default:
                     Debug.LogWarning($"invalid game state!");
@@ -145,6 +153,8 @@ namespace Gallerist
             _schmoozeDisplay.gameObject.SetActive(false);
             _patronsDisplay.gameObject.SetActive(false);
             _artPiecesDisplay.gameObject.SetActive(true);
+            _closingDisplay.gameObject.SetActive(false);
+            _endDisplay.gameObject.SetActive(false);
             _artPiecesDisplay.SetThumbnails();
         }
 
@@ -154,8 +164,11 @@ namespace Gallerist
             _preparationDisplay.gameObject.SetActive(false);
             _schmoozeDisplay.gameObject.SetActive(true);
             _patronsDisplay.gameObject.SetActive(true);
-            _patronsDisplay.SetPatrons();
             _artPiecesDisplay.gameObject.SetActive(false);
+            _closingDisplay.gameObject.SetActive(false);
+            _endDisplay.gameObject.SetActive(false);
+
+            _patronsDisplay.SetPatrons();
         }
 
         void LoadMainEventUI()
@@ -165,12 +178,32 @@ namespace Gallerist
             _schmoozeDisplay.gameObject.SetActive(false);
             _patronsDisplay.gameObject.SetActive(false);
             _artPiecesDisplay.gameObject.SetActive(false);
-
+            _closingDisplay.gameObject.SetActive(false);
+            _endDisplay.gameObject.SetActive(false);
         }
 
         void LoadClosingUI()
         {
+            _mainEventDisplay.gameObject.SetActive(false);
+            _preparationDisplay.gameObject.SetActive(false);
+            _schmoozeDisplay.gameObject.SetActive(false);
+            _patronsDisplay.gameObject.SetActive(true);
+            _artPiecesDisplay.gameObject.SetActive(true);
+            _closingDisplay.gameObject.SetActive(true);
+            _endDisplay.gameObject.SetActive(false);
+        }
 
+        void LoadEndUI()
+        {
+            _mainEventDisplay.gameObject.SetActive(false);
+            _preparationDisplay.gameObject.SetActive(false);
+            _schmoozeDisplay.gameObject.SetActive(false);
+            _patronsDisplay.gameObject.SetActive(false);
+            _artPiecesDisplay.gameObject.SetActive(false);
+            _closingDisplay.gameObject.SetActive(false);
+            _endDisplay.gameObject.SetActive(true);
+
+            _endDisplay.SummarizeNight();
         }
 
         public void CompletePreparations()
@@ -204,6 +237,8 @@ namespace Gallerist
                     break;
             }
             UpdateEvaluationText();
+            if (totalEvaluations >= maximumEvaluations)
+                ChangeGameState(GameStates.End);
         }
 
         
