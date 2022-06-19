@@ -1,5 +1,5 @@
 using System;
-
+using UnityEngine;
 namespace Gallerist
 {
     public class PatronTrait : ITrait
@@ -19,7 +19,15 @@ namespace Gallerist
         public Type Type => typeof(PatronTrait);
         public TraitType TraitType { get; }
         public string Name { get; set; }
-        public int Value { get; set; }
+        public int Value { get
+            {
+                return _value;
+            }
+            set {
+                _value = Mathf.Clamp(value, -5, 5);
+            } 
+        }
+        int _value;
         public bool IsKnown { get; set; }
     }
 }

@@ -1,7 +1,8 @@
-using System.Collections;
-using System.Linq;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Gallerist
 {
@@ -30,9 +31,11 @@ namespace Gallerist
         public int AestheticThreshold { get; set; }
         public int EmotiveThreshold { get; set; }
 
+        public event EventHandler PreferencesUpdated;
+
         int SetPerceptionRange()
         {
-            int n = (int)Random.Range(-2,2);    //int [-2,2]
+            int n = (int)Random.Range(-2,3);    //int [-2,2]
             return n;
         }
 
@@ -72,6 +75,43 @@ namespace Gallerist
             if (patronTrait is not null)
                 return patronTrait.Value;
             return 0;
+        }
+
+        public void RevealTraits(int traitsToReveal)
+        {
+            if (traitsToReveal == 0) return;
+            List<ITrait> unknownTraits = new();
+            for (int i = 0; i < traitsToReveal; i++)
+            {
+                unknownTraits = EmotiveTraits.FindAll(x => x.IsKnown == false);
+                unknownTraits.AddRange(AestheticTraits.FindAll(x => x.IsKnown == false));
+                if (unknownTraits.Count == 0)
+                    return;
+                unknownTraits[Random.Range(0, unknownTraits.Count)].IsKnown = true;
+            }
+
+            unknownTraits = EmotiveTraits.FindAll(x => x.IsKnown == false);
+            unknownTraits.AddRange(AestheticTraits.FindAll(x => x.IsKnown == false));
+            if (unknownTraits.Count == 0)
+                Debug.Log($"Patron {Name} has no remaining unknown preferences!");
+
+            PreferencesUpdated?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void ModifyTrait(ITrait trait, int modifier)
+        {
+            var patronTrait = EmotiveTraits.FirstOrDefault(x => x.Name == trait.Name);
+            if (patronTrait is not null)
+            {
+                patronTrait.Value += modifier;
+                return;
+            }
+            patronTrait = AestheticTraits.FirstOrDefault(x => x.Name == trait.Name);
+            if (patronTrait is not null)
+            {
+                patronTrait.Value += modifier;
+                return;
+            }
         }
     }
 }

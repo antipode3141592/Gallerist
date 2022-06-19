@@ -20,14 +20,17 @@ namespace Gallerist.UI
 
         
         GameManager _gameManager;
+        SchmoozeController _schmoozeController;
 
         void Awake()
         {
             _gameManager = FindObjectOfType<GameManager>();
+            _schmoozeController = FindObjectOfType<SchmoozeController>();
             foreach (var patron in PatronPortraits)
             {
                 patron.OnImageClicked += OnPatronPortraitClicked;
             }
+            _schmoozeController.PatronUpdated += UpdatePatronCard;
             
         }
 
@@ -64,6 +67,11 @@ namespace Gallerist.UI
             PatronPortraits[0].HighlightBackground();
             paginationText.text = $"{1 + pageSize*currentPage} to {pageSize * (1 + currentPage)} of {_gameManager.Patrons.Count}";
             PatronCard.LoadPatronCardData(patron: _gameManager.Patrons[pageSize * currentPage]);
+        }
+
+        void UpdatePatronCard(object sender, EventArgs e)
+        {
+            PatronCard.LoadPatronCardData(PatronCard.SelectedPatron);
         }
 
         public void PageRight()

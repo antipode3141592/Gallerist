@@ -9,6 +9,7 @@ namespace Gallerist
 {
     public class GameManager : MonoBehaviour
     {
+        SchmoozeController schmoozeController;
 
         [SerializeField] ArtCard artCard;
         [SerializeField] PatronCard patronCard;
@@ -16,9 +17,6 @@ namespace Gallerist
         [SerializeField] TextMeshProUGUI evaluationResultsText;
 
         [SerializeField] int maximumEvaluations = 5;
-
-        [SerializeField] GameObject ArtPiecesPanel;
-        [SerializeField] GameObject PatronsPanel;
 
         int totalEvaluations = 0;
         int originalsSold = 0;
@@ -34,16 +32,21 @@ namespace Gallerist
         public List<string> FirstNames { get; set; }
         public List<string> LastNames { get; set; }
 
-        PatronsDisplay _patronsDisplay;
-        ArtPiecesDisplay _artPiecesDisplay;
+        [SerializeField] PatronsDisplay _patronsDisplay;
+        [SerializeField] ArtPiecesDisplay _artPiecesDisplay;
+        [SerializeField] SchmoozeDisplay _schmoozeDisplay;
+        [SerializeField] PreparationDisplay _preparationDisplay;
+        [SerializeField] MainEventDisplay _mainEventDisplay;
 
-        GameStates currentGameState = GameStates.Start;
+        GameStates currentGameState = GameStates.End;
         public event EventHandler<GameStates> GameStateChanged;
+        public event EventHandler<string> EvaluationResultUpdated;
+        public event EventHandler<string> EvaluationsTotalUpdated;
 
         private void Awake()
         {
-            _patronsDisplay = FindObjectOfType<PatronsDisplay>();
-            _artPiecesDisplay = FindObjectOfType<ArtPiecesDisplay>();
+            schmoozeController = FindObjectOfType<SchmoozeController>();
+            schmoozeController.SchmoozingCompleted += OnSchmoozeComplete;
             ArtPieces = new List<Art>();
             Patrons = new List<Patron>();
             PatronPortaits = new List<Sprite>();
@@ -52,7 +55,11 @@ namespace Gallerist
             EmotiveTraits = new ();
             FirstNames = new ();
             LastNames = new ();
+
+            this.GameStateChanged += OnGameStateChanged;
         }
+
+        
 
         void Start()
         {
@@ -77,29 +84,106 @@ namespace Gallerist
             Debug.Log($"ArtSprites count: {ArtSprites.Count}");
             Debug.Log($"PatronPortraits count: {PatronPortaits.Count}");
 
-            GenerateArtist();
-
-            GenerateArts(10);
-
-            DebugArt();
-
-            GeneratePatrons(20);
-
-            DebugPatron();
-
-            _patronsDisplay.SetPatrons();
-            _artPiecesDisplay.SetThumbnails();
-            UpdateEvaluationText();
-            currentGameState = GameStates.Preparation;
-            GameStateChanged?.Invoke(this, GameStates.Preparation);
+            ChangeGameState(GameStates.Start);
         }
 
-        //game states
+        void ChangeGameState(GameStates targetState)
+        {
+            if (currentGameState == targetState) return;
+            currentGameState = targetState;
+            GameStateChanged?.Invoke(this, targetState);
+        }
 
-        //Start
+        void OnGameStateChanged(object sender, GameStates e)
+        {
+            Debug.Log($"OnGameStateChangedCalled.  target state: {e}");
+            switch (e)
+            {
+                case GameStates.Start:
+                    GenerateData();
+                    break;
+                case GameStates.Preparation:
+                    LoadPreparationUI();
+                    break;
+                case GameStates.Schmooze1:
+                    LoadSchmoozeUI();
 
+                    break;
+                case GameStates.MainEvent:
+                    LoadMainEventUI();
+                    break;
+                case GameStates.Schmooze2:
+                    LoadSchmoozeUI();
+                    break;
+                case GameStates.Closing:
+                    LoadClosingUI();
+                    break;
+                case GameStates.End:
+                    break;
+                default:
+                    Debug.LogWarning($"invalid game state!");
+                    break;
+            }
+        }
 
-        //closing
+        private void OnSchmoozeComplete(object sender, EventArgs e)
+        {
+            if (currentGameState == GameStates.Schmooze1)
+            {
+                ChangeGameState(GameStates.MainEvent);
+            }
+            else if (currentGameState == GameStates.Schmooze2)
+            {
+                ChangeGameState(GameStates.Closing);
+            }
+        }
+
+        void LoadPreparationUI()
+        {
+            _mainEventDisplay.gameObject.SetActive(false);
+            _preparationDisplay.gameObject.SetActive(true);
+            _schmoozeDisplay.gameObject.SetActive(false);
+            _patronsDisplay.gameObject.SetActive(false);
+            _artPiecesDisplay.gameObject.SetActive(true);
+            _artPiecesDisplay.SetThumbnails();
+        }
+
+        void LoadSchmoozeUI()
+        {
+            _mainEventDisplay.gameObject.SetActive(false);
+            _preparationDisplay.gameObject.SetActive(false);
+            _schmoozeDisplay.gameObject.SetActive(true);
+            _patronsDisplay.gameObject.SetActive(true);
+            _patronsDisplay.SetPatrons();
+            _artPiecesDisplay.gameObject.SetActive(false);
+        }
+
+        void LoadMainEventUI()
+        {
+            _mainEventDisplay.gameObject.SetActive(true);
+            _preparationDisplay.gameObject.SetActive(false);
+            _schmoozeDisplay.gameObject.SetActive(false);
+            _patronsDisplay.gameObject.SetActive(false);
+            _artPiecesDisplay.gameObject.SetActive(false);
+
+        }
+
+        void LoadClosingUI()
+        {
+
+        }
+
+        public void CompletePreparations()
+        {
+            ChangeGameState(GameStates.Schmooze1);
+        }
+
+        public void CompleteMainEvent()
+        {
+            schmoozeController.ResetActionCounter();
+            ChangeGameState(GameStates.Schmooze2);
+        }
+
         public void Evaluate()
         {
             totalEvaluations++;
@@ -120,6 +204,21 @@ namespace Gallerist
                     break;
             }
             UpdateEvaluationText();
+        }
+
+        
+
+        #region DataGeneration
+
+        void GenerateData()
+        {
+            GenerateArtist();
+
+            GenerateArts(10);
+
+            GeneratePatrons(20);
+
+            ChangeGameState(GameStates.Preparation);
         }
 
         void GenerateArtist()
@@ -284,6 +383,8 @@ namespace Gallerist
             }
             return traits;
         }
+
+        #endregion 
 
         //TODO convert text update to observer model
         void UpdateEvaluationText()

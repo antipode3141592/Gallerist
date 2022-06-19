@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Gallerist
@@ -11,6 +12,7 @@ namespace Gallerist
         public string ArtistName { get; private set; }
         public List<ITrait> AestheticTraits { get; private set; } 
         public List<ITrait> EmotiveTraits { get; private set; }
+
         public Sprite Image { get; set; }
 
         public Art(string name, string description, string artistName, List<ITrait> aestheticQualities, List<ITrait> emotiveQualities, Sprite image)
