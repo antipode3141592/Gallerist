@@ -14,7 +14,6 @@ namespace Gallerist.UI
         [SerializeField] Button ScrollRightButton;
         [SerializeField] Button ScrollLeftButton;
         [SerializeField] TextMeshProUGUI paginationText;
-        [SerializeField] TextMeshProUGUI searchText;
 
         int currentPage;
 
@@ -66,7 +65,6 @@ namespace Gallerist.UI
 
         public void PageRight()
         {
-            int _currentPage = currentPage;
             currentPage++;
             int lastPage = Mathf.CeilToInt(_gameManager.PatronPortaits.Count / ArtThumbnails.Count);
             if (currentPage >= lastPage)
@@ -74,20 +72,17 @@ namespace Gallerist.UI
                 currentPage = lastPage;
                 return;
             }
-            //if (currentPage != _currentPage)
             SetThumbnails();
         }
 
         public void PageLeft()
         {
-            int _currentPage = currentPage;
             currentPage--;
-            if (currentPage <= 0)
+            if (currentPage < 0)
             {
                 currentPage = 0;
                 return;
             }
-            //if (currentPage != _currentPage)
             SetThumbnails();
         }
     }
