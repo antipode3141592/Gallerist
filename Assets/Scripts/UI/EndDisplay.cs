@@ -45,7 +45,7 @@ namespace Gallerist.UI
             }
 
             //
-            NightDescriptionText.text = $"The assembled crowd found {gameManager.Artist.Name}'s work mesmerizing.  [buyer1] had a deep connection to [art]'s sense of [shared postive emotive trait] while also being a [positive adjective] example of [shared postive aesthetic trait] and decided to purchase the original.";
+            //NightDescriptionText.text = $"The assembled crowd found {gameManager.Artist.Name}'s work mesmerizing.  [buyer1] had a deep connection to [art]'s sense of [shared postive emotive trait] while also being a [positive adjective] example of [shared postive aesthetic trait] and decided to purchase the original.";
 
 
             OriginalsSoldText.text = $"Originals Sold: {originalsSold}";

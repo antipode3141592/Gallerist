@@ -1,9 +1,9 @@
+using Gallerist.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
-using Gallerist.UI;
 using TMPro;
+using UnityEngine;
 
 namespace Gallerist
 {
@@ -41,6 +41,7 @@ namespace Gallerist
         public List<string> FirstNames { get; set; }
         public List<string> LastNames { get; set; }
 
+        [SerializeField] StartDisplay _startDisplay;
         [SerializeField] PatronsDisplay _patronsDisplay;
         [SerializeField] ArtPiecesDisplay _artPiecesDisplay;
         [SerializeField] SchmoozeDisplay _schmoozeDisplay;
@@ -114,6 +115,7 @@ namespace Gallerist
             {
                 case GameStates.Start:
                     GenerateData();
+                    LoadStartUI();
                     break;
                 case GameStates.Preparation:
                     LoadPreparationUI();
@@ -152,8 +154,20 @@ namespace Gallerist
             }
         }
 
+        void LoadStartUI()
+        {
+            _startDisplay.gameObject.SetActive(true);
+            _mainEventDisplay.gameObject.SetActive(false);
+            _preparationDisplay.gameObject.SetActive(false);
+            _schmoozeDisplay.gameObject.SetActive(false);
+            _patronsDisplay.gameObject.SetActive(false);
+            _artPiecesDisplay.gameObject.SetActive(false);
+            _closingDisplay.gameObject.SetActive(false);
+            _endDisplay.gameObject.SetActive(false);
+        }
         void LoadPreparationUI()
         {
+            _startDisplay.gameObject.SetActive(false);
             _mainEventDisplay.gameObject.SetActive(false);
             _preparationDisplay.gameObject.SetActive(true);
             _schmoozeDisplay.gameObject.SetActive(false);
@@ -162,10 +176,12 @@ namespace Gallerist
             _closingDisplay.gameObject.SetActive(false);
             _endDisplay.gameObject.SetActive(false);
             _artPiecesDisplay.SetThumbnails();
+            _preparationDisplay.UpdateDisplay();
         }
 
         void LoadSchmoozeUI()
         {
+            _startDisplay.gameObject.SetActive(false);
             _mainEventDisplay.gameObject.SetActive(false);
             _preparationDisplay.gameObject.SetActive(false);
             _schmoozeDisplay.gameObject.SetActive(true);
@@ -175,10 +191,12 @@ namespace Gallerist
             _endDisplay.gameObject.SetActive(false);
 
             _patronsDisplay.SetPatrons();
+            _schmoozeDisplay.UpdateArtistCard();
         }
 
         void LoadMainEventUI()
         {
+            _startDisplay.gameObject.SetActive(false);
             _mainEventDisplay.gameObject.SetActive(true);
             _preparationDisplay.gameObject.SetActive(false);
             _schmoozeDisplay.gameObject.SetActive(false);
@@ -190,6 +208,7 @@ namespace Gallerist
 
         void LoadClosingUI()
         {
+            _startDisplay.gameObject.SetActive(false);
             _mainEventDisplay.gameObject.SetActive(false);
             _preparationDisplay.gameObject.SetActive(false);
             _schmoozeDisplay.gameObject.SetActive(false);
@@ -201,6 +220,7 @@ namespace Gallerist
 
         void LoadEndUI()
         {
+            _startDisplay.gameObject.SetActive(false);
             _mainEventDisplay.gameObject.SetActive(false);
             _preparationDisplay.gameObject.SetActive(false);
             _schmoozeDisplay.gameObject.SetActive(false);
@@ -212,6 +232,11 @@ namespace Gallerist
             _endDisplay.SummarizeNight();
         }
 
+        public void CompleteStart()
+        {
+            ChangeGameState(GameStates.Preparation);
+        }
+
         public void CompletePreparations()
         {
             ChangeGameState(GameStates.Schmooze1);
@@ -221,6 +246,11 @@ namespace Gallerist
         {
             schmoozeController.ResetActionCounter();
             ChangeGameState(GameStates.Schmooze2);
+        }
+
+        public void CompleteEnd()
+        {
+            //return to start
         }
 
         public void Evaluate()
@@ -258,8 +288,6 @@ namespace Gallerist
             GenerateArts(10);
 
             GeneratePatrons(20);
-
-            ChangeGameState(GameStates.Preparation);
         }
 
         void GenerateArtist()
