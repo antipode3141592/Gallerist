@@ -1,14 +1,16 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
-using System;
 
 namespace Gallerist.UI
 {
     public class PatronsDisplay : MonoBehaviour
     {
+        SchmoozeController _schmoozeController;
+        PatronManager _patronManager;
+
         [SerializeField] PatronCard PatronCard;
         [SerializeField] List<ClickableImage> PatronPortraits;
         [SerializeField] Button ScrollRightButton;
@@ -18,13 +20,13 @@ namespace Gallerist.UI
         int currentPage;
 
         
-        GameManager _gameManager;
-        SchmoozeController _schmoozeController;
+        
 
         void Awake()
         {
-            _gameManager = FindObjectOfType<GameManager>();
             _schmoozeController = FindObjectOfType<SchmoozeController>();
+            _patronManager = FindObjectOfType<PatronManager>();
+
             foreach (var patron in PatronPortraits)
             {
                 patron.OnImageClicked += OnPatronPortraitClicked;
@@ -42,7 +44,7 @@ namespace Gallerist.UI
         {
             foreach (var image in PatronPortraits) { image.ResetBackground(); }
             if (e == string.Empty) return;
-            Patron patron = _gameManager.Patrons.Find(x => x.Name == e);
+            Patron patron = _patronManager.Patrons.Find(x => x.Name == e);
             if (patron is null) return;
             //highlight patronportraitbackground
             var portrait = sender as ClickableImage;
@@ -58,14 +60,14 @@ namespace Gallerist.UI
             for (int i = 0; i < pageSize; i++)
             {
                 int patronIndex = i + pageSize * currentPage;
-                if (_gameManager.Patrons.Count <= patronIndex) return;
+                if (_patronManager.Patrons.Count <= patronIndex) return;
                 PatronPortraits[i].SetImage(
-                    sprite: _gameManager.Patrons[patronIndex].Portrait, 
-                    name: _gameManager.Patrons[patronIndex].Name);
+                    sprite: _patronManager.Patrons[patronIndex].Portrait, 
+                    name: _patronManager.Patrons[patronIndex].Name);
             }
             PatronPortraits[0].HighlightBackground();
-            paginationText.text = $"{1 + pageSize*currentPage} to {pageSize * (1 + currentPage)} of {_gameManager.Patrons.Count}";
-            PatronCard.LoadPatronCardData(patron: _gameManager.Patrons[pageSize * currentPage]);
+            paginationText.text = $"{1 + pageSize*currentPage} to {pageSize * (1 + currentPage)} of {_patronManager.Patrons.Count}";
+            PatronCard.LoadPatronCardData(patron: _patronManager.Patrons[pageSize * currentPage]);
         }
 
         void UpdatePatronCard(object sender, EventArgs e)
@@ -76,7 +78,7 @@ namespace Gallerist.UI
         public void PageRight()
         {
             currentPage++;
-            int lastPage = Mathf.CeilToInt(_gameManager.PatronPortaits.Count / PatronPortraits.Count);
+            int lastPage = Mathf.CeilToInt(_patronManager.Patrons.Count / PatronPortraits.Count);
             if (currentPage >= lastPage) 
             { 
                 currentPage = lastPage;

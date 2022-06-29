@@ -1,18 +1,30 @@
-using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
-public class ClosingDisplay : MonoBehaviour
+namespace Gallerist.UI
 {
-    // Start is called before the first frame update
-    void Start()
+    public class ClosingDisplay : MonoBehaviour
     {
-        
-    }
+        EvaluationController evaluationController;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        [SerializeField] TextMeshProUGUI evaluationsText;
+        [SerializeField] TextMeshProUGUI evaluationResultsText;
+
+        void Awake()
+        {
+            evaluationController = FindObjectOfType<EvaluationController>();
+            evaluationController.EvaluationResultUpdated += OnResultsUpdated;
+            evaluationController.EvaluationsTotalUpdated += OnTotalsUpdated;
+        }
+
+        private void OnTotalsUpdated(object sender, string e)
+        {
+            evaluationsText.text = e;
+        }
+
+        private void OnResultsUpdated(object sender, string e)
+        {
+            evaluationResultsText.text = e;
+        }
     }
 }

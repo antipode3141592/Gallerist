@@ -1,14 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
+using UnityEngine;
 
 namespace Gallerist.UI
 {
     public class EndDisplay : MonoBehaviour
     {
         GameManager gameManager;
+        EvaluationController evaluationController;
 
         [SerializeField] TextMeshProUGUI SummaryResultText;
         [SerializeField] TextMeshProUGUI NightDescriptionText;
@@ -20,13 +18,14 @@ namespace Gallerist.UI
         void Awake()
         {
             gameManager = FindObjectOfType<GameManager>();
+            evaluationController = FindObjectOfType<EvaluationController>();
         }
 
         public void SummarizeNight()
         {
-            int originalsSold = gameManager.OriginalsSold;
-            int printsSold = gameManager.PrintsSold;
-            if (originalsSold == gameManager.MaximumEvaluations)
+            int originalsSold = evaluationController.OriginalsSold;
+            int printsSold = evaluationController.PrintsSold;
+            if (originalsSold == evaluationController.MaximumEvaluations)
             {
                 SummaryResultText.text = $"The night was a roaring success!";
                 

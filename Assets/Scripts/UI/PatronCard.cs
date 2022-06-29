@@ -7,6 +7,8 @@ namespace Gallerist.UI
 {
     public class PatronCard : MonoBehaviour
     {
+        PatronManager patronManager;
+
         [SerializeField] List<TraitDisplay> aestheticTraits;
         [SerializeField] List<TraitDisplay> emotiveTraits;
 
@@ -19,9 +21,15 @@ namespace Gallerist.UI
 
         public Patron SelectedPatron;
 
+        void Awake()
+        {
+            patronManager = FindObjectOfType<PatronManager>();
+        }
+
         public void LoadPatronCardData(Patron patron)
         {
             SelectedPatron = patron;
+            patronManager.SelectedPatron = patron;
             nameText.text = patron.Name;
             isSubscriberToggle.isOn = patron.IsSubscriber;
             portraitImage.sprite = patron.Portrait;

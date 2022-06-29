@@ -7,12 +7,14 @@ namespace Gallerist.UI
     public class SchmoozeDisplay : MonoBehaviour
     {
         GameManager gameManager;
+        ArtistManager artistManager;
         [SerializeField] ArtistCard artistCard;
         [SerializeField] TextMeshProUGUI ActionCounterText;
         SchmoozeController schmoozeController;
         void Awake()
         {
             gameManager = FindObjectOfType<GameManager>();
+            artistManager = FindObjectOfType<ArtistManager>();
             schmoozeController = FindObjectOfType<SchmoozeController>();
             schmoozeController.ActionTaken += schmoozeActionTaken;
             UpdateActionCounter();
@@ -34,7 +36,17 @@ namespace Gallerist.UI
 
         public void UpdateArtistCard()
         {
-            artistCard.LoadArtistCardData(gameManager.Artist);
+            artistCard.LoadArtistCardData(artistManager.Artist);
+        }
+
+        public void ShowDialogue()
+        {
+
+        }
+
+        public void HideDialogue()
+        {
+
         }
     }
 }

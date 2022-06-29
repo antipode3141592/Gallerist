@@ -8,6 +8,8 @@ namespace Gallerist.UI
 {
     public class ArtCard : MonoBehaviour
     {
+        ArtManager artManager;
+
         [SerializeField] List<TraitDisplay> aestheticTraitDisplays;
         [SerializeField] List<TraitDisplay> emotiveTraitDisplays;
 
@@ -21,9 +23,16 @@ namespace Gallerist.UI
 
         public Art SelectedArt;
 
+        void Awake()
+        {
+            artManager = FindObjectOfType<ArtManager>();
+        }
+
         public void LoadArtCardData(Art art)
         {
             SelectedArt = art;
+            artManager.SelectedArt = art;
+
             titleText.text = art.Name;
             artistText.text = art.ArtistName;
             descriptionText.text = art.Description;

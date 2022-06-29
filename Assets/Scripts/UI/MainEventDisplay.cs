@@ -1,18 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class MainEventDisplay : MonoBehaviour
+namespace Gallerist.UI
 {
-    // Start is called before the first frame update
-    void Start()
+    public class MainEventDisplay : MonoBehaviour
     {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

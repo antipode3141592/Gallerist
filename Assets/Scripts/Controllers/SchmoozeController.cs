@@ -1,4 +1,3 @@
-using Gallerist.UI;
 using System;
 using UnityEngine;
 
@@ -7,7 +6,8 @@ namespace Gallerist
     public class SchmoozeController : MonoBehaviour
     {
         GameManager _gameManager;
-        PatronCard _patronCard;
+        ArtistManager _artistManager;
+        PatronManager _patronManager; 
 
         public int ActionsTaken { get; private set; }
         public int MaximumActions => 12;    //Schmooze for one hour, each action is five minutes
@@ -21,7 +21,8 @@ namespace Gallerist
         void Awake()
         {
             _gameManager = FindObjectOfType<GameManager>();
-            _patronCard = FindObjectOfType<PatronCard>();
+            _artistManager = FindObjectOfType<ArtistManager>();
+            _patronManager = FindObjectOfType<PatronManager>();
             ActionTaken += CheckEndofSchmooze;
             ResetActionCounter();
         }
@@ -39,7 +40,7 @@ namespace Gallerist
 
         public void Chat()
         {
-            Schmooze.Chat(_patronCard.SelectedPatron);
+            Schmooze.Chat(_patronManager.SelectedPatron);
             ActionsTaken++;
             PatronUpdated?.Invoke(this, EventArgs.Empty);
             ActionTaken?.Invoke(this, EventArgs.Empty);
@@ -47,7 +48,7 @@ namespace Gallerist
 
         public void Introduce()
         {
-            Schmooze.Introduce(_gameManager.Artist, _patronCard.SelectedPatron);
+            Schmooze.Introduce(_artistManager.Artist, _patronManager.SelectedPatron);
             ActionsTaken++;
             PatronUpdated?.Invoke(this, EventArgs.Empty);
             ActionTaken?.Invoke(this, EventArgs.Empty);
