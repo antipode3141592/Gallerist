@@ -15,16 +15,21 @@ namespace Gallerist.UI
             evaluationController = FindObjectOfType<EvaluationController>();
             evaluationController.EvaluationResultUpdated += OnResultsUpdated;
             evaluationController.EvaluationsTotalUpdated += OnTotalsUpdated;
+
+            evaluationsText.text = "";
+            evaluationResultsText.text = "";
         }
 
-        private void OnTotalsUpdated(object sender, string e)
+        void OnTotalsUpdated(object sender, string e)
         {
             evaluationsText.text = e;
         }
 
-        private void OnResultsUpdated(object sender, string e)
+        void OnResultsUpdated(object sender, string e)
         {
             evaluationResultsText.text = e;
         }
+
+
     }
 }

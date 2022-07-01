@@ -5,21 +5,30 @@ namespace Gallerist
 {
     public class GameManager : MonoBehaviour
     {
+        public string GalleryName;
+        public string GalleristName;
+        public Sprite GalleristPortrait;
+
         SchmoozeController schmoozeController;    
 
-        GameStates currentGameState = GameStates.End;
+        GameStates currentGameState = GameStates.MainMenu;
         public event EventHandler<GameStates> GameStateChanged;
-        
+
+        [SerializeField] int totalMonths = 6;
+
+        public int CurrentMonth { get; set; }
+        public int TotalMonths => totalMonths;
 
         private void Awake()
         {
             schmoozeController = FindObjectOfType<SchmoozeController>();
             schmoozeController.SchmoozingCompleted += OnSchmoozeComplete;
+            CurrentMonth = 1;
         }
 
         void Start()
         {
-            ChangeGameState(GameStates.Start);
+            ChangeGameState(GameStates.NewGame);
         }
 
         void ChangeGameState(GameStates targetState)
@@ -29,7 +38,7 @@ namespace Gallerist
             GameStateChanged?.Invoke(this, targetState);
         }
 
-        private void OnSchmoozeComplete(object sender, EventArgs e)
+        void OnSchmoozeComplete(object sender, EventArgs e)
         {
             if (currentGameState == GameStates.Schmooze1)
             {
@@ -39,6 +48,11 @@ namespace Gallerist
             {
                 ChangeGameState(GameStates.Closing);
             }
+        }
+
+        public void CompleteNewGame()
+        {
+            ChangeGameState(GameStates.Start);
         }
 
         public void CompleteStart()
@@ -64,7 +78,9 @@ namespace Gallerist
 
         public void CompleteEnd()
         {
-            //return to start
+            CurrentMonth++;
+            //cleanup
+            ChangeGameState(GameStates.Start);
         }
     }
 }

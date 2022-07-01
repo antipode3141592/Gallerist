@@ -10,6 +10,7 @@ namespace Gallerist
         [SerializeField] ArtCard artCard;
         [SerializeField] PatronCard patronCard;
 
+        [SerializeField] NewGameDisplay _newGameDisplay;
         [SerializeField] StartDisplay _startDisplay;
         [SerializeField] PatronsDisplay _patronsDisplay;
         [SerializeField] ArtPiecesDisplay _artPiecesDisplay;
@@ -31,6 +32,9 @@ namespace Gallerist
             Debug.Log($"OnGameStateChangedCalled.  target state: {e}");
             switch (e)
             {
+                case GameStates.NewGame:
+                    LoadNewGameUI();
+                    break;
                 case GameStates.Start:
                     LoadStartUI();
                     break;
@@ -58,8 +62,23 @@ namespace Gallerist
             }
         }
 
+        public void LoadNewGameUI()
+        {
+            _newGameDisplay.gameObject.SetActive(true);
+            _startDisplay.gameObject.SetActive(false);
+            _mainEventDisplay.gameObject.SetActive(false);
+            _preparationDisplay.gameObject.SetActive(false);
+            _schmoozeDisplay.gameObject.SetActive(false);
+            _patronsDisplay.gameObject.SetActive(false);
+            _artPiecesDisplay.gameObject.SetActive(false);
+            _closingDisplay.gameObject.SetActive(false);
+            _endDisplay.gameObject.SetActive(false);
+            _dialogueDisplay.gameObject.SetActive(false);
+        }
+
         public void LoadStartUI()
         {
+            _newGameDisplay.gameObject.SetActive(false);
             _startDisplay.gameObject.SetActive(true);
             _mainEventDisplay.gameObject.SetActive(false);
             _preparationDisplay.gameObject.SetActive(false);
@@ -72,6 +91,7 @@ namespace Gallerist
         }
         public void LoadPreparationUI()
         {
+            _newGameDisplay.gameObject.SetActive(false);
             _startDisplay.gameObject.SetActive(false);
             _mainEventDisplay.gameObject.SetActive(false);
             _preparationDisplay.gameObject.SetActive(true);
@@ -87,6 +107,7 @@ namespace Gallerist
 
         public void LoadSchmoozeUI()
         {
+            _newGameDisplay.gameObject.SetActive(false);
             _startDisplay.gameObject.SetActive(false);
             _mainEventDisplay.gameObject.SetActive(false);
             _preparationDisplay.gameObject.SetActive(false);
@@ -103,6 +124,7 @@ namespace Gallerist
 
         public void LoadMainEventUI()
         {
+            _newGameDisplay.gameObject.SetActive(false);
             _startDisplay.gameObject.SetActive(false);
             _mainEventDisplay.gameObject.SetActive(true);
             _preparationDisplay.gameObject.SetActive(false);
@@ -116,6 +138,7 @@ namespace Gallerist
 
         public void LoadClosingUI()
         {
+            _newGameDisplay.gameObject.SetActive(false);
             _startDisplay.gameObject.SetActive(false);
             _mainEventDisplay.gameObject.SetActive(false);
             _preparationDisplay.gameObject.SetActive(false);
@@ -129,6 +152,7 @@ namespace Gallerist
 
         public void LoadEndUI()
         {
+            _newGameDisplay.gameObject.SetActive(false);
             _startDisplay.gameObject.SetActive(false);
             _mainEventDisplay.gameObject.SetActive(false);
             _preparationDisplay.gameObject.SetActive(false);

@@ -50,5 +50,7 @@ namespace Gallerist.UI
             OriginalsSoldText.text = $"Originals Sold: {originalsSold}";
             PrintsSoldText.text = $"Prints Sold: {printsSold}";
         }
+
+
     }
 }
