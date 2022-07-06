@@ -11,9 +11,12 @@ namespace Gallerist
 
         GameManager gameManager;
 
-        public List<Patron> Patrons { get; set; }
+        public List<Patron> Patrons { get; } = new();
+        public List<Patron> PreviousPatrons { get; } = new();
 
         public Patron SelectedPatron { get; set; }
+
+
 
         void Awake()
         {
@@ -21,7 +24,6 @@ namespace Gallerist
             nameDataSource = FindObjectOfType<NameDataSource>();
             spriteDataSource = FindObjectOfType<SpriteDataSource>();
             traitDataSource = FindObjectOfType<TraitDataSource>();
-            Patrons = new List<Patron>();
 
             gameManager.GameStateChanged += OnGameStateChange;
         }
@@ -30,6 +32,7 @@ namespace Gallerist
         {
             if (e == GameStates.Start)
             {
+                PreviousPatrons.AddRange(Patrons);
                 Patrons.Clear();
                 GeneratePatrons(20);
             }
@@ -49,7 +52,7 @@ namespace Gallerist
                 isSubscriber: false,
                 aestheticTraits: traitDataSource.GenerateAestheticTraits(5, typeof(PatronTrait)),
                 emotiveTraits: traitDataSource.GenerateEmotiveTraits(5, typeof(PatronTrait)),
-                acquisitions: new List<string>(),
+                acquisitions: new (),
                 aestheticThreshold: Random.Range(8, 12),
                 emotiveThreshold: Random.Range(8, 12));
             //  add a check for duplicates before adding to Patrons list
@@ -59,6 +62,11 @@ namespace Gallerist
         public void RemoveBoredPatrons()
         {
 
+        }
+
+        public void SubscribeToMailingList(Patron patron)
+        {
+            patron.IsSubscriber = true;
         }
     }
 }

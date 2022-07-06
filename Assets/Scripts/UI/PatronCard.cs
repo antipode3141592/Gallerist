@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -8,6 +9,7 @@ namespace Gallerist.UI
     public class PatronCard : MonoBehaviour
     {
         PatronManager patronManager;
+        EvaluationController evaluationController;
 
         [SerializeField] List<TraitDisplay> aestheticTraits;
         [SerializeField] List<TraitDisplay> emotiveTraits;
@@ -16,24 +18,94 @@ namespace Gallerist.UI
         [SerializeField] Toggle isSubscriberToggle;  //noninteractable 
         [SerializeField] Image portraitImage;
 
+        [SerializeField] Image ArtAcquisitionsBackground;
+        List<AcquiredArtEntry> acquiredArtEntries;
+        [SerializeField] AcquiredArtEntry acquiredArtEntryPrefab;
+
         [SerializeField] Image aestheticTraitsBackground;
         [SerializeField] Image emotiveTraitsBackground;
 
-        public Patron SelectedPatron;
+        //debug fields
+        [SerializeField] TextMeshProUGUI perceptionRangeText;
+        [SerializeField] Button revealTraitsButton;
+        bool revealToggle = false;
 
         void Awake()
         {
             patronManager = FindObjectOfType<PatronManager>();
+            evaluationController = FindObjectOfType<EvaluationController>();
+            if (!Debug.isDebugBuild)
+                revealTraitsButton.gameObject.SetActive(false);
+            evaluationController.EvaluationResultUpdated += OnEvaluationResultUpdated;
+            acquiredArtEntries = new();
         }
 
-        public void LoadPatronCardData(Patron patron)
+        void OnEvaluationResultUpdated(object sender, string e)
         {
-            SelectedPatron = patron;
-            patronManager.SelectedPatron = patron;
+            DisplayAcquiredArt();
+        }
+
+        public void LoadPatronCardData()
+        {
+            Patron patron = patronManager.SelectedPatron;
             nameText.text = patron.Name;
             isSubscriberToggle.isOn = patron.IsSubscriber;
             portraitImage.sprite = patron.Portrait;
+            if (Debug.isDebugBuild)
+                perceptionRangeText.text = $"Perception: {patron.PerceptionRange}";
+            DisplayAcquiredArt();
+            DisplayKnownTraits();
+        }
 
+        public void DisplayAcquiredArt()
+        {
+            Patron patron = patronManager.SelectedPatron;
+            for(int i = 0; i < acquiredArtEntries.Count; i++)
+            {
+                Destroy(acquiredArtEntries[i].gameObject);
+            }
+            acquiredArtEntries.Clear();
+            foreach(var art in patron.Acquisitions)
+            {
+                var artEntry = Instantiate<AcquiredArtEntry>(acquiredArtEntryPrefab, ArtAcquisitionsBackground.transform);
+                artEntry.SetDisplay(art);
+                acquiredArtEntries.Add(artEntry);
+            }
+        }
+
+        public void ToggleTraitsView()
+        {
+            revealToggle = !revealToggle;
+            if (revealToggle)
+            {
+                DisplayAllTraits();
+            }
+            else
+            {
+                DisplayKnownTraits();
+            }
+        }
+
+        void DisplayAllTraits()
+        {
+            Patron patron = patronManager.SelectedPatron;
+            for (int i = 0; i < patron.AestheticTraits.Count; i++)
+            {
+                var trait = patron.AestheticTraits[i];
+                string traitText = $"{trait.Name} {trait.Value}";
+                aestheticTraits[i].UpdateText(traitText);
+            }
+            for (int i = 0; i < patron.EmotiveTraits.Count; i++)
+            {
+                var trait = patron.EmotiveTraits[i];
+                string traitText = $"{trait.Name} {trait.Value}";
+                emotiveTraits[i].UpdateText(traitText);
+            }
+        }
+
+        void DisplayKnownTraits()
+        {
+            Patron patron = patronManager.SelectedPatron;
             for (int i = 0; i < patron.AestheticTraits.Count; i++)
             {
                 var trait = patron.AestheticTraits[i];

@@ -9,8 +9,6 @@ namespace Gallerist
         Patron patron;
         Artist artist;
 
-        DialogueDisplay dialogueDisplay;
-
         void Awake()
         {
             

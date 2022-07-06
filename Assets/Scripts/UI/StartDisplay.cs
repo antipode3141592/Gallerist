@@ -6,13 +6,16 @@ namespace Gallerist.UI
     public class StartDisplay : MonoBehaviour
     {
         GameManager gameManager;
+        GameStatsController gameStatsController;
 
         [SerializeField] TextMeshProUGUI DescriptionText;
         [SerializeField] TextMeshProUGUI SummaryText;
 
         void Awake()
         {
+
             gameManager = FindObjectOfType<GameManager>();
+            gameStatsController = FindObjectOfType<GameStatsController>();
         }
 
         void OnEnable()
@@ -31,7 +34,7 @@ namespace Gallerist.UI
         void SetDescription()
         {
             string output = "";
-            switch (gameManager.CurrentMonth)
+            switch (gameStatsController.Stats.CurrentMonth)
             {
                 case 1:
                     output = $"{gameManager.GalleryName} is nearing its grand opening.  Time to finalize preparations for the first opening night!";
@@ -56,7 +59,7 @@ namespace Gallerist.UI
 
         void SetSummary()
         {
-            SummaryText.text = $"{gameManager.CurrentMonth} of {gameManager.TotalMonths}";
+            SummaryText.text = $"{gameStatsController.Stats.CurrentMonth} of {gameManager.TotalMonths}";
         }
     }
 }

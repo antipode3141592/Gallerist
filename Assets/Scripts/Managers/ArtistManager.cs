@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Gallerist
@@ -9,7 +10,9 @@ namespace Gallerist
         SpriteDataSource spriteDataSource;
         TraitDataSource traitDataSource;
 
-        public Artist Artist { get; set; }
+        public Artist Artist { get; set; } = null;
+
+        public List<Artist> PreviousArtists { get; } = new List<Artist>();
 
         void Awake()
         {
@@ -24,7 +27,8 @@ namespace Gallerist
         {
             if (e == GameStates.Start)
             {
-                Artist = null;
+                if (Artist is not null)
+                    PreviousArtists.Add(Artist);
                 GenerateArtist();
             }
         }

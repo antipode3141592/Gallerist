@@ -19,9 +19,6 @@ namespace Gallerist.UI
 
         int currentPage;
 
-        
-        
-
         void Awake()
         {
             _schmoozeController = FindObjectOfType<SchmoozeController>();
@@ -49,7 +46,8 @@ namespace Gallerist.UI
             //highlight patronportraitbackground
             var portrait = sender as ClickableImage;
             if (portrait is not null) portrait.HighlightBackground();
-            PatronCard.LoadPatronCardData(patron: patron);
+            _patronManager.SelectedPatron = patron;
+            PatronCard.LoadPatronCardData();
 
         }
 
@@ -67,12 +65,13 @@ namespace Gallerist.UI
             }
             PatronPortraits[0].HighlightBackground();
             paginationText.text = $"{1 + pageSize*currentPage} to {pageSize * (1 + currentPage)} of {_patronManager.Patrons.Count}";
-            PatronCard.LoadPatronCardData(patron: _patronManager.Patrons[pageSize * currentPage]);
+            _patronManager.SelectedPatron = _patronManager.Patrons.Find(x => x.Name == PatronPortraits[0].Name);
+            PatronCard.LoadPatronCardData();
         }
 
         void UpdatePatronCard(object sender, EventArgs e)
         {
-            PatronCard.LoadPatronCardData(PatronCard.SelectedPatron);
+            PatronCard.LoadPatronCardData();
         }
 
         public void PageRight()

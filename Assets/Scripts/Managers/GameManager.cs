@@ -10,20 +10,24 @@ namespace Gallerist
         public Sprite GalleristPortrait;
 
         SchmoozeController schmoozeController;    
+        GameStatsController gameStatsController;
 
         GameStates currentGameState = GameStates.MainMenu;
         public event EventHandler<GameStates> GameStateChanged;
 
         [SerializeField] int totalMonths = 6;
 
-        public int CurrentMonth { get; set; }
+        
         public int TotalMonths => totalMonths;
+
+        
 
         private void Awake()
         {
             schmoozeController = FindObjectOfType<SchmoozeController>();
+            gameStatsController = FindObjectOfType<GameStatsController>();
             schmoozeController.SchmoozingCompleted += OnSchmoozeComplete;
-            CurrentMonth = 1;
+            
         }
 
         void Start()
@@ -68,6 +72,7 @@ namespace Gallerist
         public void CompleteMainEvent()
         {
             schmoozeController.ResetActionCounter();
+            //remov
             ChangeGameState(GameStates.Schmooze2);
         }
 
@@ -78,7 +83,7 @@ namespace Gallerist
 
         public void CompleteEnd()
         {
-            CurrentMonth++;
+            gameStatsController.Stats.CurrentMonth++;
             //cleanup
             ChangeGameState(GameStates.Start);
         }

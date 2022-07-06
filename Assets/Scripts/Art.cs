@@ -1,6 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace Gallerist
@@ -10,6 +8,9 @@ namespace Gallerist
         public string Name { get; private set; }
         public string Description { get; private set; }
         public string ArtistName { get; private set; }
+
+        public bool IsSold { get; set; } = false;
+
         public List<ITrait> AestheticTraits { get; private set; } 
         public List<ITrait> EmotiveTraits { get; private set; }
 

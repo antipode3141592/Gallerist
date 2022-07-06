@@ -15,7 +15,7 @@ namespace Gallerist.UI
         public event EventHandler<string> OnImageClicked;
 
         string _name;
-
+        public string Name => _name;
         private void Awake()
         {
             ResetBackground();

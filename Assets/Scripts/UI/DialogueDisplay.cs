@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Gallerist
+namespace Gallerist.UI
 {
     public class DialogueDisplay : MonoBehaviour
     {

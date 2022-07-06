@@ -8,7 +8,7 @@ namespace Gallerist
 {
     public class Patron
     {
-        public Patron(string name, Sprite portrait, bool isSubscriber, List<ITrait> aestheticTraits, List<ITrait> emotiveTraits, List<string> acquisitions, int aestheticThreshold, int emotiveThreshold)
+        public Patron(string name, Sprite portrait, bool isSubscriber, List<ITrait> aestheticTraits, List<ITrait> emotiveTraits, List<Art> acquisitions, int aestheticThreshold, int emotiveThreshold)
         {
             Name = name;
             Portrait = portrait;
@@ -23,8 +23,8 @@ namespace Gallerist
 
         public Sprite Portrait { get; private set; }
         public string Name { get; private set; }
-        public bool IsSubscriber { get; private set; }
-        public List<string> Acquisitions { get; private set; }
+        public bool IsSubscriber { get; set; }
+        public List<Art> Acquisitions { get; private set; }
         public List<ITrait> AestheticTraits { get; private set; }
         public List<ITrait> EmotiveTraits { get; private set; }
         public int PerceptionRange { get; private set; }
@@ -35,25 +35,25 @@ namespace Gallerist
 
         int SetPerceptionRange()
         {
-            int n = (int)Random.Range(-2,3);    //int [-2,2]
+            int n = (int)Random.Range(10,15);    //int [-2,2]
             return n;
         }
 
         public EvaluationResultTypes EvaluateArt(Art art)
         {
-            int aestheticTotal = 0;
-            int emotiveTotal = 0;
+            int aestheticTotal = PerceptionRange;
+            int emotiveTotal = PerceptionRange;
 
             foreach(var trait in art.AestheticTraits)
             {
-                aestheticTotal += trait.Value + PatronAestheticTraitValue(trait) + PerceptionRange;
+                aestheticTotal += AddTraitsIfMatched(trait, AestheticTraits);
             }
             foreach(var trait in art.EmotiveTraits)
             {
-                emotiveTotal += trait.Value + PatronEmotiveTraitValue(trait) + PerceptionRange;
+                emotiveTotal += AddTraitsIfMatched(trait, EmotiveTraits);
             }
-
-            Debug.Log($"A: {aestheticTotal} At: {AestheticThreshold}, E: {emotiveTotal} Et: {EmotiveThreshold}");
+            if (Debug.isDebugBuild)
+                Debug.Log($"A: {aestheticTotal} At: {AestheticThreshold}, E: {emotiveTotal} Et: {EmotiveThreshold}");
             if (aestheticTotal >= AestheticThreshold && emotiveTotal >= EmotiveThreshold)
                 return EvaluationResultTypes.Original;
             else if (aestheticTotal >= AestheticThreshold || emotiveTotal >= EmotiveThreshold)
@@ -61,19 +61,11 @@ namespace Gallerist
             return EvaluationResultTypes.None;
         }
 
-        int PatronAestheticTraitValue(ITrait trait)
+        int AddTraitsIfMatched(ITrait artTrait, List<ITrait> patronTraits)
         {
-            var patronTrait = AestheticTraits.FirstOrDefault(x => x.Name == trait.Name);
+            var patronTrait = patronTraits.FirstOrDefault(x => x.Name == artTrait.Name);
             if (patronTrait is not null)
-                return patronTrait.Value;
-            return 0;
-        }
-
-        int PatronEmotiveTraitValue(ITrait trait)
-        {
-            var patronTrait = EmotiveTraits.FirstOrDefault(x => x.Name == trait.Name);
-            if (patronTrait is not null)
-                return patronTrait.Value;
+                return patronTrait.Value + artTrait.Value;
             return 0;
         }
 
@@ -93,7 +85,8 @@ namespace Gallerist
             unknownTraits = EmotiveTraits.FindAll(x => x.IsKnown == false);
             unknownTraits.AddRange(AestheticTraits.FindAll(x => x.IsKnown == false));
             if (unknownTraits.Count == 0)
-                Debug.Log($"Patron {Name} has no remaining unknown preferences!");
+                if (Debug.isDebugBuild)
+                    Debug.Log($"Patron {Name} has no remaining unknown preferences!");
 
             PreferencesUpdated?.Invoke(this, EventArgs.Empty);
         }

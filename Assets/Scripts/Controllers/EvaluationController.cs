@@ -53,6 +53,9 @@ namespace Gallerist
             {
                 case EvaluationResultTypes.Original:
                     ResultsText = $"Patron {currentPatron.Name} loves {currentArt.Name} and will buy the original!";
+                    currentArt.IsSold = true;
+                    patronManager.SubscribeToMailingList(currentPatron);
+                    currentPatron.Acquisitions.Add(currentArt);
                     originalsSold++;
                     break;
                 case EvaluationResultTypes.Print:

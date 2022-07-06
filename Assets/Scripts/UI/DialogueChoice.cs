@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Gallerist
+namespace Gallerist.UI
 {
     public class DialogueChoice : MonoBehaviour
     {

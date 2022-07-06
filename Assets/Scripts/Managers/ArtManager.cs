@@ -12,7 +12,8 @@ namespace Gallerist
         NameDataSource nameDataSource;
         SpriteDataSource spriteDataSource;
         TraitDataSource traitDataSource;
-        public List<Art> ArtPieces { get; set; }
+        public List<Art> ArtPieces { get; } = new List<Art>();
+        public List<Art> PreviousArtPieces { get; } = new List<Art>();
 
         public Art SelectedArt { get; set; }
 
@@ -26,7 +27,6 @@ namespace Gallerist
             spriteDataSource = FindObjectOfType<SpriteDataSource>();
             traitDataSource = FindObjectOfType<TraitDataSource>();
 
-            ArtPieces = new List<Art>();
             gameManager.GameStateChanged += OnGameStateChange;
         }
 
