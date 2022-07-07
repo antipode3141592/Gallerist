@@ -30,7 +30,14 @@ namespace Gallerist
                 if (Artist is not null)
                     PreviousArtists.Add(Artist);
                 GenerateArtist();
+                if (!Debug.isDebugBuild) return;
+                Debug.Log($"Current Artist: {Artist.Name}");
+                foreach (var artist in PreviousArtists)
+                {
+                    Debug.Log($"Previous Artist: {artist.Name}");
+                }
             }
+            
         }
 
         void GenerateArtist()

@@ -9,6 +9,7 @@ namespace Gallerist
         GameManager gameManager;
         PatronManager patronManager;
         ArtManager artManager;
+        GameStatsController gameStatsController;
 
         public bool ShowResults = false;
         public string ResultsText = "";
@@ -32,6 +33,7 @@ namespace Gallerist
             gameManager = FindObjectOfType<GameManager>();
             patronManager = FindObjectOfType<PatronManager>();
             artManager = FindObjectOfType<ArtManager>();
+            gameStatsController = FindObjectOfType<GameStatsController>();
         }
 
         public void Evaluate()
@@ -61,6 +63,7 @@ namespace Gallerist
                 case EvaluationResultTypes.Print:
                     ResultsText = $"Patron {currentPatron.Name} likes {currentArt.Name} and will buy a print!";
                     printsSold++;
+                    currentArt.PrintsSold++;
                     break;
                 case EvaluationResultTypes.None:
                     ResultsText = $"Patron {currentPatron.Name} is not particularly drawn to {currentArt.Name}, but will take a business card.";

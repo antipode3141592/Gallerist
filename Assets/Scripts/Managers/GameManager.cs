@@ -15,10 +15,7 @@ namespace Gallerist
         GameStates currentGameState = GameStates.MainMenu;
         public event EventHandler<GameStates> GameStateChanged;
 
-        [SerializeField] int totalMonths = 6;
-
         
-        public int TotalMonths => totalMonths;
 
         
 

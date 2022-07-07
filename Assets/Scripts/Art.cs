@@ -10,6 +10,7 @@ namespace Gallerist
         public string ArtistName { get; private set; }
 
         public bool IsSold { get; set; } = false;
+        public int PrintsSold { get; set; } = 0;
 
         public List<ITrait> AestheticTraits { get; private set; } 
         public List<ITrait> EmotiveTraits { get; private set; }

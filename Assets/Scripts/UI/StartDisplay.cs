@@ -59,7 +59,7 @@ namespace Gallerist.UI
 
         void SetSummary()
         {
-            SummaryText.text = $"{gameStatsController.Stats.CurrentMonth} of {gameManager.TotalMonths}";
+            SummaryText.text = $"{gameStatsController.Stats.CurrentMonth} of {gameStatsController.TotalMonths}";
         }
     }
 }
