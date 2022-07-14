@@ -14,9 +14,6 @@ namespace Gallerist
         GameManager gameManager;
         ArtManager artManager;
 
-        public List<Patron> Patrons { get; } = new();
-        public List<Patron> PreviousPatrons { get; } = new();
-
         public List<Patron> CurrentObjects { get; } = new List<Patron>();
         public List<Patron> PastObjects { get; } = new List<Patron>();
 
@@ -44,7 +41,7 @@ namespace Gallerist
         {
             if (e == GameStates.Start)
             {
-                PreviousPatrons.AddRange(CurrentObjects);
+                PastObjects.AddRange(CurrentObjects);
                 CurrentObjects.Clear();
                 GeneratePatrons(20);
             } else if (e == GameStates.Schmooze2)
@@ -98,8 +95,8 @@ namespace Gallerist
 
             for (int i = 0; i < boredPatrons.Count; i++)
             {
-                if (Patrons.Contains(boredPatrons[i]))
-                    Patrons.Remove(boredPatrons[i]);
+                if (CurrentObjects.Contains(boredPatrons[i]))
+                    CurrentObjects.Remove(boredPatrons[i]);
                 boredPatrons[i] = null;
             }
             boredPatrons.Clear();

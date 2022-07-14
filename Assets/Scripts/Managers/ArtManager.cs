@@ -12,7 +12,6 @@ namespace Gallerist
         NameDataSource nameDataSource;
         SpriteDataSource spriteDataSource;
         TraitDataSource traitDataSource;
-        public List<Art> ArtPieces { get; } = new List<Art>();
 
         public List<Art> CurrentObjects { get; } = new List<Art>();
 
@@ -55,10 +54,12 @@ namespace Gallerist
         {
             if (artistManager.Artist == null)
             {
-                Debug.Log("Artist is not yet ready...");
+                if (Debug.isDebugBuild)
+                    Debug.Log("Artist is not yet ready...");
                 yield return null;
             }
-            Debug.Log("Begin generating art...");
+            if (Debug.isDebugBuild)
+                Debug.Log("Begin generating art...");
             //create piece of art
             var newArt = new Art(
                 name: nameDataSource.GenerateArtName(),
@@ -72,7 +73,8 @@ namespace Gallerist
 
             //add art to ArtPieces list
             CurrentObjects.Add(newArt);
-            Debug.Log("Art Pieces generated!");
+            if (Debug.isDebugBuild)
+                Debug.Log("Art Pieces generated!");
             ArtCreated?.Invoke(this, EventArgs.Empty);
         }
 
