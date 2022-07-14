@@ -39,7 +39,7 @@ namespace Gallerist
         public void Evaluate()
         {
             var currentPatron = patronManager.SelectedObject;
-            var currentArt = artManager.SelectedArt;
+            var currentArt = artManager.SelectedObject;
 
             //if currentPatron hasn't bought an original and currentArt hasn't been sold, continue
 

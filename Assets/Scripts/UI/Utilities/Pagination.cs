@@ -19,7 +19,6 @@ namespace Gallerist.UI
 
         int currentPage;
         int totalPages;
-        int itemCount;
 
         public List<ClickableImage> Thumbnails => thumbnails;
         public int PageSize => Thumbnails.Count;

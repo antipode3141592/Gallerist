@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Gallerist
 {
-    public class ArtManager : MonoBehaviour
+    public class ArtManager : MonoBehaviour, IObjectManager<Art>
     {
         GameManager gameManager;
         ArtistManager artistManager;
@@ -13,11 +13,15 @@ namespace Gallerist
         SpriteDataSource spriteDataSource;
         TraitDataSource traitDataSource;
         public List<Art> ArtPieces { get; } = new List<Art>();
-        public List<Art> PreviousArtPieces { get; } = new List<Art>();
 
-        public Art SelectedArt { get; set; }
+        public List<Art> CurrentObjects { get; } = new List<Art>();
+
+        public List<Art> PastObjects { get; } = new List<Art>();
+
+        public Art SelectedObject { get; set; }
 
         public event EventHandler ArtCreated;
+        public event EventHandler ObjectsGenerated;
 
         void Awake()
         {
@@ -34,7 +38,7 @@ namespace Gallerist
         {
             if (e == GameStates.Start)
             {
-                ArtPieces.Clear();
+                CurrentObjects.Clear();
                 GenerateArts(10);
             }
         }
@@ -67,9 +71,14 @@ namespace Gallerist
             //stats are based on Artist favoredTraits (ex: artist specializing in landscapes will tend to create landscapes)
 
             //add art to ArtPieces list
-            ArtPieces.Add(newArt);
+            CurrentObjects.Add(newArt);
             Debug.Log("Art Pieces generated!");
             ArtCreated?.Invoke(this, EventArgs.Empty);
+        }
+
+        public Art GetObjectAt(int index)
+        {
+            throw new NotImplementedException();
         }
     }
 }

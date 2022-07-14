@@ -20,8 +20,6 @@ namespace Gallerist
         public List<Patron> CurrentObjects { get; } = new List<Patron>();
         public List<Patron> PastObjects { get; } = new List<Patron>();
 
-        public Patron SelectedPatron { get; set; }
-
         public Patron SelectedObject { get; set; }
         
 
@@ -88,7 +86,7 @@ namespace Gallerist
             int boredPatronCount = 0;
             foreach(var patron in CurrentObjects)
             {
-                foreach(var art in artManager.ArtPieces)
+                foreach(var art in artManager.CurrentObjects)
                 {
                     if (patron.EvaluateArt(art) == EvaluationResultTypes.None)
                     {

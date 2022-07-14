@@ -100,7 +100,6 @@ namespace Gallerist
             _artPiecesDisplay.gameObject.SetActive(true);
             _closingDisplay.gameObject.SetActive(false);
             _endDisplay.gameObject.SetActive(false);
-            _artPiecesDisplay.SetThumbnails();
             _preparationDisplay.UpdateDisplay();
             _dialogueDisplay.gameObject.SetActive(false);
         }
@@ -117,8 +116,6 @@ namespace Gallerist
             _closingDisplay.gameObject.SetActive(false);
             _endDisplay.gameObject.SetActive(false);
             _dialogueDisplay.gameObject.SetActive(false);
-
-            //_patronsDisplay.SetPatrons();
             _schmoozeDisplay.UpdateArtistCard();
         }
 
