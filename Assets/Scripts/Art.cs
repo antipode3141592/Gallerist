@@ -3,9 +3,10 @@ using UnityEngine;
 
 namespace Gallerist
 {
-    public class Art
+    public class Art : IThumbnail
     {
         public string Name { get; private set; }
+        public Sprite Image { get; private set; }
         public string Description { get; private set; }
         public string ArtistName { get; private set; }
 
@@ -15,7 +16,7 @@ namespace Gallerist
         public List<ITrait> AestheticTraits { get; private set; } 
         public List<ITrait> EmotiveTraits { get; private set; }
 
-        public Sprite Image { get; set; }
+        
 
         public Art(string name, string description, string artistName, List<ITrait> aestheticQualities, List<ITrait> emotiveQualities, Sprite image)
         {
@@ -27,5 +28,11 @@ namespace Gallerist
             EmotiveTraits = emotiveQualities;
             Image = image;
         }
+    }
+
+    public interface IThumbnail
+    {
+        public string Name { get; }
+        public Sprite Image { get; }
     }
 }

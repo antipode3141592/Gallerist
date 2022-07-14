@@ -118,7 +118,7 @@ namespace Gallerist
             _endDisplay.gameObject.SetActive(false);
             _dialogueDisplay.gameObject.SetActive(false);
 
-            _patronsDisplay.SetPatrons();
+            //_patronsDisplay.SetPatrons();
             _schmoozeDisplay.UpdateArtistCard();
         }
 

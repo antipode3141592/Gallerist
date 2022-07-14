@@ -38,7 +38,7 @@ namespace Gallerist
 
         public void Evaluate()
         {
-            var currentPatron = patronManager.SelectedPatron;
+            var currentPatron = patronManager.SelectedObject;
             var currentArt = artManager.SelectedArt;
 
             //if currentPatron hasn't bought an original and currentArt hasn't been sold, continue
@@ -59,14 +59,19 @@ namespace Gallerist
                     patronManager.SubscribeToMailingList(currentPatron);
                     currentPatron.Acquisitions.Add(currentArt);
                     originalsSold++;
+                    gameStatsController.Stats.OriginalsSold++;
                     break;
                 case EvaluationResultTypes.Print:
                     ResultsText = $"Patron {currentPatron.Name} likes {currentArt.Name} and will buy a print!";
                     printsSold++;
                     currentArt.PrintsSold++;
+                    gameStatsController.Stats.PrintsSold++;
+                    break;
+                case EvaluationResultTypes.Subscribe:
+                    ResultsText = $"Patron {currentPatron.Name} is not particularly drawn to {currentArt.Name}, but will subscribe to the mailing list.";
                     break;
                 case EvaluationResultTypes.None:
-                    ResultsText = $"Patron {currentPatron.Name} is not particularly drawn to {currentArt.Name}, but will take a business card.";
+                    ResultsText = $"Patron {currentPatron.Name} is completely disinterested in {currentArt.Name} and will likely not return to the gallery.";
                     break;
                 default:
                     ResultsText = "FLAGRANT ERROR";
@@ -86,5 +91,12 @@ namespace Gallerist
             if (totalEvaluations >= maximumEvaluations)
                 gameManager.CompleteEvaluation();
         }
+
+        public EvaluationResultTypes TryEvaluate(Patron patron, Art art)
+        {
+            return patron.EvaluateArt(art);
+        }
+
+        
     }
 }

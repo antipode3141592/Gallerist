@@ -6,12 +6,12 @@ using Random = UnityEngine.Random;
 
 namespace Gallerist
 {
-    public class Patron
+    public class Patron: IThumbnail
     {
         public Patron(string name, Sprite portrait, bool isSubscriber, List<ITrait> aestheticTraits, List<ITrait> emotiveTraits, List<Art> acquisitions, int aestheticThreshold, int emotiveThreshold)
         {
             Name = name;
-            Portrait = portrait;
+            Image = portrait;
             IsSubscriber = isSubscriber;
             Acquisitions = acquisitions;
             AestheticTraits = aestheticTraits;
@@ -21,7 +21,7 @@ namespace Gallerist
             EmotiveThreshold = emotiveThreshold;
         }
 
-        public Sprite Portrait { get; private set; }
+        public Sprite Image { get; private set; }
         public string Name { get; private set; }
         public bool IsSubscriber { get; set; }
         public List<Art> Acquisitions { get; private set; }
@@ -58,12 +58,14 @@ namespace Gallerist
                 return EvaluationResultTypes.Original;
             else if (aestheticTotal >= AestheticThreshold || emotiveTotal >= EmotiveThreshold)
                 return EvaluationResultTypes.Print;
+            else if (aestheticTotal > 0 && emotiveTotal > 0)
+                return EvaluationResultTypes.Subscribe;
             return EvaluationResultTypes.None;
         }
 
         int AddTraitsIfMatched(ITrait artTrait, List<ITrait> patronTraits)
         {
-            var patronTrait = patronTraits.FirstOrDefault(x => x.Name == artTrait.Name);
+            var patronTrait = patronTraits.Find(x => x.Name == artTrait.Name);
             if (patronTrait is not null)
                 return patronTrait.Value + artTrait.Value;
             return 0;

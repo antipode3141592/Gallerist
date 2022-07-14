@@ -1,14 +1,12 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace Gallerist
 {
-    public class Artist
+    public class Artist: IThumbnail
     {
         public string Name { get; private set; }
-        public Sprite Portrait { get; private set; }
+        public Sprite Image { get; private set; }
 
         public List<ITrait> FavoredAestheticTraits { get; private set; }
         public List<ITrait> FavoredEmotiveTraits { get; private set; }
@@ -18,7 +16,7 @@ namespace Gallerist
             Name = name;
             FavoredAestheticTraits = favoredAestheticTraits;
             FavoredEmotiveTraits = favoredEmotiveTraits;
-            Portrait = portrait;
+            Image = portrait;
         }
     }
 }

@@ -19,7 +19,7 @@ namespace Gallerist.UI
         public void LoadArtistCardData(Artist artist)
         {
             nameText.text = artist.Name;
-            portraitImage.sprite = artist.Portrait;
+            portraitImage.sprite = artist.Image;
 
             for (int i = 0; i < artist.FavoredAestheticTraits.Count; i++)
             {

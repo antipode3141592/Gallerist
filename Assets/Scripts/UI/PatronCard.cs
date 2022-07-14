@@ -47,10 +47,10 @@ namespace Gallerist.UI
 
         public void LoadPatronCardData()
         {
-            Patron patron = patronManager.SelectedPatron;
+            Patron patron = patronManager.SelectedObject;
             nameText.text = patron.Name;
             isSubscriberToggle.isOn = patron.IsSubscriber;
-            portraitImage.sprite = patron.Portrait;
+            portraitImage.sprite = patron.Image;
             if (Debug.isDebugBuild)
                 perceptionRangeText.text = $"Perception: {patron.PerceptionRange}";
             DisplayAcquiredArt();
@@ -59,7 +59,7 @@ namespace Gallerist.UI
 
         public void DisplayAcquiredArt()
         {
-            Patron patron = patronManager.SelectedPatron;
+            Patron patron = patronManager.SelectedObject;
             for(int i = 0; i < acquiredArtEntries.Count; i++)
             {
                 Destroy(acquiredArtEntries[i].gameObject);
@@ -88,7 +88,7 @@ namespace Gallerist.UI
 
         void DisplayAllTraits()
         {
-            Patron patron = patronManager.SelectedPatron;
+            Patron patron = patronManager.SelectedObject;
             for (int i = 0; i < patron.AestheticTraits.Count; i++)
             {
                 var trait = patron.AestheticTraits[i];
@@ -105,7 +105,7 @@ namespace Gallerist.UI
 
         void DisplayKnownTraits()
         {
-            Patron patron = patronManager.SelectedPatron;
+            Patron patron = patronManager.SelectedObject;
             for (int i = 0; i < patron.AestheticTraits.Count; i++)
             {
                 var trait = patron.AestheticTraits[i];

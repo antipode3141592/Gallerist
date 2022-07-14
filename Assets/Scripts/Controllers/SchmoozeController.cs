@@ -40,7 +40,7 @@ namespace Gallerist
 
         public void Chat()
         {
-            Schmooze.Chat(_patronManager.SelectedPatron);
+            Schmooze.Chat(_patronManager.SelectedObject);
             ActionsTaken++;
             PatronUpdated?.Invoke(this, EventArgs.Empty);
             ActionTaken?.Invoke(this, EventArgs.Empty);
@@ -48,7 +48,7 @@ namespace Gallerist
 
         public void Introduce()
         {
-            Schmooze.Introduce(_artistManager.Artist, _patronManager.SelectedPatron);
+            Schmooze.Introduce(_artistManager.Artist, _patronManager.SelectedObject);
             ActionsTaken++;
             PatronUpdated?.Invoke(this, EventArgs.Empty);
             ActionTaken?.Invoke(this, EventArgs.Empty);
