@@ -25,7 +25,7 @@ namespace Gallerist
 
         private void OnGameStateChange(object sender, GameStates e)
         {
-            if (e == GameStates.Start)
+            if (e == GameStates.NewGame)
             {
                 if (Artist is not null)
                     PreviousArtists.Add(Artist);

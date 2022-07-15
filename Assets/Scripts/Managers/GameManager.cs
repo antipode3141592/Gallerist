@@ -15,10 +15,6 @@ namespace Gallerist
         GameStates currentGameState = GameStates.MainMenu;
         public event EventHandler<GameStates> GameStateChanged;
 
-        
-
-        
-
         private void Awake()
         {
             schmoozeController = FindObjectOfType<SchmoozeController>();
@@ -68,8 +64,6 @@ namespace Gallerist
 
         public void CompleteMainEvent()
         {
-            schmoozeController.ResetActionCounter();
-            //remov
             ChangeGameState(GameStates.Schmooze2);
         }
 

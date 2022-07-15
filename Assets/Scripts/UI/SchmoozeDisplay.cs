@@ -1,37 +1,67 @@
-using System;
-using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Gallerist.UI
 {
     public class SchmoozeDisplay : MonoBehaviour
     {
-        GameManager gameManager;
         ArtistManager artistManager;
-        [SerializeField] ArtistCard artistCard;
-        [SerializeField] TextMeshProUGUI ActionCounterText;
         SchmoozeController schmoozeController;
+
+        [SerializeField] ArtistCard artistCard;
+        [SerializeField] TimeTracker timeTracker;
+
+        [SerializeField] Button chatButton;
+        [SerializeField] Button nudgeButton;
+        [SerializeField] Button introductionButton;
+
+
         void Awake()
         {
-            gameManager = FindObjectOfType<GameManager>();
             artistManager = FindObjectOfType<ArtistManager>();
             schmoozeController = FindObjectOfType<SchmoozeController>();
-            schmoozeController.ActionTaken += schmoozeActionTaken;
-            UpdateActionCounter();
+            schmoozeController.ActionTaken += SchmoozeActionTaken;
+            schmoozeController.SchmoozingStarted += OnSchmoozingStart;
+            schmoozeController.EnableChat += OnEnableChat;
+            schmoozeController.EnableNudge += OnEnableNudge;
+            schmoozeController.EnableIntroduction += OnEnableIntroduction;
+
+            chatButton.onClick.AddListener(schmoozeController.Chat);
+            nudgeButton.onClick.AddListener(schmoozeController.Nudge);
+            introductionButton.onClick.AddListener(schmoozeController.Introduce);
         }
 
-        private void schmoozeActionTaken(object sender, EventArgs e)
+        private void OnEnableIntroduction(object sender, bool e)
         {
-            UpdateActionCounter();
-
+            introductionButton.interactable = e;
         }
 
-        private void UpdateActionCounter()
+        private void OnEnableNudge(object sender, bool e)
         {
-            
-            string actions = $"Schmoozing:  {schmoozeController.ActionsTaken} of {schmoozeController.MaximumActions} actions taken.";
-            Debug.Log(actions);
-            ActionCounterText.text = actions;
+            nudgeButton.interactable = e;
+        }
+
+        private void OnEnableChat(object sender, bool e)
+        {
+            chatButton.interactable = e;
+        }
+
+        void OnEnable()
+        {
+            timeTracker.Reset(schmoozeController.TotalSchmoozingTime);
+            introductionButton.interactable = true;
+            nudgeButton.interactable = true;
+            chatButton.interactable = true;
+        }
+
+        void SchmoozeActionTaken(object sender, int e)
+        {
+            timeTracker.UpdateForeground(e);
+        }
+
+        void OnSchmoozingStart(object sender, int e)
+        {
+            timeTracker.Reset(e);
         }
 
         public void UpdateArtistCard()

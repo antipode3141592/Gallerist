@@ -22,8 +22,6 @@ namespace Gallerist
 
         List<Patron> boredPatrons = new List<Patron>();
 
-        public event EventHandler PatronsGenerated;
-
         public event EventHandler ObjectsGenerated;
 
         void Awake()
@@ -44,7 +42,7 @@ namespace Gallerist
                 PastObjects.AddRange(CurrentObjects);
                 CurrentObjects.Clear();
                 GeneratePatrons(20);
-            } else if (e == GameStates.Schmooze2)
+            } else if (e == GameStates.MainEvent)
             {
                 int bored = RemoveBoredPatrons();
                 if (Debug.isDebugBuild)
@@ -53,13 +51,12 @@ namespace Gallerist
             }
         }
 
-        public void GeneratePatrons(int total)
+        void GeneratePatrons(int total)
         {
             if (Debug.isDebugBuild)
                 Debug.Log($"Generating {total} new patrons");
             for (int i = 0; i < total; i++)
                 GeneratePatron();
-            PatronsGenerated?.Invoke(this, EventArgs.Empty);
             ObjectsGenerated?.Invoke(this, EventArgs.Empty);
         }
 

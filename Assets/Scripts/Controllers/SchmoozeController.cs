@@ -9,14 +9,19 @@ namespace Gallerist
         ArtistManager _artistManager;
         PatronManager _patronManager; 
 
-        public int ActionsTaken { get; private set; }
-        public int MaximumActions => 12;    //Schmooze for one hour, each action is five minutes
+        public int ElapsedTime { get; set; }
+        public int TotalSchmoozingTime => 60;    //Schmooze for sixty minutes
+        public int ChatTime => 5;
+        public int IntroductionTime => 10;
+        public int NudgeTime => 5;
 
-
-        public event EventHandler ActionTaken;
+        public event EventHandler<int> ActionTaken;
         public event EventHandler PatronUpdated;
         public event EventHandler SchmoozingCompleted;
-
+        public event EventHandler<int> SchmoozingStarted;
+        public event EventHandler<bool> EnableChat;
+        public event EventHandler<bool> EnableNudge;
+        public event EventHandler<bool> EnableIntroduction;
 
         void Awake()
         {
@@ -24,41 +29,68 @@ namespace Gallerist
             _artistManager = FindObjectOfType<ArtistManager>();
             _patronManager = FindObjectOfType<PatronManager>();
             ActionTaken += CheckEndofSchmooze;
-            ResetActionCounter();
-        }
-        public void ResetActionCounter()
-        {
-            ActionsTaken = 0;
-            ActionTaken?.Invoke(this, EventArgs.Empty);
+            _gameManager.GameStateChanged += OnGameStateChanged;
         }
 
-        void CheckEndofSchmooze(object sender, EventArgs e)
+        private void OnGameStateChanged(object sender, GameStates e)
         {
-            if (ActionsTaken >= MaximumActions)
+            switch (e)
+            {
+                case GameStates.Schmooze1:
+                    ResetActionCounter();
+                    SchmoozingStarted?.Invoke(this, TotalSchmoozingTime);
+                    break;
+                case GameStates.Schmooze2:
+                    ResetActionCounter();
+                    SchmoozingStarted?.Invoke(this, TotalSchmoozingTime);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public void ResetActionCounter()
+        {
+            ElapsedTime = 0;
+        }
+
+        void CheckEndofSchmooze(object sender, int e)
+        {
+            if (ElapsedTime >= TotalSchmoozingTime)
                 SchmoozingCompleted?.Invoke(this, EventArgs.Empty);
         }
 
         public void Chat()
         {
             Schmooze.Chat(_patronManager.SelectedObject);
-            ActionsTaken++;
+            ElapsedTime += ChatTime;
             PatronUpdated?.Invoke(this, EventArgs.Empty);
-            ActionTaken?.Invoke(this, EventArgs.Empty);
+            ActionTaken?.Invoke(this, ElapsedTime);
+
+            EnableChat?.Invoke(this, TotalSchmoozingTime - ElapsedTime >= ChatTime);
+            EnableIntroduction?.Invoke(this, TotalSchmoozingTime - ElapsedTime >= IntroductionTime);
+            EnableNudge?.Invoke(this, TotalSchmoozingTime - ElapsedTime >= NudgeTime);
         }
 
         public void Introduce()
         {
             Schmooze.Introduce(_artistManager.Artist, _patronManager.SelectedObject);
-            ActionsTaken++;
+            ElapsedTime += IntroductionTime;
             PatronUpdated?.Invoke(this, EventArgs.Empty);
-            ActionTaken?.Invoke(this, EventArgs.Empty);
+            ActionTaken?.Invoke(this, ElapsedTime);
+
+            EnableChat?.Invoke(this, TotalSchmoozingTime - ElapsedTime >= ChatTime);
+            EnableIntroduction?.Invoke(this, TotalSchmoozingTime - ElapsedTime >= IntroductionTime);
+            EnableNudge?.Invoke(this, TotalSchmoozingTime - ElapsedTime >= NudgeTime);
         }
 
         public void Nudge()
         {
+            ElapsedTime += NudgeTime;
 
+            EnableChat?.Invoke(this, TotalSchmoozingTime - ElapsedTime >= ChatTime);
+            EnableIntroduction?.Invoke(this, TotalSchmoozingTime - ElapsedTime >= IntroductionTime);
+            EnableNudge?.Invoke(this, TotalSchmoozingTime - ElapsedTime >= NudgeTime);
         }
-
-
     }
 }
