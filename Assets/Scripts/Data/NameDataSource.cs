@@ -15,8 +15,8 @@ namespace Gallerist
             LastNames = new();
             var _firstNames = Resources.Load<TextAsset>("Gallerist - FirstNames");
             var _lastNames = Resources.Load<TextAsset>("Gallerist - LastNames");
-            FirstNames.AddRange(_firstNames.text.Split(',', '\n').ToList());
-            LastNames.AddRange(_lastNames.text.Split(',', '\n').ToList());
+            FirstNames.AddRange(_firstNames.text.Split(',', '\n'));
+            LastNames.AddRange(_lastNames.text.Split(',', '\n'));
             Debug.Log($"FirstNames count: {FirstNames.Count}");
             Debug.Log($"LastNames count: {LastNames.Count}");
         }
