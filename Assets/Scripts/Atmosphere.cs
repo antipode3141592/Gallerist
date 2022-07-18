@@ -14,7 +14,7 @@ namespace Gallerist
 
     public interface IModifier
     {
-        public Type TypeToModify { get; } 
-        public IList<string> IdsToModify { get; }
+        public TraitType TypeToModify { get; } 
+        public List<string> IdsToModify { get; }
     }
 }

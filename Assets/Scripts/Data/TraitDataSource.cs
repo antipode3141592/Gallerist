@@ -93,5 +93,19 @@ namespace Gallerist
             }
             return traits;
         }
+
+        public List<string> GetRandomTraitNames(int totalTraits, TraitType traitType)
+        {
+            List<string> traitNames = new();
+            for (int i = 0; i < totalTraits; i++)
+            {
+                string traitName;
+                do { traitName = GetRandomTraitName(
+                    traitType == TraitType.Emotive ? EmotiveTraits : AestheticTraits); }
+                while (traitNames.Contains(traitName));
+                traitNames.Add(traitName);
+            }
+            return traitNames;
+        }
     }
 }

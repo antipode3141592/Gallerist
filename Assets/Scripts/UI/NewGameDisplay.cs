@@ -15,6 +15,11 @@ namespace Gallerist.UI
             gameManager = FindObjectOfType<GameManager>();
         }
 
+        private void Start()
+        {
+            galleristNameInput.Select();
+        }
+
         public void StartGame()
         {
             gameManager.GalleristName = galleristNameInput.text;
