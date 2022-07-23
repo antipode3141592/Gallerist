@@ -4,9 +4,9 @@ using UnityEngine;
 
 namespace Gallerist.Data
 {
-    public class MainEventDataSource : MonoBehaviour, IDataSource<string>
+    public class CenterpieceDataSource : MonoBehaviour, IDataSource<string>
     {
-        [SerializeField] string dataPath = "Gallerist - MainEvent";
+        [SerializeField] string dataPath = "Gallerist - Centerpiece";
 
         Bag dataBag;
 
