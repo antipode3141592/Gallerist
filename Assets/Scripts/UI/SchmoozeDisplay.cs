@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,6 +8,8 @@ namespace Gallerist.UI
     {
         ArtistManager artistManager;
         SchmoozeController schmoozeController;
+        
+        GameStateMachine gameStateMachine;
 
         [SerializeField] ArtistCard artistCard;
         [SerializeField] TimeTracker timeTracker;
@@ -18,10 +21,11 @@ namespace Gallerist.UI
 
         void Awake()
         {
+            gameStateMachine = FindObjectOfType<GameStateMachine>();
             artistManager = FindObjectOfType<ArtistManager>();
             schmoozeController = FindObjectOfType<SchmoozeController>();
             schmoozeController.ActionTaken += SchmoozeActionTaken;
-            schmoozeController.SchmoozingStarted += OnSchmoozingStart;
+            gameStateMachine.Schmooze.StateEntered += OnSchmoozingStart;
             schmoozeController.EnableChat += OnEnableChat;
             schmoozeController.EnableNudge += OnEnableNudge;
             schmoozeController.EnableIntroduction += OnEnableIntroduction;
@@ -54,14 +58,14 @@ namespace Gallerist.UI
             chatButton.interactable = true;
         }
 
-        void SchmoozeActionTaken(object sender, int e)
+        void SchmoozeActionTaken(object sender, EventArgs e)
         {
-            timeTracker.UpdateForeground(e);
+            timeTracker.UpdateForeground(gameStateMachine.Schmooze.ElapsedTime);
         }
 
-        void OnSchmoozingStart(object sender, int e)
+        void OnSchmoozingStart(object sender, EventArgs e)
         {
-            timeTracker.Reset(e);
+            timeTracker.Reset(gameStateMachine.Schmooze.TotalTime);
         }
 
         public void UpdateArtistCard()

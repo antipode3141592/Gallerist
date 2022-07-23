@@ -1,6 +1,7 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Gallerist.UI
 {
@@ -13,6 +14,7 @@ namespace Gallerist.UI
         [SerializeField] TextMeshProUGUI descriptionText;
         [SerializeField] TextMeshProUGUI resultsText;
 
+        [SerializeField] Button continueButton;
 
         void Awake()
         {
@@ -43,6 +45,7 @@ namespace Gallerist.UI
         void MoveOnScreen()
         {
             transform.position = originalPosition;
+            continueButton.Select();
         }
     }
 }

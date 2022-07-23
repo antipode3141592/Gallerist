@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -5,7 +6,7 @@ namespace Gallerist
 {
     public class ArtistManager : MonoBehaviour
     {
-        GameManager gameManager;
+        GameStateMachine gameStateMachine;
         NameDataSource nameDataSource;
         SpriteDataSource spriteDataSource;
         TraitDataSource traitDataSource;
@@ -16,28 +17,24 @@ namespace Gallerist
 
         void Awake()
         {
-            gameManager = FindObjectOfType<GameManager>();
+            gameStateMachine = FindObjectOfType<GameStateMachine>();
             nameDataSource = FindObjectOfType<NameDataSource>();
             spriteDataSource = FindObjectOfType<SpriteDataSource>();
             traitDataSource = FindObjectOfType<TraitDataSource>();
-            gameManager.GameStateChanged += OnGameStateChange;
+            gameStateMachine.NewGame.StateEntered += OnNewGame;
         }
 
-        private void OnGameStateChange(object sender, GameStates e)
+        void OnNewGame(object sender, EventArgs e)
         {
-            if (e == GameStates.NewGame)
+            if (Artist is not null)
+                PreviousArtists.Add(Artist);
+            GenerateArtist();
+            if (!Debug.isDebugBuild) return;
+            Debug.Log($"Current Artist: {Artist.Name}");
+            foreach (var artist in PreviousArtists)
             {
-                if (Artist is not null)
-                    PreviousArtists.Add(Artist);
-                GenerateArtist();
-                if (!Debug.isDebugBuild) return;
-                Debug.Log($"Current Artist: {Artist.Name}");
-                foreach (var artist in PreviousArtists)
-                {
-                    Debug.Log($"Previous Artist: {artist.Name}");
-                }
+                Debug.Log($"Previous Artist: {artist.Name}");
             }
-            
         }
 
         void GenerateArtist()

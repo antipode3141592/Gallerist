@@ -1,3 +1,4 @@
+using Gallerist.States;
 using System;
 using UnityEngine;
 
@@ -5,7 +6,7 @@ namespace Gallerist
 {
     public class SchmoozeController : MonoBehaviour
     {
-        GameManager _gameManager;
+        GameStateMachine _gameStateMachine;
         ArtistManager _artistManager;
         PatronManager _patronManager; 
 
@@ -13,84 +14,58 @@ namespace Gallerist
         public int TotalSchmoozingTime => 60;    //Schmooze for sixty minutes
         public int ChatTime => 5;
         public int IntroductionTime => 10;
-        public int NudgeTime => 5;
+        public int NudgeTime => 15;
 
-        public event EventHandler<int> ActionTaken;
         public event EventHandler PatronUpdated;
         public event EventHandler SchmoozingCompleted;
-        public event EventHandler<int> SchmoozingStarted;
+        public event EventHandler ActionTaken;
         public event EventHandler<bool> EnableChat;
         public event EventHandler<bool> EnableNudge;
         public event EventHandler<bool> EnableIntroduction;
 
+        SchmoozeState SchmoozeState;
+
         void Awake()
         {
-            _gameManager = FindObjectOfType<GameManager>();
+            _gameStateMachine = FindObjectOfType<GameStateMachine>();
+            SchmoozeState = _gameStateMachine.Schmooze;
             _artistManager = FindObjectOfType<ArtistManager>();
             _patronManager = FindObjectOfType<PatronManager>();
-            ActionTaken += CheckEndofSchmooze;
-            _gameManager.GameStateChanged += OnGameStateChanged;
-        }
-
-        private void OnGameStateChanged(object sender, GameStates e)
-        {
-            switch (e)
-            {
-                case GameStates.Schmooze1:
-                    ResetActionCounter();
-                    SchmoozingStarted?.Invoke(this, TotalSchmoozingTime);
-                    break;
-                case GameStates.Schmooze2:
-                    ResetActionCounter();
-                    SchmoozingStarted?.Invoke(this, TotalSchmoozingTime);
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        public void ResetActionCounter()
-        {
-            ElapsedTime = 0;
-        }
-
-        void CheckEndofSchmooze(object sender, int e)
-        {
-            if (ElapsedTime >= TotalSchmoozingTime)
-                SchmoozingCompleted?.Invoke(this, EventArgs.Empty);
         }
 
         public void Chat()
         {
             Schmooze.Chat(_patronManager.SelectedObject);
-            ElapsedTime += ChatTime;
+            SchmoozeState.ElapsedTime += ChatTime;
             PatronUpdated?.Invoke(this, EventArgs.Empty);
-            ActionTaken?.Invoke(this, ElapsedTime);
-
-            EnableChat?.Invoke(this, TotalSchmoozingTime - ElapsedTime >= ChatTime);
-            EnableIntroduction?.Invoke(this, TotalSchmoozingTime - ElapsedTime >= IntroductionTime);
-            EnableNudge?.Invoke(this, TotalSchmoozingTime - ElapsedTime >= NudgeTime);
+            ActionTaken?.Invoke(this, EventArgs.Empty);
+            CheckActionEnable();
         }
 
         public void Introduce()
         {
             Schmooze.Introduce(_artistManager.Artist, _patronManager.SelectedObject);
-            ElapsedTime += IntroductionTime;
+            SchmoozeState.ElapsedTime += IntroductionTime;            
             PatronUpdated?.Invoke(this, EventArgs.Empty);
-            ActionTaken?.Invoke(this, ElapsedTime);
-
-            EnableChat?.Invoke(this, TotalSchmoozingTime - ElapsedTime >= ChatTime);
-            EnableIntroduction?.Invoke(this, TotalSchmoozingTime - ElapsedTime >= IntroductionTime);
-            EnableNudge?.Invoke(this, TotalSchmoozingTime - ElapsedTime >= NudgeTime);
+            ActionTaken?.Invoke(this, EventArgs.Empty);
+            CheckActionEnable();
         }
 
         public void Nudge()
         {
-            ElapsedTime += NudgeTime;
+            Schmooze.Nudge(_patronManager.SelectedObject);
+            SchmoozeState.ElapsedTime += NudgeTime;
+            PatronUpdated?.Invoke(this, EventArgs.Empty);
+            ActionTaken?.Invoke(this, EventArgs.Empty);
+            CheckActionEnable();
+        }
 
-            EnableChat?.Invoke(this, TotalSchmoozingTime - ElapsedTime >= ChatTime);
-            EnableIntroduction?.Invoke(this, TotalSchmoozingTime - ElapsedTime >= IntroductionTime);
-            EnableNudge?.Invoke(this, TotalSchmoozingTime - ElapsedTime >= NudgeTime);
+        void CheckActionEnable()
+        {
+            int remainingTime = SchmoozeState.TotalTime - SchmoozeState.ElapsedTime;
+            EnableChat?.Invoke(this, remainingTime >= ChatTime);
+            EnableIntroduction?.Invoke(this, remainingTime >= IntroductionTime);
+            EnableNudge?.Invoke(this, remainingTime >= NudgeTime);
         }
     }
 }

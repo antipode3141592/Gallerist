@@ -16,9 +16,10 @@ namespace Gallerist
             Acquisitions = acquisitions;
             AestheticTraits = aestheticTraits;
             EmotiveTraits = emotiveTraits;
-            PerceptionRange = SetPerceptionRange();
+            PerceptionRange = Random.Range(-1, 2);
             AestheticThreshold = aestheticThreshold;
             EmotiveThreshold = emotiveThreshold;
+            BoredomThreshold = Random.Range(3,7);
         }
 
         public Sprite Image { get; private set; }
@@ -30,14 +31,11 @@ namespace Gallerist
         public int PerceptionRange { get; private set; }
         public int AestheticThreshold { get; set; }
         public int EmotiveThreshold { get; set; }
+        public int BoredomThreshold { get; set; }
+        public int Satisfaction { get; set; } = 0;
+
 
         public event EventHandler PreferencesUpdated;
-
-        int SetPerceptionRange()
-        {
-            int n = (int)Random.Range(10,15);    //int [-2,2]
-            return n;
-        }
 
         public EvaluationResultTypes EvaluateArt(Art art)
         {
@@ -107,6 +105,24 @@ namespace Gallerist
                 patronTrait.Value += modifier;
                 return;
             }
+            PreferencesUpdated?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void ModifyRandomMatchingTrait(List<ITrait> traits, int modifier)
+        {
+            int i = 0; 
+            while(i < modifier)
+            {
+                ModifyTrait(traits[Random.Range(0, traits.Count)], 1);
+                i++;
+            }
+            PreferencesUpdated?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void SetSubscription()
+        {
+            IsSubscriber = true;
+            RevealTraits(2);
         }
     }
 }

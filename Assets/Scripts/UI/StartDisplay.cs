@@ -1,20 +1,21 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Gallerist.UI
 {
     public class StartDisplay : MonoBehaviour
     {
-        GameManager gameManager;
+        GameStateMachine gameStateMachine;
         GameStatsController gameStatsController;
 
         [SerializeField] TextMeshProUGUI DescriptionText;
         [SerializeField] TextMeshProUGUI SummaryText;
+        [SerializeField] Button continueButton;
 
         void Awake()
         {
-
-            gameManager = FindObjectOfType<GameManager>();
+            gameStateMachine = FindObjectOfType<GameStateMachine>();
             gameStatsController = FindObjectOfType<GameStatsController>();
         }
 
@@ -23,12 +24,14 @@ namespace Gallerist.UI
             SetDescription();
 
             SetSummary();
+
+            continueButton.Select();
         }
 
         public void CompleteStart()
         {
 
-            gameManager.CompleteStart();
+            gameStateMachine.StartState.IsComplete = true;
         }
 
         void SetDescription()
@@ -36,19 +39,23 @@ namespace Gallerist.UI
             string output = "";
             switch (gameStatsController.Stats.CurrentMonth)
             {
+                case 0:
+                    output = $"{gameStatsController.Stats.GalleryName} is nearing its grand opening.  Time to finalize preparations for the first opening night!";
+                    break;
                 case 1:
-                    output = $"{gameManager.GalleryName} is nearing its grand opening.  Time to finalize preparations for the first opening night!";
+                    output = $"{gameStatsController.Stats.GalleryName} is becoming more well known in the community and you expect this month's show should have a larger turnout.";
                     break;
                 case 2:
-                    output = $"{gameManager.GalleryName} is becoming more well known in the community and you expect this month's show should have a larger turnout.";
+                    output = $"Month 3 Text";
                     break;
                 case 3:
+                    output = $"Month 4 Text.  Other Stuff.";
                     break;
                 case 4:
+                    output = $"Month 5 Text.  Nearing the end of the year!";
                     break;
                 case 5:
-                    break;
-                case 6:
+                    output = $"This is the last opening night of the year!  Holiday crowds are out in droves.  Good luck!";
                     break;
                 default:
                     break;
@@ -59,7 +66,7 @@ namespace Gallerist.UI
 
         void SetSummary()
         {
-            SummaryText.text = $"{gameStatsController.Stats.CurrentMonth} of {gameStatsController.TotalMonths}";
+            SummaryText.text = $"{gameStatsController.Stats.CurrentMonth + 1} of {gameStatsController.BaseGameStats.TotalMonths}";
         }
     }
 }

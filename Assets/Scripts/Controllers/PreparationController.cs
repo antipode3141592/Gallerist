@@ -1,4 +1,5 @@
 using Gallerist.Data;
+using Gallerist.States;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,46 +8,48 @@ namespace Gallerist
 {
     public class PreparationController : MonoBehaviour
     {
-        GameManager gameManager;
+        GameStateMachine gameStateMachine;
         TraitDataSource traitDataSource;
         AmbientMusicDataSource ambientMusicDataSource;
         FoodAndDrinkDataSource foodAndDrinkDataSource;
-        MainEventDataSource mainEventDataSource;
+        CenterpieceDataSource centerpieceDataSource;
 
         public List<AmbientMusic> AmbientMusics { get; } = new();
         public List<FoodAndDrink> FoodAndDrinks { get; } = new();
-        public List<MainEvent> MainEvents { get; } = new();
+        public List<Centerpiece> Centerpieces { get; } = new();
 
         AmbientMusic currentAmbientMusic;
         FoodAndDrink currentFoodAndDrink;
-        MainEvent currentMainEvent;
+        Centerpiece currentCenterpiece;
+
+        bool AmbientMusicSelected;
+        bool FoodAndDrinkSelected;
+        bool CenterpieceSelected;
+
+        bool AllSelected => AmbientMusicSelected && FoodAndDrinkSelected && CenterpieceSelected;
 
         public int OptionsPerMonth = 3;
-
-        int _optionsSelected = 0;
 
         public event EventHandler OptionsCreated;
         public event EventHandler AllOptionsSelected;
 
         void Awake()
         {
-            gameManager = FindObjectOfType<GameManager>();
+            gameStateMachine = FindObjectOfType<GameStateMachine>();
             traitDataSource = FindObjectOfType<TraitDataSource>();
             ambientMusicDataSource = FindObjectOfType<AmbientMusicDataSource>();
             foodAndDrinkDataSource = FindObjectOfType<FoodAndDrinkDataSource>();
-            mainEventDataSource = FindObjectOfType<MainEventDataSource>();
+            centerpieceDataSource = FindObjectOfType<CenterpieceDataSource>();
 
-            gameManager.GameStateChanged += OnGameStateChange;
+            gameStateMachine.Preparation.StateEntered += OnPreparationEntered;
         }
 
-        void OnGameStateChange(object sender, GameStates e)
+        void OnPreparationEntered(object sender, EventArgs e)
         {
-            
-            if (e == GameStates.Start)
-            {
-                CreateOptions();
-                _optionsSelected = 0;
-            }
+            AmbientMusicSelected = false;
+            FoodAndDrinkSelected = false;
+            CenterpieceSelected = false;
+            CreateOptions();
         }
 
         public void SetAmbientMusic(string musicName)
@@ -54,10 +57,11 @@ namespace Gallerist
             var _currentMusic = AmbientMusics.Find(x => x.Name == musicName);
             if (_currentMusic is null) return;
             currentAmbientMusic = _currentMusic;
+            AmbientMusicSelected = true;
             if (Debug.isDebugBuild)
                 Debug.Log($"Ambient Music Selected : {currentAmbientMusic.Name}");
-            _optionsSelected++;
-            if (_optionsSelected >= 3)
+            
+            if (AllSelected)
                 AllOptionsSelected?.Invoke(this, EventArgs.Empty);
         }
 
@@ -66,22 +70,22 @@ namespace Gallerist
             var _currentFood = FoodAndDrinks.Find(x => x.Name == foodName);
             if (_currentFood is null) return;
             currentFoodAndDrink = _currentFood;
+            FoodAndDrinkSelected = true;
             if (Debug.isDebugBuild)
                 Debug.Log($"Current Food and Drink Selected : {currentFoodAndDrink.Name}");
-            _optionsSelected++;
-            if (_optionsSelected >= 3)
+            if (AllSelected)
                 AllOptionsSelected?.Invoke(this, EventArgs.Empty);
         }
 
-        public void SetMainEvent(string eventName)
+        public void SetCenterpiece(string eventName)
         {
-            var _currentMainEvent = MainEvents.Find(x => x.Name == eventName);
+            var _currentMainEvent = Centerpieces.Find(x => x.Name == eventName);
             if (_currentMainEvent is null) return;
-            currentMainEvent = _currentMainEvent;
+            currentCenterpiece = _currentMainEvent;
+            CenterpieceSelected = true;
             if (Debug.isDebugBuild)
-                Debug.Log($"Current Main Event: {currentMainEvent.Name}");
-            _optionsSelected++;
-            if (_optionsSelected >= 3)
+                Debug.Log($"Current Main Event: {currentCenterpiece.Name}");
+            if (AllSelected)
                 AllOptionsSelected?.Invoke(this, EventArgs.Empty);
         }
 
@@ -89,7 +93,7 @@ namespace Gallerist
         {
             AmbientMusics.Clear();
             FoodAndDrinks.Clear();
-            MainEvents.Clear();
+            Centerpieces.Clear();
             for (int i = 0; i < OptionsPerMonth; i++)
             {
                 AmbientMusics.Add(
@@ -106,9 +110,9 @@ namespace Gallerist
                         idsToModify: traitDataSource.GetRandomTraitNames(5, TraitType.Emotive)
                         )
                     );
-                MainEvents.Add(
-                    new MainEvent(
-                        name: mainEventDataSource.GetRandomItem(),
+                Centerpieces.Add(
+                    new Centerpiece(
+                        name: centerpieceDataSource.GetRandomItem(),
                         description: "",
                         idsToModify: traitDataSource.GetRandomTraitNames(5, TraitType.Emotive)
                         )
@@ -119,7 +123,7 @@ namespace Gallerist
 
         public void PreparationsComplete()
         {
-            gameManager.CompletePreparations();
+            gameStateMachine.Preparation.IsComplete = true;
         }
     }
 
@@ -155,7 +159,7 @@ namespace Gallerist
         }
     }
 
-    public class MainEvent : IModifier
+    public class Centerpiece : IModifier
     {
         public string Name;
         public string Description;
@@ -163,7 +167,7 @@ namespace Gallerist
         public List<string> IdsToModify { get; }
         public string Modifiers => $"({string.Join(',', IdsToModify)})";
 
-        public MainEvent(string name, string description, List<string> idsToModify)
+        public Centerpiece(string name, string description, List<string> idsToModify)
         {
             Name = name;
             Description = description;

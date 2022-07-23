@@ -1,3 +1,16 @@
 {
-	"name": "Gallerist"
+    "name": "Gallerist",
+    "rootNamespace": "",
+    "references": [
+        "GUID:adf2c52afe86ab8489bef0b064a5a7fc"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }

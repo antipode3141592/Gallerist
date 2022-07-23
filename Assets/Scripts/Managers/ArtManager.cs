@@ -6,7 +6,7 @@ namespace Gallerist
 {
     public class ArtManager : MonoBehaviour, IObjectManager<Art>
     {
-        GameManager gameManager;
+        GameStateMachine gameStateMachine;
         ArtistManager artistManager;
         NameDataSource nameDataSource;
         SpriteDataSource spriteDataSource;
@@ -22,22 +22,19 @@ namespace Gallerist
 
         void Awake()
         {
-            gameManager = FindObjectOfType<GameManager>();
+            gameStateMachine = FindObjectOfType<GameStateMachine>();
             artistManager = FindObjectOfType<ArtistManager>();
             nameDataSource = FindObjectOfType<NameDataSource>();
             spriteDataSource = FindObjectOfType<SpriteDataSource>();
             traitDataSource = FindObjectOfType<TraitDataSource>();
 
-            gameManager.GameStateChanged += OnGameStateChange;
+            gameStateMachine.StartState.StateEntered += OnGameStarted;
         }
 
-        private void OnGameStateChange(object sender, GameStates e)
+        void OnGameStarted(object sender, EventArgs e)
         {
-            if (e == GameStates.Start)
-            {
-                CurrentObjects.Clear();
-                GenerateArts(10);
-            }
+            CurrentObjects.Clear();
+            GenerateArts(10);
         }
 
         void GenerateArts(int total)

@@ -1,25 +1,24 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Gallerist.UI
 {
     public class GameStateObserver : MonoBehaviour
     {
-        GameManager gameManager;
-        [SerializeField] List<Image> stateIcons;
+        GameStateMachine gameStateMachine;
+        [SerializeField] List<StateDisplay> stateIcons;
 
         void Awake()
         {
-            gameManager = FindObjectOfType<GameManager>();
-            gameManager.GameStateChanged += UpdateGameStateText;
+            gameStateMachine = FindObjectOfType<GameStateMachine>();
+            gameStateMachine.OnStateChanged += OnStateChanged;
         }
 
-        private void UpdateGameStateText(object sender, GameStates e)
+        void OnStateChanged(object sender, string e)
         {
             for (int i = 0; i < stateIcons.Count; i++)
             {
-                stateIcons[i].color = i == (int)e ? Color.blue : Color.grey;
+                stateIcons[i].Image.color = stateIcons[i].StateName.ToLower() == e.ToLower() ? Color.blue : Color.grey;
             }
         }
     }

@@ -1,12 +1,13 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Gallerist.UI
 {
     public class EndDisplay : MonoBehaviour
     {
-        GameManager gameManager;
-        EvaluationController evaluationController;
+        GameStateMachine gameStateMachine;
+        GameStatsController gameStatsController;
 
         [SerializeField] TextMeshProUGUI SummaryResultText;
         [SerializeField] TextMeshProUGUI NightDescriptionText;
@@ -15,20 +16,29 @@ namespace Gallerist.UI
         [SerializeField] TextMeshProUGUI PrintsSoldText;
         [SerializeField] TextMeshProUGUI NewSubscribers;
 
+        [SerializeField] Button continueButton;
+
         void Awake()
         {
-            gameManager = FindObjectOfType<GameManager>();
-            evaluationController = FindObjectOfType<EvaluationController>();
+            gameStateMachine = FindObjectOfType<GameStateMachine>();
+            gameStatsController = FindObjectOfType<GameStatsController>();
+        }
+
+        void OnEnable()
+        {
+            continueButton.Select();
+            SummarizeNight();
         }
 
         public void SummarizeNight()
         {
-            int originalsSold = evaluationController.OriginalsSold;
-            int printsSold = evaluationController.PrintsSold;
-            if (originalsSold == evaluationController.MaximumEvaluations)
+            int originalsSold = gameStatsController.Stats.OriginalsThisMonth;
+            int printsSold = gameStatsController.Stats.PrintsThisMonth;
+            int subscribers = gameStatsController.Stats.SubscribersThisMonth;
+
+            if (originalsSold == gameStateMachine.Closing.TotalEvaluations)
             {
                 SummaryResultText.text = $"The night was a roaring success!";
-                
             }
             else if (originalsSold > 0)
             {
@@ -43,14 +53,15 @@ namespace Gallerist.UI
                 SummaryResultText.text = $"The night was a dissapointment.";
             }
 
-            //
-            //NightDescriptionText.text = $"The assembled crowd found {gameManager.Artist.Name}'s work mesmerizing.  [buyer1] had a deep connection to [art]'s sense of [shared postive emotive trait] while also being a [positive adjective] example of [shared postive aesthetic trait] and decided to purchase the original.";
-
-
             OriginalsSoldText.text = $"Originals Sold: {originalsSold}";
             PrintsSoldText.text = $"Prints Sold: {printsSold}";
+            NewSubscribers.text = $"New Subscribers: {subscribers}";
         }
 
-
+        public void CompleteEnd()
+        {
+            gameStatsController.Stats.SaveMonth();
+            gameStateMachine.End.IsComplete = true;
+        }
     }
 }

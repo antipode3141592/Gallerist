@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using System.Linq;
 using UnityEngine.UI;
 
 namespace Gallerist.UI
@@ -42,9 +41,9 @@ namespace Gallerist.UI
                 if (preparationController.FoodAndDrinks.Count > i)
                     foodAndDrinkItems.PreparationItemsList[i].SetItem(preparationController.FoodAndDrinks[i].Name,
                     preparationController.FoodAndDrinks[i].Modifiers);
-                if (preparationController.MainEvents.Count > i)
-                    mainEventItems.PreparationItemsList[i].SetItem(preparationController.MainEvents[i].Name,
-                    preparationController.MainEvents[i].Modifiers);
+                if (preparationController.Centerpieces.Count > i)
+                    mainEventItems.PreparationItemsList[i].SetItem(preparationController.Centerpieces[i].Name,
+                    preparationController.Centerpieces[i].Modifiers);
             }
         }
 
@@ -55,7 +54,7 @@ namespace Gallerist.UI
 
         void MainEventSelected(object sender, EventArgs e)
         {
-            preparationController.SetMainEvent(mainEventItems.SelectedItem.Name);
+            preparationController.SetCenterpiece(mainEventItems.SelectedItem.Name);
         }
 
         void FoodAndDrinkSelected(object sender, EventArgs e)

@@ -1,7 +1,7 @@
-using UnityEngine;
 using FiniteStateMachine;
 using Gallerist.States;
 using System;
+using UnityEngine;
 
 namespace Gallerist
 {
@@ -11,14 +11,14 @@ namespace Gallerist
 
         StateMachine _stateMachine;
 
-        NewGame newGame;
-        START startState;
-        Preparation preparation;
-        SchmoozeState schmooze;
-        MainEvent mainEvent;
-        Closing closing;
-        END end;
-        Final final;
+        NewGame newGame = new();
+        START startState = new();
+        Preparation preparation = new();
+        SchmoozeState schmooze = new();
+        MainEvent mainEvent = new();
+        Closing closing = new();
+        END end = new();
+        Final final = new();
 
         public NewGame NewGame => newGame;
         public START StartState => startState;
@@ -40,15 +40,6 @@ namespace Gallerist
             _stateMachine = new StateMachine();
 
             _stateMachine.OnStateChange += OnStateChangeHandler;
-
-            newGame = new NewGame();
-            startState = new START();
-            preparation = new Preparation();
-            schmooze = new SchmoozeState();
-            mainEvent = new MainEvent();
-            closing = new Closing();
-            end = new END();
-            final = new Final();
 
             At(newGame, startState, NewGameComplete());
             At(startState, preparation, StartComplete());

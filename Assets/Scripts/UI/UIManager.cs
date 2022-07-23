@@ -1,11 +1,12 @@
 using Gallerist.UI;
+using System;
 using UnityEngine;
 
 namespace Gallerist
 {
     public class UIManager : MonoBehaviour
     {
-        GameManager gameManager;
+        GameStateMachine gameStateMachine;
 
         [SerializeField] ArtCard artCard;
         [SerializeField] PatronCard patronCard;
@@ -20,49 +21,25 @@ namespace Gallerist
         [SerializeField] ClosingDisplay _closingDisplay;
         [SerializeField] EndDisplay _endDisplay;
         [SerializeField] DialogueDisplay _dialogueDisplay;
+        [SerializeField] FinalDisplay _finalDisplay;
 
         void Awake()
         {
-            gameManager = FindObjectOfType<GameManager>();
-            gameManager.GameStateChanged += OnGameStateChanged;
+            gameStateMachine = FindObjectOfType<GameStateMachine>();
+
+            gameStateMachine.NewGame.StateEntered += LoadNewGameUI;
+            gameStateMachine.StartState.StateEntered += LoadStartUI;
+            gameStateMachine.Preparation.StateEntered += LoadPreparationUI;
+            gameStateMachine.Schmooze.StateEntered += LoadSchmoozeUI;
+            gameStateMachine.MainEvent.StateEntered += LoadMainEventUI;
+            gameStateMachine.Closing.StateEntered += LoadClosingUI;
+            gameStateMachine.End.StateEntered += LoadEndUI;
+            gameStateMachine.Final.StateEntered += LoadFinalUI;
         }
 
-        void OnGameStateChanged(object sender, GameStates e)
-        {
-            Debug.Log($"OnGameStateChangedCalled.  target state: {e}");
-            switch (e)
-            {
-                case GameStates.NewGame:
-                    LoadNewGameUI();
-                    break;
-                case GameStates.Start:
-                    LoadStartUI();
-                    break;
-                case GameStates.Preparation:
-                    LoadPreparationUI();
-                    break;
-                case GameStates.Schmooze1:
-                    LoadSchmoozeUI();
-                    break;
-                case GameStates.MainEvent:
-                    LoadMainEventUI();
-                    break;
-                case GameStates.Schmooze2:
-                    LoadSchmoozeUI();
-                    break;
-                case GameStates.Closing:
-                    LoadClosingUI();
-                    break;
-                case GameStates.End:
-                    LoadEndUI();
-                    break;
-                default:
-                    Debug.LogWarning($"invalid game state!");
-                    break;
-            }
-        }
+        
 
-        public void LoadNewGameUI()
+        public void LoadNewGameUI(object sender, EventArgs e)
         {
             _newGameDisplay.gameObject.SetActive(true);
             _startDisplay.gameObject.SetActive(false);
@@ -74,9 +51,10 @@ namespace Gallerist
             _closingDisplay.gameObject.SetActive(false);
             _endDisplay.gameObject.SetActive(false);
             _dialogueDisplay.gameObject.SetActive(false);
+            _finalDisplay.gameObject.SetActive(false);
         }
 
-        public void LoadStartUI()
+        public void LoadStartUI(object sender, EventArgs e)
         {
             _newGameDisplay.gameObject.SetActive(false);
             _startDisplay.gameObject.SetActive(true);
@@ -88,8 +66,9 @@ namespace Gallerist
             _closingDisplay.gameObject.SetActive(false);
             _endDisplay.gameObject.SetActive(false);
             _dialogueDisplay.gameObject.SetActive(false);
+            _finalDisplay.gameObject.SetActive(false);
         }
-        public void LoadPreparationUI()
+        public void LoadPreparationUI(object sender, EventArgs e)
         {
             _newGameDisplay.gameObject.SetActive(false);
             _startDisplay.gameObject.SetActive(false);
@@ -102,9 +81,10 @@ namespace Gallerist
             _endDisplay.gameObject.SetActive(false);
             _preparationDisplay.UpdateDisplay();
             _dialogueDisplay.gameObject.SetActive(false);
+            _finalDisplay.gameObject.SetActive(false);
         }
 
-        public void LoadSchmoozeUI()
+        public void LoadSchmoozeUI(object sender, EventArgs e)
         {
             _newGameDisplay.gameObject.SetActive(false);
             _startDisplay.gameObject.SetActive(false);
@@ -117,9 +97,10 @@ namespace Gallerist
             _endDisplay.gameObject.SetActive(false);
             _dialogueDisplay.gameObject.SetActive(false);
             _schmoozeDisplay.UpdateArtistCard();
+            _finalDisplay.gameObject.SetActive(false);
         }
 
-        public void LoadMainEventUI()
+        public void LoadMainEventUI(object sender, EventArgs e)
         {
             _newGameDisplay.gameObject.SetActive(false);
             _startDisplay.gameObject.SetActive(false);
@@ -131,9 +112,10 @@ namespace Gallerist
             _closingDisplay.gameObject.SetActive(false);
             _endDisplay.gameObject.SetActive(false);
             _dialogueDisplay.gameObject.SetActive(false);
+            _finalDisplay.gameObject.SetActive(false);
         }
 
-        public void LoadClosingUI()
+        public void LoadClosingUI(object sender, EventArgs e)
         {
             _newGameDisplay.gameObject.SetActive(false);
             _startDisplay.gameObject.SetActive(false);
@@ -145,9 +127,10 @@ namespace Gallerist
             _closingDisplay.gameObject.SetActive(true);
             _endDisplay.gameObject.SetActive(false);
             _dialogueDisplay.gameObject.SetActive(false);
+            _finalDisplay.gameObject.SetActive(false);
         }
 
-        public void LoadEndUI()
+        public void LoadEndUI(object sender, EventArgs e)
         {
             _newGameDisplay.gameObject.SetActive(false);
             _startDisplay.gameObject.SetActive(false);
@@ -159,8 +142,22 @@ namespace Gallerist
             _closingDisplay.gameObject.SetActive(false);
             _endDisplay.gameObject.SetActive(true);
             _dialogueDisplay.gameObject.SetActive(false);
+            _finalDisplay.gameObject.SetActive(false);
+        }
 
-            _endDisplay.SummarizeNight();
+        public void LoadFinalUI(object sender, EventArgs e)
+        {
+            _newGameDisplay.gameObject.SetActive(false);
+            _startDisplay.gameObject.SetActive(false);
+            _mainEventDisplay.gameObject.SetActive(false);
+            _preparationDisplay.gameObject.SetActive(false);
+            _schmoozeDisplay.gameObject.SetActive(false);
+            _patronsDisplay.gameObject.SetActive(false);
+            _artPiecesDisplay.gameObject.SetActive(false);
+            _closingDisplay.gameObject.SetActive(false);
+            _endDisplay.gameObject.SetActive(false);
+            _dialogueDisplay.gameObject.SetActive(false);
+            _finalDisplay.gameObject.SetActive(true);
         }
     }
 }

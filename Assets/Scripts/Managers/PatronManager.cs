@@ -11,44 +11,46 @@ namespace Gallerist
         SpriteDataSource spriteDataSource;
         TraitDataSource traitDataSource;
 
-        GameManager gameManager;
-        ArtManager artManager;
+        GameStateMachine gameStateMachine;
+        GameStatsController gameStatsController;
 
         public List<Patron> CurrentObjects { get; } = new List<Patron>();
         public List<Patron> PastObjects { get; } = new List<Patron>();
 
         public Patron SelectedObject { get; set; }
         
-
-        List<Patron> boredPatrons = new List<Patron>();
+        public List<Patron> ExitingPatrons { get; } = new List<Patron>();
 
         public event EventHandler ObjectsGenerated;
 
         void Awake()
         {
-            gameManager = FindObjectOfType<GameManager>();
-            artManager = FindObjectOfType<ArtManager>();
+            gameStateMachine = FindObjectOfType<GameStateMachine>();
+            gameStatsController = FindObjectOfType<GameStatsController>();
             nameDataSource = FindObjectOfType<NameDataSource>();
             spriteDataSource = FindObjectOfType<SpriteDataSource>();
             traitDataSource = FindObjectOfType<TraitDataSource>();
 
-            gameManager.GameStateChanged += OnGameStateChange;
+            gameStateMachine.StartState.StateEntered += OnStartEntered;
+            gameStateMachine.MainEvent.StateEntered += OnMainEventEntered;
         }
 
-        private void OnGameStateChange(object sender, GameStates e)
+        void OnStartEntered(object sender, EventArgs e)
         {
-            if (e == GameStates.Start)
-            {
-                PastObjects.AddRange(CurrentObjects);
-                CurrentObjects.Clear();
-                GeneratePatrons(20);
-            } else if (e == GameStates.MainEvent)
-            {
-                int bored = RemoveBoredPatrons();
-                if (Debug.isDebugBuild)
-                    Debug.Log($"There are {bored} patrons that have left");
-                GeneratePatrons(bored + Random.Range(0, 5));
-            }
+            PastObjects.AddRange(CurrentObjects);
+            CurrentObjects.Clear();
+            GeneratePatrons(20);
+        }
+
+        void OnMainEventEntered(object sender, EventArgs e)
+        {
+            RemovePatrons();
+            int bored = gameStatsController.Stats.BoredGuests;
+            if (Debug.isDebugBuild)
+                Debug.Log($"There are {bored} patrons that have left");
+            int incoming = bored + Random.Range(0, 5);
+            gameStatsController.Stats.MidPartyEntrances = incoming;
+            GeneratePatrons(incoming);
         }
 
         void GeneratePatrons(int total)
@@ -75,34 +77,16 @@ namespace Gallerist
             CurrentObjects.Add(newPatron);
         }
 
-        int RemoveBoredPatrons()
+        void RemovePatrons()
         {
-            int boredPatronCount = 0;
-            foreach(var patron in CurrentObjects)
+            gameStatsController.Stats.MidPartyExits = ExitingPatrons.Count;
+            for (int i = 0; i < ExitingPatrons.Count; i++)
             {
-                foreach(var art in artManager.CurrentObjects)
-                {
-                    if (patron.EvaluateArt(art) == EvaluationResultTypes.None)
-                    {
-                        boredPatrons.Add(patron);
-                        boredPatronCount++;
-                    }    
-                }
+                if (CurrentObjects.Contains(ExitingPatrons[i]))
+                    CurrentObjects.Remove(ExitingPatrons[i]);
+                ExitingPatrons[i] = null;
             }
-
-            for (int i = 0; i < boredPatrons.Count; i++)
-            {
-                if (CurrentObjects.Contains(boredPatrons[i]))
-                    CurrentObjects.Remove(boredPatrons[i]);
-                boredPatrons[i] = null;
-            }
-            boredPatrons.Clear();
-            return boredPatronCount;
-        }
-
-        public void SubscribeToMailingList(Patron patron)
-        {
-            patron.IsSubscriber = true;
+            ExitingPatrons.Clear();
         }
 
         public Patron GetObjectAt(int index)
