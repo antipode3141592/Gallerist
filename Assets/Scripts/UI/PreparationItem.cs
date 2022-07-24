@@ -34,6 +34,7 @@ namespace Gallerist.UI
         {
             NameText.text = name;
             ModifiersText.text = modifiers;
+            Highlight(false);
         }
 
     }
