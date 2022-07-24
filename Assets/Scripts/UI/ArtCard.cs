@@ -1,8 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 namespace Gallerist.UI
 {
@@ -17,6 +16,8 @@ namespace Gallerist.UI
         [SerializeField] TextMeshProUGUI artistText;
         [SerializeField] TextMeshProUGUI descriptionText;
         [SerializeField] Image artImage;
+        [SerializeField] TextMeshProUGUI availabilityText;
+        [SerializeField] TextMeshProUGUI printsSoldText;
 
         [SerializeField] Image aestheticTraitsBackground;
         [SerializeField] Image emotiveTraitsBackground;
@@ -34,6 +35,9 @@ namespace Gallerist.UI
             titleText.text = art.Name;
             artistText.text = art.ArtistName;
             descriptionText.text = art.Description;
+            availabilityText.text = art.IsSold ? "Sold" : "Available";
+            availabilityText.color = art.IsSold ? Color.red : Color.white;
+            printsSoldText.text = art.PrintsSold > 0 ? $"Prints Sold: {art.PrintsSold}" : "";
 
             artImage.sprite = art.Image;
 

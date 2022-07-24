@@ -1,3 +1,4 @@
+using Gallerist.States;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,6 +17,14 @@ namespace Gallerist.UI
 
         void OnStateChanged(object sender, string e)
         {
+            if (Debug.isDebugBuild)
+                Debug.Log($"GameStateObserver:  Evaluating {e.ToLower()} against {typeof(SchmoozeState).Name}");
+
+            string mod = e.ToLower();
+            if (mod == typeof(SchmoozeState).Name)
+            {
+                mod += $"{gameStateMachine.Schmooze.SchmoozeCounter:d1}";
+            }
             for (int i = 0; i < stateIcons.Count; i++)
             {
                 stateIcons[i].Image.color = stateIcons[i].StateName.ToLower() == e.ToLower() ? Color.blue : Color.grey;

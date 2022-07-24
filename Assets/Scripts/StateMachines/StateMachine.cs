@@ -42,7 +42,7 @@ namespace FiniteStateMachine
             _transitions.TryGetValue(_currentState.GetType(), out _currentTransitions);
             if (_currentTransitions == null)
                 _currentTransitions = EmptyTransitions;
-            OnStateChange?.Invoke(this, _currentState.ToString());
+            OnStateChange?.Invoke(this, _currentState.GetType().Name);
             _currentState.OnEnter();
             TimeInState = 0f;
         }
