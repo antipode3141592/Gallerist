@@ -21,13 +21,13 @@ namespace Gallerist.UI
                 Debug.Log($"GameStateObserver:  Evaluating {e.ToLower()} against {typeof(SchmoozeState).Name}");
 
             string mod = e.ToLower();
-            if (mod == typeof(SchmoozeState).Name)
+            if (mod == typeof(SchmoozeState).Name.ToLower())
             {
                 mod += $"{gameStateMachine.Schmooze.SchmoozeCounter:d1}";
             }
             for (int i = 0; i < stateIcons.Count; i++)
             {
-                stateIcons[i].Image.color = stateIcons[i].StateName.ToLower() == e.ToLower() ? Color.blue : Color.grey;
+                stateIcons[i].Image.color = stateIcons[i].StateName.ToLower() == mod ? Color.blue : Color.grey;
             }
         }
     }
