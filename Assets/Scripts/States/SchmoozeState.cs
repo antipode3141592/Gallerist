@@ -25,6 +25,8 @@ namespace Gallerist.States
         {
             ElapsedTime = 0;
             SchmoozeCounter++;
+            if (SchmoozeCounter >= 2)
+                SchmoozeCounter = 0;
             StateExited?.Invoke(this, EventArgs.Empty);
         }
 
