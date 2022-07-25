@@ -584,6 +584,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8399893997561674133}
     m_Modifications:
+    - target: {fileID: 1738886268970627539, guid: 41cff2521fc869e488ea583b3e9e0777, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 56
+      objectReference: {fileID: 0}
+    - target: {fileID: 1950136048731193053, guid: 41cff2521fc869e488ea583b3e9e0777, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 56
+      objectReference: {fileID: 0}
     - target: {fileID: 2624835334155090956, guid: 41cff2521fc869e488ea583b3e9e0777, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -667,6 +675,38 @@ PrefabInstance:
     - target: {fileID: 2624835334155090956, guid: 41cff2521fc869e488ea583b3e9e0777, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3484199490981041442, guid: 41cff2521fc869e488ea583b3e9e0777, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 56
+      objectReference: {fileID: 0}
+    - target: {fileID: 4123201345694352827, guid: 41cff2521fc869e488ea583b3e9e0777, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 56
+      objectReference: {fileID: 0}
+    - target: {fileID: 4405616091991628332, guid: 41cff2521fc869e488ea583b3e9e0777, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 56
+      objectReference: {fileID: 0}
+    - target: {fileID: 5672552230331993728, guid: 41cff2521fc869e488ea583b3e9e0777, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 56
+      objectReference: {fileID: 0}
+    - target: {fileID: 6073327214077314494, guid: 41cff2521fc869e488ea583b3e9e0777, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 56
+      objectReference: {fileID: 0}
+    - target: {fileID: 6294139064461584434, guid: 41cff2521fc869e488ea583b3e9e0777, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 56
+      objectReference: {fileID: 0}
+    - target: {fileID: 6388201630563333183, guid: 41cff2521fc869e488ea583b3e9e0777, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 56
+      objectReference: {fileID: 0}
+    - target: {fileID: 7842339250280542801, guid: 41cff2521fc869e488ea583b3e9e0777, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 56
       objectReference: {fileID: 0}
     - target: {fileID: 8067269043939559854, guid: 41cff2521fc869e488ea583b3e9e0777, type: 3}
       propertyPath: thumbnails.Array.data[0]

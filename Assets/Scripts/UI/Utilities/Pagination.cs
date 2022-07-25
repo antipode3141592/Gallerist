@@ -92,7 +92,7 @@ namespace Gallerist.UI
             for (int i = 0; i < totalPages; i++)
             {
                 pageButtons[i].gameObject.SetActive(true);
-                pageButtons[i].SetButton(i);
+                pageButtons[i].SetButton(i, PageSize);
             }
             for (int j = totalPages; j < pageButtons.Count; j++)
             {

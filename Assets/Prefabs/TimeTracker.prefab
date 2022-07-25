@@ -93,8 +93,6 @@ MonoBehaviour:
   Background: {fileID: 3218002029064055178}
   Foreground: {fileID: 3273157945302087760}
   CounterText: {fileID: 779375065311992235}
-  TotalTime: 0
-  CurrentTime: 0
 --- !u!1 &2102387489019461879
 GameObject:
   m_ObjectHideFlags: 0
@@ -161,7 +159,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: e4541323b97189a48a9be8566f31a632, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

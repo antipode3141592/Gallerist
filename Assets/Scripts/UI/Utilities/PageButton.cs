@@ -20,10 +20,10 @@ namespace Gallerist.UI
             OnClick?.Invoke(this, _index);
         }
 
-        public void SetButton(int index)
+        public void SetButton(int index, int pageSize)
         {
             _index = index;
-            _buttonText.text = $"{index + 1}";     //page '0' should display as '1'
+            _buttonText.text = $"{index * pageSize +1}-{(index + 1) * pageSize}";
         }
 
         public void HighlightBackground(bool highlight)
