@@ -36,6 +36,7 @@ namespace Gallerist
 
 
         public event EventHandler PreferencesUpdated;
+        public event EventHandler<string> TraitRevealed;
 
         public EvaluationResultTypes EvaluateArt(Art art)
         {
@@ -69,26 +70,37 @@ namespace Gallerist
             return 0;
         }
 
-        public void RevealTraits(int traitsToReveal)
+        public string RevealTrait()
         {
-            if (traitsToReveal == 0) return;
             List<ITrait> unknownTraits = new();
-            for (int i = 0; i < traitsToReveal; i++)
-            {
-                unknownTraits = EmotiveTraits.FindAll(x => x.IsKnown == false);
-                unknownTraits.AddRange(AestheticTraits.FindAll(x => x.IsKnown == false));
-                if (unknownTraits.Count == 0)
-                    return;
-                unknownTraits[Random.Range(0, unknownTraits.Count)].IsKnown = true;
-            }
-
             unknownTraits = EmotiveTraits.FindAll(x => x.IsKnown == false);
             unknownTraits.AddRange(AestheticTraits.FindAll(x => x.IsKnown == false));
             if (unknownTraits.Count == 0)
-                if (Debug.isDebugBuild)
-                    Debug.Log($"Patron {Name} has no remaining unknown preferences!");
+                return "";
+            int randomIndex = Random.Range(0, unknownTraits.Count);
+            unknownTraits[randomIndex].IsKnown = true;
+
+            //unknownTraits = EmotiveTraits.FindAll(x => x.IsKnown == false);
+            //unknownTraits.AddRange(AestheticTraits.FindAll(x => x.IsKnown == false));
+            //if (unknownTraits.Count == 0)
+            //    if (Debug.isDebugBuild)
+            //        Debug.Log($"Patron {Name} has no remaining unknown preferences!");
 
             PreferencesUpdated?.Invoke(this, EventArgs.Empty);
+            TraitRevealed?.Invoke(this, $"{unknownTraits[randomIndex].Name}");
+            if (Debug.isDebugBuild)
+                Debug.Log($"{Name} has a preference for {unknownTraits[randomIndex].Name} at {unknownTraits[randomIndex].Value}");
+            return unknownTraits[randomIndex].Name;
+        }
+
+        public void ModifyRandomTrait(int modifier)
+        {
+            ITrait _trait = Utilities.RandomBool() ?
+                AestheticTraits[Random.Range(0,AestheticTraits.Count)] :
+                EmotiveTraits[Random.Range(0,EmotiveTraits.Count)];
+            if (Debug.isDebugBuild)
+                Debug.Log($"randomly chosen trait: {_trait.Name}");
+            ModifyTrait(_trait, modifier);
         }
 
         public void ModifyTrait(ITrait trait, int modifier)
@@ -96,16 +108,23 @@ namespace Gallerist
             var patronTrait = EmotiveTraits.FirstOrDefault(x => x.Name == trait.Name);
             if (patronTrait is not null)
             {
+                if (Debug.isDebugBuild)
+                    Debug.Log($"modifying {patronTrait.Name} {patronTrait.Value} by {modifier}");
                 patronTrait.Value += modifier;
+                PreferencesUpdated?.Invoke(this, EventArgs.Empty);
                 return;
             }
             patronTrait = AestheticTraits.FirstOrDefault(x => x.Name == trait.Name);
             if (patronTrait is not null)
             {
+                if (Debug.isDebugBuild)
+                    Debug.Log($"modifying {patronTrait.Name} {patronTrait.Value} by {modifier}");
                 patronTrait.Value += modifier;
+                PreferencesUpdated?.Invoke(this, EventArgs.Empty);
                 return;
             }
-            PreferencesUpdated?.Invoke(this, EventArgs.Empty);
+            if (Debug.isDebugBuild)
+                Debug.Log($"{trait.Name} not found, no modifications made");
         }
 
         public void ModifyRandomMatchingTrait(List<ITrait> traits, int modifier)
@@ -119,10 +138,14 @@ namespace Gallerist
             PreferencesUpdated?.Invoke(this, EventArgs.Empty);
         }
 
-        public void SetSubscription()
+        public bool SetSubscription()
         {
+            if (IsSubscriber)
+                return false;
             IsSubscriber = true;
-            RevealTraits(2);
+            for (int i = 0; i < 2; i++)
+                RevealTrait();
+            return true;
         }
     }
 }

@@ -13,10 +13,11 @@ namespace Gallerist
 
         public bool ShowResults = false;
         public string ResultsText = "";
+        public string SummaryText = "";
 
         public event EventHandler<string> EvaluationResultUpdated;
         public event EventHandler<string> EvaluationsTotalUpdated;
-        public event EventHandler EvaluationResultsReady;
+        public event EventHandler<ResultsArgs> EvaluationResultsReady;
 
         void Awake()
         {
@@ -70,15 +71,18 @@ namespace Gallerist
 
             ShowResults = true;
             if (ShowResults)
-                EvaluationResultsReady?.Invoke(this, EventArgs.Empty);
+                EvaluationResultsReady?.Invoke(this, new ResultsArgs(
+                    description: $"{ResultsText}",
+                    summary: $""));
             while (ShowResults)
             {
                 yield return null;
             }
 
+            gameStateMachine.Closing.Evaluations++;
             EvaluationsTotalUpdated?.Invoke(this, $"{gameStateMachine.Closing.Evaluations} of {gameStateMachine.Closing.TotalEvaluations} Evaluations");
             EvaluationResultUpdated?.Invoke(this, $"Originals Sold: {gameStatsController.Stats.OriginalsThisMonth} , Prints Sold: {gameStatsController.Stats.PrintsThisMonth}");
-            gameStateMachine.Closing.Evaluations++;
+            
         }
 
         void Evaluate(Patron currentPatron, Art currentArt)
@@ -89,6 +93,7 @@ namespace Gallerist
             if (result == EvaluationResultTypes.None)
             {
                 ResultsText = $"Patron {currentPatron.Name} finds {currentArt.Name} boring.";
+                SummaryText = $"";
                 return;
             }
 
@@ -100,6 +105,7 @@ namespace Gallerist
                 {
                     currentPatron.Satisfaction += 5;
                     ResultsText = $"{currentPatron.Name} is uninterested in {currentArt.Name} but has joined the gallery's mailing list.";
+                    SummaryText = $"+1 Subscription";
                     currentPatron.SetSubscription();
                     gameStatsController.Stats.SubscribersThisMonth++;
                 }
@@ -109,6 +115,7 @@ namespace Gallerist
             {
                 currentPatron.Satisfaction += 5;
                 ResultsText = $"Patron {currentPatron.Name} likes {currentArt.Name} and will buy a print!";
+                SummaryText = $"+1 Print Sale";
                 currentArt.PrintsSold++;
                 gameStatsController.Stats.PrintsThisMonth++;
                 return;
@@ -118,10 +125,23 @@ namespace Gallerist
             {
                 currentPatron.Satisfaction += 10;
                 ResultsText = $"Patron {currentPatron.Name} loves {currentArt.Name} and will buy the original!";
+                SummaryText = $"+1 Original Sale";
                 currentArt.IsSold = true;
                 currentPatron.Acquisitions.Add(currentArt);
                 gameStatsController.Stats.OriginalsThisMonth++;
             }
+        }
+    }
+
+    public class ResultsArgs : EventArgs
+    {
+        public string Description;
+        public string Summary;
+
+        public ResultsArgs(string description, string summary)
+        {
+            Description = description;
+            Summary = summary;
         }
     }
 }

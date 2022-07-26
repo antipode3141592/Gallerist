@@ -25,10 +25,11 @@ namespace Gallerist.UI
             MoveOffscreen();
         }
 
-        void DisplayResults(object sender, EventArgs e)
+        private void DisplayResults(object sender, ResultsArgs e)
         {
             MoveOnScreen();
-            descriptionText.text = evaluationController.ResultsText;
+            descriptionText.text = e.Description;
+            resultsText.text = e.Summary;
         }
 
         public void Continue()
