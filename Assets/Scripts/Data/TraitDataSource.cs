@@ -61,7 +61,7 @@ namespace Gallerist
                 else if (traitType == typeof(PatronTrait))
                 {
                     //first trait is negative, others are positive
-                    traitValue = i == 0 ? Random.Range(-5,-1) : Random.Range(1, 5) + bonus;
+                    traitValue = i == totalTraits - 1 ? Random.Range(-5,-1) : Random.Range(1, 5) + bonus;
                     traits.Add(new PatronTrait(traitNames[i], traitValue, false, TraitType.Aesthetic));
                 }
                 else
@@ -101,7 +101,7 @@ namespace Gallerist
                 else if (traitType == typeof(PatronTrait))
                 {
                     //first trait is negative, others are positive
-                    traitValue = i == 0 ? Random.Range(-5, -1) : Random.Range(1, 5) + bonus;
+                    traitValue = i == totalTraits - 1 ? Random.Range(-5, -1) : Random.Range(1, 5) + bonus;
                     traits.Add(new PatronTrait(traitNames[i], traitValue, false, TraitType.Emotive));
                 }
                 else
