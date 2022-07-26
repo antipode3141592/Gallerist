@@ -76,31 +76,7 @@ namespace Gallerist.UI
         public void ToggleTraitsView()
         {
             revealToggle = !revealToggle;
-            if (revealToggle)
-            {
-                DisplayAllTraits();
-            }
-            else
-            {
-                DisplayKnownTraits();
-            }
-        }
-
-        void DisplayAllTraits()
-        {
-            Patron patron = patronManager.SelectedObject;
-            for (int i = 0; i < patron.AestheticTraits.Count; i++)
-            {
-                var trait = patron.AestheticTraits[i];
-                string traitText = $"{trait.Name} {trait.Value}";
-                aestheticTraits[i].UpdateText(traitText);
-            }
-            for (int i = 0; i < patron.EmotiveTraits.Count; i++)
-            {
-                var trait = patron.EmotiveTraits[i];
-                string traitText = $"{trait.Name} {trait.Value}";
-                emotiveTraits[i].UpdateText(traitText);
-            }
+            DisplayKnownTraits();
         }
 
         void DisplayKnownTraits()
@@ -109,13 +85,13 @@ namespace Gallerist.UI
             for (int i = 0; i < patron.AestheticTraits.Count; i++)
             {
                 var trait = patron.AestheticTraits[i];
-                string traitText = trait.IsKnown ? $"{trait.Name} {trait.Value}" : $"(unknown)";
+                string traitText = revealToggle || trait.IsKnown ? $"{trait.Name} {trait.Value}" : $"(unknown)";
                 aestheticTraits[i].UpdateText(traitText);
             }
             for (int i = 0; i < patron.EmotiveTraits.Count; i++)
             {
                 var trait = patron.EmotiveTraits[i];
-                string traitText = trait.IsKnown ? $"{trait.Name} {trait.Value}" : $"(unknown)";
+                string traitText = revealToggle || trait.IsKnown ? $"{trait.Name} {trait.Value}" : $"(unknown)";
                 emotiveTraits[i].UpdateText(traitText);
             }
         }
