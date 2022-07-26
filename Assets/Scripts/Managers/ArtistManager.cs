@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Gallerist
 {
@@ -45,6 +46,12 @@ namespace Gallerist
                 favoredEmotiveTraits: traitDataSource.GenerateEmotiveTraits(3, typeof(ArtistTrait)),
                 portrait: spriteDataSource.GeneratePortrait()
                 );
+        }
+
+        public void GetRandomTraits(out ITrait aesthetic, out ITrait emotive)
+        {
+            aesthetic = Artist.FavoredAestheticTraits[Random.Range(0, Artist.FavoredAestheticTraits.Count)];
+            emotive = Artist.FavoredEmotiveTraits[Random.Range(0, Artist.FavoredEmotiveTraits.Count)];
         }
     }
 }

@@ -4,14 +4,10 @@ namespace Gallerist
 {
     public class PatronTrait : ITrait
     {
-        public PatronTrait(string name, bool isKnown, TraitType traitType)
+        public PatronTrait(string name, int value, bool isKnown, TraitType traitType)
         {
             Name = name;
-            Value = UnityEngine.Random.Range(-5,5);
-            do
-            {
-                Value = UnityEngine.Random.Range(-5, 5);
-            }while(Value == 0); //having a 0 weight trait is silly
+            Value = value;
             IsKnown = isKnown;
             TraitType = traitType;
         }

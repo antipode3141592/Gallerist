@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Gallerist
 {
@@ -34,10 +35,10 @@ namespace Gallerist
         void OnGameStarted(object sender, EventArgs e)
         {
             CurrentObjects.Clear();
-            GenerateArts(10);
+            GenerateArtpieces(10);
         }
 
-        void GenerateArts(int total)
+        void GenerateArtpieces(int total)
         {
             for (int i = 0; i < total; i++)
             {
@@ -48,13 +49,18 @@ namespace Gallerist
 
         void GenerateArt()
         {
+            ITrait aesthetic = null;
+            ITrait emotive = null;
+            artistManager.GetRandomTraits(out aesthetic, out emotive);
+
+
             //create piece of art
             var newArt = new Art(
                 name: nameDataSource.GenerateArtName(),
                 description: nameDataSource.GenerateArtDescription(),
                 artistName: artistManager.Artist.Name,
-                aestheticQualities: traitDataSource.GenerateAestheticTraits(3, typeof(ArtTrait)),
-                emotiveQualities: traitDataSource.GenerateEmotiveTraits(3, typeof(ArtTrait)),
+                aestheticQualities: traitDataSource.GenerateAestheticTraits(3, typeof(ArtTrait), requiredTraits: new() { aesthetic.Name }),
+                emotiveQualities: traitDataSource.GenerateEmotiveTraits(3, typeof(ArtTrait), requiredTraits: new() { emotive.Name}),
                 image: spriteDataSource.GenerateArtImage()
                 );
             //stats are based on Artist favoredTraits (ex: artist specializing in landscapes will tend to create landscapes)
@@ -66,6 +72,13 @@ namespace Gallerist
         public Art GetObjectAt(int index)
         {
             throw new NotImplementedException();
+        }
+
+        public void GetRandomTraits(out ITrait aesthetic, out ITrait emotive)
+        {
+            var randomObject = CurrentObjects[Random.Range(0, CurrentObjects.Count)];
+            aesthetic = randomObject.AestheticTraits[Random.Range(0, randomObject.AestheticTraits.Count)];
+            emotive = randomObject.EmotiveTraits[Random.Range(0, randomObject.EmotiveTraits.Count)];
         }
     }
 }

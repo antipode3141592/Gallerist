@@ -13,6 +13,8 @@ namespace Gallerist
 
         GameStateMachine gameStateMachine;
         GameStatsController gameStatsController;
+        ArtistManager artistManager;
+        ArtManager artManager;
 
         public List<Patron> CurrentObjects { get; } = new List<Patron>();
         public List<Patron> PastObjects { get; } = new List<Patron>();
@@ -27,6 +29,8 @@ namespace Gallerist
         {
             gameStateMachine = FindObjectOfType<GameStateMachine>();
             gameStatsController = FindObjectOfType<GameStatsController>();
+            artistManager = FindObjectOfType<ArtistManager>();
+            artManager = FindObjectOfType<ArtManager>();
             nameDataSource = FindObjectOfType<NameDataSource>();
             spriteDataSource = FindObjectOfType<SpriteDataSource>();
             traitDataSource = FindObjectOfType<TraitDataSource>();
@@ -64,12 +68,16 @@ namespace Gallerist
 
         public void GeneratePatron()
         {
+            ITrait aesthetic = null;
+            ITrait emotive = null;
+            artManager.GetRandomTraits(out aesthetic, out emotive);
+
             var newPatron = new Patron(
                 name: nameDataSource.GenerateRandomPatronName(),
                 portrait: spriteDataSource.GeneratePortrait(),
                 isSubscriber: false,
-                aestheticTraits: traitDataSource.GenerateAestheticTraits(5, typeof(PatronTrait)),
-                emotiveTraits: traitDataSource.GenerateEmotiveTraits(5, typeof(PatronTrait)),
+                aestheticTraits: traitDataSource.GenerateAestheticTraits(5, typeof(PatronTrait), new() { aesthetic.Name }),
+                emotiveTraits: traitDataSource.GenerateEmotiveTraits(5, typeof(PatronTrait), new() { emotive.Name }),
                 acquisitions: new (),
                 aestheticThreshold: Random.Range(8, 13),
                 emotiveThreshold: Random.Range(8, 13));

@@ -4,11 +4,11 @@ namespace Gallerist
 {
     public class ArtistTrait : ITrait
     {
-        public ArtistTrait(string name, bool isKnown, TraitType traitType)
+        public ArtistTrait(string name,  int value, bool isKnown, TraitType traitType)
         {
             TraitType = traitType;
             Name = name;
-            Value = UnityEngine.Random.Range(1, 5);
+            Value = value;
             IsKnown = isKnown;
         }
 

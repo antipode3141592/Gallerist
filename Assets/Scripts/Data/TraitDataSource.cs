@@ -31,29 +31,38 @@ namespace Gallerist
             return traitList[randomIndex].Trim();
         }
 
-        public List<ITrait> GenerateAestheticTraits(int totalTraits, Type traitType)
+        public List<ITrait> GenerateAestheticTraits(int totalTraits, Type traitType, List<string> requiredTraits = null, int bonus = 0)
         {
             List<ITrait> traits = new();
-            List<string> traitNames = new();
+            List<string> traitNames = requiredTraits is null ? new() : requiredTraits;
+
 
             for (int i = 0; i < totalTraits; i++)
             {
                 string traitName;
-                do { traitName = GetRandomTraitName(AestheticTraits); }
-                while (traitNames.Contains(traitName));
-                traitNames.Add(traitName);
-
+                int traitValue = 0;
+                if (traitNames.ElementAtOrDefault(i) is null)
+                {
+                    do { traitName = GetRandomTraitName(AestheticTraits); }
+                    while (traitNames.Contains(traitName));
+                    traitNames.Add(traitName);
+                }
+                
                 if (traitType == typeof(ArtTrait))
                 {
-                    traits.Add(new ArtTrait(traitName, true, TraitType.Aesthetic));
+                    traitValue = Random.Range(1, 5) + bonus;
+                    traits.Add(new ArtTrait(traitNames[i], traitValue, true, TraitType.Aesthetic));
                 }
                 else if (traitType == typeof(ArtistTrait))
                 {
-                    traits.Add(new ArtistTrait(traitName, true, TraitType.Aesthetic));
+                    traitValue = Random.Range(1, 5) + bonus;
+                    traits.Add(new ArtistTrait(traitNames[i], traitValue, true, TraitType.Aesthetic));
                 }
                 else if (traitType == typeof(PatronTrait))
                 {
-                    traits.Add(new PatronTrait(traitName, false, TraitType.Aesthetic));
+                    //first trait is negative, others are positive
+                    traitValue = i == 0 ? Random.Range(-5,-1) : Random.Range(1, 5) + bonus;
+                    traits.Add(new PatronTrait(traitNames[i], traitValue, false, TraitType.Aesthetic));
                 }
                 else
                 {
@@ -63,28 +72,37 @@ namespace Gallerist
             return traits;
         }
 
-        public List<ITrait> GenerateEmotiveTraits(int totalTraits, Type traitType)
+        public List<ITrait> GenerateEmotiveTraits(int totalTraits, Type traitType, List<string> requiredTraits = null, int bonus = 0)
         {
             List<ITrait> traits = new();
-            List<string> traitNames = new();
+            List<string> traitNames = requiredTraits is null ? new() : requiredTraits;
             for (int i = 0; i < totalTraits; i++)
             {
                 string traitName;
-                do { traitName = GetRandomTraitName(EmotiveTraits); }
-                while (traitNames.Contains(traitName));
-                traitNames.Add(traitName);
+                int traitValue = 0;
+                if (traitNames.ElementAtOrDefault(i) is null)
+                {
+                    do { traitName = GetRandomTraitName(EmotiveTraits); }
+                    while (traitNames.Contains(traitName));
+                    traitNames.Add(traitName);
+                }
+                
 
                 if (traitType == typeof(ArtTrait))
                 {
-                    traits.Add(new ArtTrait(traitName, true, TraitType.Emotive));
+                    traitValue = Random.Range(1, 5) + bonus;
+                    traits.Add(new ArtTrait(traitNames[i], traitValue, true, TraitType.Emotive));
                 }
                 else if (traitType == typeof(ArtistTrait))
                 {
-                    traits.Add(new ArtistTrait(traitName, true, TraitType.Emotive));
+                    traitValue = Random.Range(1, 5) + bonus;
+                    traits.Add(new ArtistTrait(traitNames[i], traitValue, true, TraitType.Emotive));
                 }
                 else if (traitType == typeof(PatronTrait))
                 {
-                    traits.Add(new PatronTrait(traitName, false, TraitType.Emotive));
+                    //first trait is negative, others are positive
+                    traitValue = i == 0 ? Random.Range(-5, -1) : Random.Range(1, 5) + bonus;
+                    traits.Add(new PatronTrait(traitNames[i], traitValue, false, TraitType.Emotive));
                 }
                 else
                 {
