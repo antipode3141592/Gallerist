@@ -1,3 +1,4 @@
+using Gallerist.Events;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,6 +25,7 @@ namespace Gallerist
         public List<Patron> ExitingPatrons { get; } = new List<Patron>();
 
         public event EventHandler ObjectsGenerated;
+        public event EventHandler<TraitModified> ObjectTraitModified;
 
         void Awake()
         {
@@ -82,7 +84,13 @@ namespace Gallerist
                 aestheticThreshold: Random.Range(8, 13),
                 emotiveThreshold: Random.Range(8, 13));
             //  add a check for duplicates before adding to Patrons list
+            newPatron.TraitModified += PatronTraitModified;
             CurrentObjects.Add(newPatron);
+        }
+
+        private void PatronTraitModified(object sender, TraitModified e)
+        {
+            ObjectTraitModified?.Invoke(sender, e);
         }
 
         void RemovePatrons()

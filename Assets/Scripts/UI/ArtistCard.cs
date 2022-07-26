@@ -24,14 +24,12 @@ namespace Gallerist.UI
             for (int i = 0; i < artist.FavoredAestheticTraits.Count; i++)
             {
                 var trait = artist.FavoredAestheticTraits[i];
-                string traitText = trait.IsKnown ? $"{trait.Name} {trait.Value}" : $"(unknown)";
-                aestheticTraits[i].UpdateText(traitText);
+                aestheticTraits[i].UpdateText(trait);
             }
             for (int i = 0; i < artist.FavoredEmotiveTraits.Count; i++)
             {
                 var trait = artist.FavoredEmotiveTraits[i];
-                string traitText = trait.IsKnown ? $"{trait.Name} {trait.Value}" : $"(unknown)";
-                emotiveTraits[i].UpdateText(traitText);
+                emotiveTraits[i].UpdateText(trait);
             }
         }
     }

@@ -1,4 +1,4 @@
-using System;
+using Gallerist.Events;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -38,6 +38,15 @@ namespace Gallerist.UI
                 revealTraitsButton.gameObject.SetActive(false);
             evaluationController.EvaluationResultUpdated += OnEvaluationResultUpdated;
             acquiredArtEntries = new();
+
+            patronManager.ObjectTraitModified += OnObjectTraitModified;
+        }
+
+        void OnObjectTraitModified(object sender, TraitModified e)
+        {
+            Patron patron = sender as Patron;
+            if (patron.Name == nameText.text)
+                HighlightTrait(e.TraitName, e.Modifier);
         }
 
         void OnEvaluationResultUpdated(object sender, string e)
@@ -85,14 +94,32 @@ namespace Gallerist.UI
             for (int i = 0; i < patron.AestheticTraits.Count; i++)
             {
                 var trait = patron.AestheticTraits[i];
-                string traitText = revealToggle || trait.IsKnown ? $"{trait.Name} {trait.Value}" : $"(unknown)";
-                aestheticTraits[i].UpdateText(traitText);
+                aestheticTraits[i].UpdateText(trait, revealToggle);
             }
             for (int i = 0; i < patron.EmotiveTraits.Count; i++)
             {
                 var trait = patron.EmotiveTraits[i];
-                string traitText = revealToggle || trait.IsKnown ? $"{trait.Name} {trait.Value}" : $"(unknown)";
-                emotiveTraits[i].UpdateText(traitText);
+                emotiveTraits[i].UpdateText(trait, revealToggle);
+            }
+        }
+
+        void HighlightTrait(string traitName, int modifier)
+        {
+            foreach (var trait in aestheticTraits)
+            {
+                if (trait.TraitName == traitName)
+                {
+                    trait.HighlightTrait(modifier);
+                    return;
+                }
+            }
+            foreach (var trait in emotiveTraits)
+            {
+                if (trait.TraitName == traitName)
+                {
+                    trait.HighlightTrait(modifier);
+                    return;
+                }
             }
         }
     }

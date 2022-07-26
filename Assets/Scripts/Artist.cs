@@ -11,6 +11,8 @@ namespace Gallerist
         public List<ITrait> FavoredAestheticTraits { get; private set; }
         public List<ITrait> FavoredEmotiveTraits { get; private set; }
 
+        public int Experience { get; set; }
+
         public Artist(string name, List<ITrait> favoredAestheticTraits, List<ITrait> favoredEmotiveTraits, Sprite portrait)
         {
             Name = name;

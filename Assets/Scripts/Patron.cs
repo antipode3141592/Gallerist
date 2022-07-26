@@ -1,3 +1,4 @@
+using Gallerist.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,6 +38,7 @@ namespace Gallerist
 
         public event EventHandler PreferencesUpdated;
         public event EventHandler<string> TraitRevealed;
+        public event EventHandler<TraitModified> TraitModified;
 
         public EvaluationResultTypes EvaluateArt(Art art)
         {
@@ -80,12 +82,6 @@ namespace Gallerist
             int randomIndex = Random.Range(0, unknownTraits.Count);
             unknownTraits[randomIndex].IsKnown = true;
 
-            //unknownTraits = EmotiveTraits.FindAll(x => x.IsKnown == false);
-            //unknownTraits.AddRange(AestheticTraits.FindAll(x => x.IsKnown == false));
-            //if (unknownTraits.Count == 0)
-            //    if (Debug.isDebugBuild)
-            //        Debug.Log($"Patron {Name} has no remaining unknown preferences!");
-
             PreferencesUpdated?.Invoke(this, EventArgs.Empty);
             TraitRevealed?.Invoke(this, $"{unknownTraits[randomIndex].Name}");
             if (Debug.isDebugBuild)
@@ -112,6 +108,7 @@ namespace Gallerist
                     Debug.Log($"modifying {patronTrait.Name} {patronTrait.Value} by {modifier}");
                 patronTrait.Value += modifier;
                 PreferencesUpdated?.Invoke(this, EventArgs.Empty);
+                TraitModified?.Invoke(this, new TraitModified(trait.Name, modifier));
                 return;
             }
             patronTrait = AestheticTraits.FirstOrDefault(x => x.Name == trait.Name);
@@ -121,6 +118,7 @@ namespace Gallerist
                     Debug.Log($"modifying {patronTrait.Name} {patronTrait.Value} by {modifier}");
                 patronTrait.Value += modifier;
                 PreferencesUpdated?.Invoke(this, EventArgs.Empty);
+                TraitModified?.Invoke(this, new TraitModified(trait.Name, modifier));
                 return;
             }
             if (Debug.isDebugBuild)
