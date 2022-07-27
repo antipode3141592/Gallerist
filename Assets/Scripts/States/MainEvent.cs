@@ -5,12 +5,13 @@ namespace Gallerist.States
 {
     public class MainEvent : IState
     {
+        PatronManager patronManager;
+
         public bool IsComplete;
 
-
-
-        public MainEvent()
+        public MainEvent(PatronManager patronManager)
         {
+            this.patronManager = patronManager;
         }
 
         public event EventHandler StateEntered;
@@ -18,6 +19,7 @@ namespace Gallerist.States
 
         public void OnEnter()
         {
+            patronManager.OnMainEventEntered();
             StateEntered?.Invoke(this, EventArgs.Empty);
             IsComplete = false;
         }

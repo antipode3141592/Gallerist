@@ -25,13 +25,10 @@ namespace Gallerist
             patronManager = FindObjectOfType<PatronManager>();
             artManager = FindObjectOfType<ArtManager>();
             gameStatsController = FindObjectOfType<GameStatsController>();
-            gameStateMachine.Schmooze.StateExited += OnSchmoozeEnd;
         }
 
-        void OnSchmoozeEnd(object sender, EventArgs e)
+        public void OnSchmoozeEnd()
         {
-            if (Debug.isDebugBuild)
-                Debug.Log($"{sender} triggered OnSchmoozeEnd");
             EvaluateAll();
         }
 

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -18,9 +17,24 @@ namespace Gallerist
 
         public List<Art> PastObjects { get; } = new List<Art>();
 
-        public Art SelectedObject { get; set; }
+        public HashSet<string> ArtTraits = new();
+        
+        Art selectedObject;
+
+        public Art SelectedObject {
+            get 
+            {
+                return selectedObject; 
+            }
+            set 
+            { 
+                selectedObject = value;
+                SelectedObjectChanged?.Invoke(this, EventArgs.Empty);
+            }
+        }
 
         public event EventHandler ObjectsGenerated;
+        public event EventHandler SelectedObjectChanged;
 
         void Awake()
         {
@@ -29,18 +43,13 @@ namespace Gallerist
             nameDataSource = FindObjectOfType<NameDataSource>();
             spriteDataSource = FindObjectOfType<SpriteDataSource>();
             traitDataSource = FindObjectOfType<TraitDataSource>();
-
-            gameStateMachine.StartState.StateEntered += OnGameStarted;
         }
 
-        void OnGameStarted(object sender, EventArgs e)
+        public void GenerateArtpieces(int total)
         {
             CurrentObjects.Clear();
-            GenerateArtpieces(10);
-        }
-
-        void GenerateArtpieces(int total)
-        {
+            if (Debug.isDebugBuild)
+                Debug.Log($"Generating {total} new art pieces");
             for (int i = 0; i < total; i++)
             {
                 GenerateArt();
@@ -61,7 +70,7 @@ namespace Gallerist
                 description: nameDataSource.GenerateArtDescription(),
                 artistName: artistManager.Artist.Name,
                 aestheticQualities: traitDataSource.GenerateAestheticTraits(3, typeof(ArtTrait), requiredTraits: new() { aesthetic.Name }),
-                emotiveQualities: traitDataSource.GenerateEmotiveTraits(3, typeof(ArtTrait), requiredTraits: new() { emotive.Name}),
+                emotiveQualities: traitDataSource.GenerateEmotiveTraits(3, typeof(ArtTrait), requiredTraits: new() { emotive.Name }),
                 image: spriteDataSource.GenerateArtImage()
                 );
             //stats are based on Artist favoredTraits (ex: artist specializing in landscapes will tend to create landscapes)
@@ -75,17 +84,32 @@ namespace Gallerist
             throw new NotImplementedException();
         }
 
-        public List<string> GetAllTraitNames()
+        HashSet<string> GetAllCurrentTraitNames()
         {
             HashSet<string> traitNames = new();
-            foreach(var art in CurrentObjects)
+            if (selectedObject is not null)
+            {
+                foreach (var trait1 in selectedObject.AestheticTraits)
+                    if (!traitNames.Contains(trait1.Name))
+                        traitNames.Add(trait1.Name);
+                foreach (var trait2 in selectedObject.EmotiveTraits)
+                    if (!traitNames.Contains(trait2.Name))
+                        traitNames.Add(trait2.Name);
+            }
+            return traitNames;
+        }
+
+        public HashSet<string> GetAllTraitNames()
+        {
+            HashSet<string> traitNames = new();
+            foreach (var art in CurrentObjects)
             {
                 foreach (var trait in art.AestheticTraits)
                     traitNames.Add(trait.Name);
                 foreach (var trait in art.EmotiveTraits)
                     traitNames.Add(trait.Name);
             }
-            return traitNames.ToList();
+            return traitNames;
         }
 
         public void GetRandomTraits(out ITrait aesthetic, out ITrait emotive)
@@ -93,6 +117,12 @@ namespace Gallerist
             var randomObject = CurrentObjects[Random.Range(0, CurrentObjects.Count)];
             aesthetic = randomObject.AestheticTraits[Random.Range(0, randomObject.AestheticTraits.Count)];
             emotive = randomObject.EmotiveTraits[Random.Range(0, randomObject.EmotiveTraits.Count)];
+        }
+
+        public void SetCurrentArt(Art art)
+        {
+            SelectedObject = art;
+            ArtTraits = GetAllCurrentTraitNames();
         }
     }
 }

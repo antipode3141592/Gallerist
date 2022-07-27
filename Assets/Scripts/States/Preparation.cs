@@ -1,25 +1,24 @@
 using FiniteStateMachine;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 namespace Gallerist.States
 {
     public class Preparation : IState
     {
+        PreparationController preparationController;
 
         public event EventHandler StateEntered;
         public event EventHandler StateExited;
         public bool IsComplete = false;
 
-        public Preparation()
+        public Preparation(PreparationController preparationController)
         {
-
+            this.preparationController = preparationController;
         }
 
         public void OnEnter()
         {
+            preparationController.OnPreparationEntered();
             StateEntered?.Invoke(this, EventArgs.Empty);
             IsComplete = false;
         }

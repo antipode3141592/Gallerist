@@ -7,18 +7,23 @@ namespace Gallerist
 {
     public class GameStateMachine : MonoBehaviour
     {
+        ArtManager artManager;
+        ArtistManager artistManager;
+        PatronManager patronManager;
         GameStatsController gameStatsController;
+        PreparationController preparationController;
+        EvaluationController evaluationController;
 
         StateMachine _stateMachine;
 
-        NewGame newGame = new();
-        START startState = new();
-        Preparation preparation = new();
-        SchmoozeState schmooze = new();
-        MainEvent mainEvent = new();
-        Closing closing = new();
-        END end = new();
-        Final final = new();
+        NewGame newGame; //= new();
+        START startState;// = new();
+        Preparation preparation; // = new();
+        SchmoozeState schmooze; // = new();
+        MainEvent mainEvent; // = new();
+        Closing closing; // = new();
+        END end; // = new();
+        Final final; // = new();
 
         public NewGame NewGame => newGame;
         public START StartState => startState;
@@ -35,9 +40,24 @@ namespace Gallerist
 
         void Awake()
         {
+            artistManager = FindObjectOfType<ArtistManager>();
+            artManager = FindObjectOfType<ArtManager>();
+            patronManager = FindObjectOfType<PatronManager>();
+
             gameStatsController = FindObjectOfType<GameStatsController>();
+            preparationController = FindObjectOfType<PreparationController>();
+            evaluationController = FindObjectOfType<EvaluationController>();
 
             _stateMachine = new StateMachine();
+
+            newGame = new();
+            startState = new START(artManager, artistManager, patronManager);
+            preparation = new(preparationController);
+            schmooze = new(evaluationController);
+            mainEvent = new(patronManager);
+            closing = new();
+            end = new();
+            final = new();
 
             _stateMachine.OnStateChange += OnStateChangeHandler;
 

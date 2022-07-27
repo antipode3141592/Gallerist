@@ -1,7 +1,7 @@
 using Gallerist.Data;
-using Gallerist.States;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Gallerist
@@ -43,11 +43,9 @@ namespace Gallerist
             ambientMusicDataSource = FindObjectOfType<AmbientMusicDataSource>();
             foodAndDrinkDataSource = FindObjectOfType<FoodAndDrinkDataSource>();
             centerpieceDataSource = FindObjectOfType<CenterpieceDataSource>();
-
-            gameStateMachine.Preparation.StateEntered += OnPreparationEntered;
         }
 
-        void OnPreparationEntered(object sender, EventArgs e)
+        public void OnPreparationEntered()
         {
             AmbientMusicSelected = false;
             FoodAndDrinkSelected = false;
@@ -98,7 +96,7 @@ namespace Gallerist
             FoodAndDrinks.Clear();
             Centerpieces.Clear();
 
-            List<string> traitNames = artManager.GetAllTraitNames();
+            List<string> traitNames = artManager.GetAllTraitNames().ToList();
             Bag traitBag = new Bag(traitNames.Count);
 
             for (int i = 0; i < OptionsPerMonth; i++)
@@ -151,7 +149,7 @@ namespace Gallerist
         public string Description;
         public TraitType TypeToModify => TraitType.Aesthetic;
         public List<string> IdsToModify { get; }
-        public string Modifiers => $"({string.Join(',', IdsToModify)})";
+        public string Modifiers => $"({string.Join(", ", IdsToModify)})";
 
         public AmbientMusic(string name, string description, List<string> idsToModify)
         {
@@ -167,7 +165,7 @@ namespace Gallerist
         public string Description;
         public TraitType TypeToModify => TraitType.Emotive;
         public List<string> IdsToModify { get; }
-        public string Modifiers => $"({string.Join(',', IdsToModify)})";
+        public string Modifiers => $"({string.Join(", ", IdsToModify)})";
 
         public FoodAndDrink(string name, string description, List<string> idsToModify)
         {

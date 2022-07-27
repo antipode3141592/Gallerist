@@ -36,19 +36,19 @@ namespace Gallerist
             nameDataSource = FindObjectOfType<NameDataSource>();
             spriteDataSource = FindObjectOfType<SpriteDataSource>();
             traitDataSource = FindObjectOfType<TraitDataSource>();
-
-            gameStateMachine.StartState.StateEntered += OnStartEntered;
-            gameStateMachine.MainEvent.StateEntered += OnMainEventEntered;
         }
 
-        void OnStartEntered(object sender, EventArgs e)
+        public void NewPatrons(int total)
         {
-            PastObjects.AddRange(CurrentObjects);
-            CurrentObjects.Clear();
-            GeneratePatrons(20);
+            if (CurrentObjects.Count > 0)
+            {
+                PastObjects.AddRange(CurrentObjects);
+                CurrentObjects.Clear();
+            }
+            GeneratePatrons(total);
         }
 
-        void OnMainEventEntered(object sender, EventArgs e)
+        public void OnMainEventEntered()
         {
             RemovePatrons();
             int bored = gameStatsController.Stats.BoredGuests;

@@ -14,7 +14,11 @@ namespace Gallerist
 
         public Artist Artist { get; set; } = null;
 
+        public HashSet<string> ArtistTraits = new();
+
         public List<Artist> PreviousArtists { get; } = new List<Artist>();
+
+        public event EventHandler ArtistGenerated;
 
         void Awake()
         {
@@ -22,10 +26,10 @@ namespace Gallerist
             nameDataSource = FindObjectOfType<NameDataSource>();
             spriteDataSource = FindObjectOfType<SpriteDataSource>();
             traitDataSource = FindObjectOfType<TraitDataSource>();
-            gameStateMachine.NewGame.StateEntered += OnNewGame;
+            //gameStateMachine.StartState.StateEntered += OnNewGame;
         }
 
-        void OnNewGame(object sender, EventArgs e)
+        public void NewArtist()
         {
             if (Artist is not null)
                 PreviousArtists.Add(Artist);
@@ -36,16 +40,29 @@ namespace Gallerist
             {
                 Debug.Log($"Previous Artist: {artist.Name}");
             }
+            ArtistGenerated?.Invoke(this, EventArgs.Empty);
         }
 
         void GenerateArtist()
         {
+            ArtistTraits.Clear();
             Artist = new Artist(
                 name: nameDataSource.GenerateRandomArtistName(),
                 favoredAestheticTraits: traitDataSource.GenerateAestheticTraits(3, typeof(ArtistTrait)),
                 favoredEmotiveTraits: traitDataSource.GenerateEmotiveTraits(3, typeof(ArtistTrait)),
                 portrait: spriteDataSource.GeneratePortrait()
                 );
+            ArtistTraits = GetAllTraits();
+        }
+
+        HashSet<string> GetAllTraits()
+        {
+            HashSet<string> retval = new();
+            foreach (var trait in Artist.FavoredAestheticTraits)
+                retval.Add(trait.Name);
+            foreach (var trait in Artist.FavoredEmotiveTraits)
+                retval.Add(trait.Name);
+            return retval;
         }
 
         public void GetRandomTraits(out ITrait aesthetic, out ITrait emotive)
