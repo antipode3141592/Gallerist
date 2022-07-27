@@ -14,6 +14,8 @@ namespace Gallerist
         FoodAndDrinkDataSource foodAndDrinkDataSource;
         CenterpieceDataSource centerpieceDataSource;
 
+        ArtManager artManager;
+
         public List<AmbientMusic> AmbientMusics { get; } = new();
         public List<FoodAndDrink> FoodAndDrinks { get; } = new();
         public List<Centerpiece> Centerpieces { get; } = new();
@@ -36,6 +38,7 @@ namespace Gallerist
         void Awake()
         {
             gameStateMachine = FindObjectOfType<GameStateMachine>();
+            artManager = FindObjectOfType<ArtManager>();
             traitDataSource = FindObjectOfType<TraitDataSource>();
             ambientMusicDataSource = FindObjectOfType<AmbientMusicDataSource>();
             foodAndDrinkDataSource = FindObjectOfType<FoodAndDrinkDataSource>();
@@ -94,27 +97,42 @@ namespace Gallerist
             AmbientMusics.Clear();
             FoodAndDrinks.Clear();
             Centerpieces.Clear();
+
+            List<string> traitNames = artManager.GetAllTraitNames();
+            Bag traitBag = new Bag(traitNames.Count);
+
             for (int i = 0; i < OptionsPerMonth; i++)
             {
+                traitBag.ResetBag();
+
                 AmbientMusics.Add(
                     new AmbientMusic(
                         name: ambientMusicDataSource.GetRandomItem(),
                         description: "",
-                        idsToModify: traitDataSource.GetRandomTraitNames(5, TraitType.Aesthetic)
+                        idsToModify: new List<string> { 
+                            traitNames[traitBag.DrawFromBag()],
+                            traitNames[traitBag.DrawFromBag()],
+                            traitNames[traitBag.DrawFromBag()]}
                         )
                     );
                 FoodAndDrinks.Add(
                     new FoodAndDrink(
                         name: foodAndDrinkDataSource.GetRandomItem(),
                         description: "",
-                        idsToModify: traitDataSource.GetRandomTraitNames(5, TraitType.Emotive)
+                        idsToModify: new List<string> {
+                            traitNames[traitBag.DrawFromBag()],
+                            traitNames[traitBag.DrawFromBag()],
+                            traitNames[traitBag.DrawFromBag()]}
                         )
                     );
                 Centerpieces.Add(
                     new Centerpiece(
                         name: centerpieceDataSource.GetRandomItem(),
                         description: "",
-                        idsToModify: traitDataSource.GetRandomTraitNames(5, TraitType.Emotive)
+                        idsToModify: new List<string> {
+                            traitNames[traitBag.DrawFromBag()],
+                            traitNames[traitBag.DrawFromBag()],
+                            traitNames[traitBag.DrawFromBag()]}
                         )
                     );
             }
@@ -165,7 +183,7 @@ namespace Gallerist
         public string Description;
         public TraitType TypeToModify => TraitType.Emotive;
         public List<string> IdsToModify { get; }
-        public string Modifiers => $"({string.Join(',', IdsToModify)})";
+        public string Modifiers => $"({string.Join(", ", IdsToModify)})";
 
         public Centerpiece(string name, string description, List<string> idsToModify)
         {

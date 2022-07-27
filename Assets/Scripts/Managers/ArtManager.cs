@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -72,6 +73,19 @@ namespace Gallerist
         public Art GetObjectAt(int index)
         {
             throw new NotImplementedException();
+        }
+
+        public List<string> GetAllTraitNames()
+        {
+            HashSet<string> traitNames = new();
+            foreach(var art in CurrentObjects)
+            {
+                foreach (var trait in art.AestheticTraits)
+                    traitNames.Add(trait.Name);
+                foreach (var trait in art.EmotiveTraits)
+                    traitNames.Add(trait.Name);
+            }
+            return traitNames.ToList();
         }
 
         public void GetRandomTraits(out ITrait aesthetic, out ITrait emotive)
