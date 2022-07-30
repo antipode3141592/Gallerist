@@ -17,18 +17,15 @@ namespace Gallerist
 
         public List<Art> PastObjects { get; } = new List<Art>();
 
-        public HashSet<string> ArtTraits = new();
+        public HashSet<string> AllCurrentTraitNames = new();
         
-        Art selectedObject;
+        Art currentObject;
 
-        public Art SelectedObject {
-            get 
-            {
-                return selectedObject; 
-            }
+        public Art CurrentObject {
+            get => currentObject;
             set 
             { 
-                selectedObject = value;
+                currentObject = value;
                 SelectedObjectChanged?.Invoke(this, EventArgs.Empty);
             }
         }
@@ -87,12 +84,12 @@ namespace Gallerist
         HashSet<string> GetAllCurrentTraitNames()
         {
             HashSet<string> traitNames = new();
-            if (selectedObject is not null)
+            if (currentObject is not null)
             {
-                foreach (var trait1 in selectedObject.AestheticTraits)
+                foreach (var trait1 in currentObject.AestheticTraits)
                     if (!traitNames.Contains(trait1.Name))
                         traitNames.Add(trait1.Name);
-                foreach (var trait2 in selectedObject.EmotiveTraits)
+                foreach (var trait2 in currentObject.EmotiveTraits)
                     if (!traitNames.Contains(trait2.Name))
                         traitNames.Add(trait2.Name);
             }
@@ -119,10 +116,10 @@ namespace Gallerist
             emotive = randomObject.EmotiveTraits[Random.Range(0, randomObject.EmotiveTraits.Count)];
         }
 
-        public void SetCurrentArt(Art art)
+        public void SetCurrentObject(Art art)
         {
-            SelectedObject = art;
-            ArtTraits = GetAllCurrentTraitNames();
+            CurrentObject = art;
+            AllCurrentTraitNames = GetAllCurrentTraitNames();
         }
     }
 }

@@ -63,14 +63,14 @@ namespace Gallerist.UI
         {
             
             totalPages = Mathf.CeilToInt((float)thumbnailItems.Count() / (float)Thumbnails.Count);
-            if (Debug.isDebugBuild)
-                Debug.Log($"Sprites: {thumbnailItems.Count()} / Thumbnails: {Thumbnails.Count} = Total Pages: {totalPages}");
+            //if (Debug.isDebugBuild)
+            //    Debug.Log($"Sprites: {thumbnailItems.Count()} / Thumbnails: {Thumbnails.Count} = Total Pages: {totalPages}");
             for (int i = 0; i < Thumbnails.Count; i++)
             {
                 int index = i + PageSize * currentPage;
 
-                if (Debug.isDebugBuild)
-                    Debug.Log($"i: {i}, index: {index}");
+                //if (Debug.isDebugBuild)
+                //    Debug.Log($"i: {i}, index: {index}");
                 if (thumbnailItems.Count() <= index)
                 {
                     Thumbnails[i].gameObject.SetActive(false);

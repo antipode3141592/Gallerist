@@ -33,7 +33,7 @@ namespace Gallerist.UI
             if (e == string.Empty) return;
             Patron patron = _patronManager.CurrentObjects.Find(x => x.Name == e);
             if (patron is null) return;
-            _patronManager.SelectedObject = patron;
+            _patronManager.SetCurrentObject(patron);
             PatronCard.LoadPatronCardData();
         }
 

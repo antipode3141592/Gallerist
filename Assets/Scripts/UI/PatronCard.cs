@@ -56,7 +56,7 @@ namespace Gallerist.UI
 
         public void LoadPatronCardData()
         {
-            Patron patron = patronManager.SelectedObject;
+            Patron patron = patronManager.CurrentObject;
             nameText.text = patron.Name;
             isSubscriberToggle.isOn = patron.IsSubscriber;
             portraitImage.sprite = patron.Image;
@@ -68,7 +68,7 @@ namespace Gallerist.UI
 
         public void DisplayAcquiredArt()
         {
-            Patron patron = patronManager.SelectedObject;
+            Patron patron = patronManager.CurrentObject;
             for(int i = 0; i < acquiredArtEntries.Count; i++)
             {
                 Destroy(acquiredArtEntries[i].gameObject);
@@ -90,7 +90,7 @@ namespace Gallerist.UI
 
         void DisplayKnownTraits()
         {
-            Patron patron = patronManager.SelectedObject;
+            Patron patron = patronManager.CurrentObject;
             for (int i = 0; i < patron.AestheticTraits.Count; i++)
             {
                 var trait = patron.AestheticTraits[i];

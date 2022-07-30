@@ -17,14 +17,29 @@ namespace Gallerist
         ArtistManager artistManager;
         ArtManager artManager;
 
+        
+
         public List<Patron> CurrentObjects { get; } = new List<Patron>();
         public List<Patron> PastObjects { get; } = new List<Patron>();
 
-        public Patron SelectedObject { get; set; }
-        
+        public HashSet<string> AllCurrentTraitNames = new();
+
+        Patron currentObject;
+        public Patron CurrentObject 
+        { 
+            get => currentObject;
+            set
+            {
+                currentObject = value;
+                SelectedObjectChanged?.Invoke(this, EventArgs.Empty);
+            }
+        }
+
         public List<Patron> ExitingPatrons { get; } = new List<Patron>();
 
         public event EventHandler ObjectsGenerated;
+        public event EventHandler SelectedObjectChanged;
+        
         public event EventHandler<TraitModified> ObjectTraitModified;
 
         void Awake()
@@ -80,7 +95,7 @@ namespace Gallerist
                 isSubscriber: false,
                 aestheticTraits: traitDataSource.GenerateAestheticTraits(5, typeof(PatronTrait), new() { aesthetic.Name }),
                 emotiveTraits: traitDataSource.GenerateEmotiveTraits(5, typeof(PatronTrait), new() { emotive.Name }),
-                acquisitions: new (),
+                acquisitions: new(),
                 aestheticThreshold: Random.Range(8, 13),
                 emotiveThreshold: Random.Range(8, 13));
             //  add a check for duplicates before adding to Patrons list
@@ -108,6 +123,28 @@ namespace Gallerist
         public Patron GetObjectAt(int index)
         {
             return CurrentObjects[index];
+        }
+
+        public void SetCurrentObject(Patron patron)
+        {
+            CurrentObject = patron;
+            AllCurrentTraitNames = GetAllCurrentTraitNames();
+
+        }
+
+        HashSet<string> GetAllCurrentTraitNames()
+        {
+            HashSet<string> traitNames = new();
+            if (currentObject is not null)
+            {
+                foreach (var trait1 in currentObject.AestheticTraits)
+                    if (!traitNames.Contains(trait1.Name))
+                        traitNames.Add(trait1.Name);
+                foreach (var trait2 in currentObject.EmotiveTraits)
+                    if (!traitNames.Contains(trait2.Name))
+                        traitNames.Add(trait2.Name);
+            }
+            return traitNames;
         }
     }
 }
