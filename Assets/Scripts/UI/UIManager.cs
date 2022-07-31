@@ -1,6 +1,8 @@
 using Gallerist.UI;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
+using Display = Gallerist.UI.Display;
 
 namespace Gallerist
 {
@@ -8,20 +10,11 @@ namespace Gallerist
     {
         GameStateMachine gameStateMachine;
 
-        [SerializeField] ArtCard artCard;
-        [SerializeField] PatronCard patronCard;
+        [SerializeField] List<Display> displayList;
 
-        [SerializeField] NewGameDisplay _newGameDisplay;
-        [SerializeField] StartDisplay _startDisplay;
-        [SerializeField] PatronsDisplay _patronsDisplay;
-        [SerializeField] ArtPiecesDisplay _artPiecesDisplay;
-        [SerializeField] SchmoozeDisplay _schmoozeDisplay;
-        [SerializeField] PreparationDisplay _preparationDisplay;
-        [SerializeField] MainEventDisplay _mainEventDisplay;
-        [SerializeField] ClosingDisplay _closingDisplay;
-        [SerializeField] EndDisplay _endDisplay;
         [SerializeField] DialogueDisplay _dialogueDisplay;
-        [SerializeField] FinalDisplay _finalDisplay;
+
+        Dictionary<Type, Display> _displays = new();
 
         void Awake()
         {
@@ -35,129 +28,63 @@ namespace Gallerist
             gameStateMachine.Closing.StateEntered += LoadClosingUI;
             gameStateMachine.End.StateEntered += LoadEndUI;
             gameStateMachine.Final.StateEntered += LoadFinalUI;
+
+            foreach (var display in displayList)
+            {
+                _displays.Add(display.GetType(), display);
+            }
+
+            _dialogueDisplay.gameObject.SetActive(false);
         }
 
-        
+        void LoadDisplay(Type displayType)
+        {
+            foreach (var display in _displays)
+            {
+                if (display.Key == displayType)
+                    display.Value.Show();
+                else
+                    display.Value.Hide();
+            }
+        }
 
         public void LoadNewGameUI(object sender, EventArgs e)
         {
-            _newGameDisplay.gameObject.SetActive(true);
-            _startDisplay.gameObject.SetActive(false);
-            _mainEventDisplay.gameObject.SetActive(false);
-            _preparationDisplay.gameObject.SetActive(false);
-            _schmoozeDisplay.gameObject.SetActive(false);
-            _patronsDisplay.gameObject.SetActive(false);
-            _artPiecesDisplay.gameObject.SetActive(false);
-            _closingDisplay.gameObject.SetActive(false);
-            _endDisplay.gameObject.SetActive(false);
-            _dialogueDisplay.gameObject.SetActive(false);
-            _finalDisplay.gameObject.SetActive(false);
+            LoadDisplay(typeof(NewGameDisplay));
         }
 
         public void LoadStartUI(object sender, EventArgs e)
         {
-            _newGameDisplay.gameObject.SetActive(false);
-            _startDisplay.gameObject.SetActive(true);
-            _mainEventDisplay.gameObject.SetActive(false);
-            _preparationDisplay.gameObject.SetActive(false);
-            _schmoozeDisplay.gameObject.SetActive(false);
-            _patronsDisplay.gameObject.SetActive(false);
-            _artPiecesDisplay.gameObject.SetActive(false);
-            _closingDisplay.gameObject.SetActive(false);
-            _endDisplay.gameObject.SetActive(false);
-            _dialogueDisplay.gameObject.SetActive(false);
-            _finalDisplay.gameObject.SetActive(false);
+            LoadDisplay(typeof(StartDisplay));
         }
         public void LoadPreparationUI(object sender, EventArgs e)
         {
-            _newGameDisplay.gameObject.SetActive(false);
-            _startDisplay.gameObject.SetActive(false);
-            _mainEventDisplay.gameObject.SetActive(false);
-            _preparationDisplay.gameObject.SetActive(true);
-            _schmoozeDisplay.gameObject.SetActive(false);
-            _patronsDisplay.gameObject.SetActive(false);
-            _artPiecesDisplay.gameObject.SetActive(true);
-            _closingDisplay.gameObject.SetActive(false);
-            _endDisplay.gameObject.SetActive(false);
-            _preparationDisplay.UpdateDisplay();
-            _dialogueDisplay.gameObject.SetActive(false);
-            _finalDisplay.gameObject.SetActive(false);
+            LoadDisplay(typeof(PreparationDisplay));
         }
 
         public void LoadSchmoozeUI(object sender, EventArgs e)
         {
-            _newGameDisplay.gameObject.SetActive(false);
-            _startDisplay.gameObject.SetActive(false);
-            _mainEventDisplay.gameObject.SetActive(false);
-            _preparationDisplay.gameObject.SetActive(false);
-            _schmoozeDisplay.gameObject.SetActive(true);
-            _patronsDisplay.gameObject.SetActive(true);
-            _artPiecesDisplay.gameObject.SetActive(false);
-            _closingDisplay.gameObject.SetActive(false);
-            _endDisplay.gameObject.SetActive(false);
-            _dialogueDisplay.gameObject.SetActive(false);
-            _schmoozeDisplay.UpdateArtistCard();
-            _finalDisplay.gameObject.SetActive(false);
+            LoadDisplay(typeof(SchmoozeDisplay));
         }
 
         public void LoadMainEventUI(object sender, EventArgs e)
         {
-            _newGameDisplay.gameObject.SetActive(false);
-            _startDisplay.gameObject.SetActive(false);
-            _mainEventDisplay.gameObject.SetActive(true);
-            _preparationDisplay.gameObject.SetActive(false);
-            _schmoozeDisplay.gameObject.SetActive(false);
-            _patronsDisplay.gameObject.SetActive(false);
-            _artPiecesDisplay.gameObject.SetActive(false);
-            _closingDisplay.gameObject.SetActive(false);
-            _endDisplay.gameObject.SetActive(false);
-            _dialogueDisplay.gameObject.SetActive(false);
-            _finalDisplay.gameObject.SetActive(false);
+            LoadDisplay(typeof(MainEventDisplay));
         }
 
         public void LoadClosingUI(object sender, EventArgs e)
         {
-            _newGameDisplay.gameObject.SetActive(false);
-            _startDisplay.gameObject.SetActive(false);
-            _mainEventDisplay.gameObject.SetActive(false);
-            _preparationDisplay.gameObject.SetActive(false);
-            _schmoozeDisplay.gameObject.SetActive(false);
-            _patronsDisplay.gameObject.SetActive(true);
-            _artPiecesDisplay.gameObject.SetActive(true);
-            _closingDisplay.gameObject.SetActive(true);
-            _endDisplay.gameObject.SetActive(false);
-            _dialogueDisplay.gameObject.SetActive(false);
-            _finalDisplay.gameObject.SetActive(false);
+            LoadDisplay(typeof(ClosingDisplay));
         }
 
         public void LoadEndUI(object sender, EventArgs e)
         {
-            _newGameDisplay.gameObject.SetActive(false);
-            _startDisplay.gameObject.SetActive(false);
-            _mainEventDisplay.gameObject.SetActive(false);
-            _preparationDisplay.gameObject.SetActive(false);
-            _schmoozeDisplay.gameObject.SetActive(false);
-            _patronsDisplay.gameObject.SetActive(false);
-            _artPiecesDisplay.gameObject.SetActive(false);
-            _closingDisplay.gameObject.SetActive(false);
-            _endDisplay.gameObject.SetActive(true);
-            _dialogueDisplay.gameObject.SetActive(false);
-            _finalDisplay.gameObject.SetActive(false);
+            LoadDisplay(typeof(EndDisplay));
         }
 
         public void LoadFinalUI(object sender, EventArgs e)
         {
-            _newGameDisplay.gameObject.SetActive(false);
-            _startDisplay.gameObject.SetActive(false);
-            _mainEventDisplay.gameObject.SetActive(false);
-            _preparationDisplay.gameObject.SetActive(false);
-            _schmoozeDisplay.gameObject.SetActive(false);
-            _patronsDisplay.gameObject.SetActive(false);
-            _artPiecesDisplay.gameObject.SetActive(false);
-            _closingDisplay.gameObject.SetActive(false);
-            _endDisplay.gameObject.SetActive(false);
-            _dialogueDisplay.gameObject.SetActive(false);
-            _finalDisplay.gameObject.SetActive(true);
+            LoadDisplay(typeof(FinalDisplay));
         }
     }
 }

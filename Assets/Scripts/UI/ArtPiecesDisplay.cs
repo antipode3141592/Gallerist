@@ -19,8 +19,16 @@ namespace Gallerist.UI
             _pagination = GetComponentInChildren<Pagination>();
 
             _artManager.ObjectsGenerated += OnArtGenerated;
+            _artManager.SelectedObjectChanged += OnSelectedArtChanged;
             _pagination.ThumbnailSelected += OnThumbnailSelected;
             _pagination.PageSelected += OnPageSelected;
+        }
+
+        void OnSelectedArtChanged(object sender, EventArgs e)
+        {
+            if (_artManager.CurrentObject is null) 
+                return;
+            ArtCard.LoadArtCardData();
         }
 
         void OnPageSelected(object sender, int e)
@@ -33,7 +41,7 @@ namespace Gallerist.UI
             if (e == String.Empty) return;
             Art art = _artManager.CurrentObjects.Find(x => x.Name == e);
             if (art is null) return;
-            _artManager.SelectedObject = art;
+            _artManager.SetCurrentObject(art);
             ArtCard.LoadArtCardData();
         }
 

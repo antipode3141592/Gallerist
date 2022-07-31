@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Gallerist.UI
 {
-    public class NewGameDisplay : MonoBehaviour
+    public class NewGameDisplay : Display
     {
         GameStateMachine gameStateMachine;
         GameStatsController gameStatsController;
@@ -11,8 +11,9 @@ namespace Gallerist.UI
         [SerializeField] TMP_InputField galleristNameInput;
         [SerializeField] TMP_InputField galleryNameInput;
 
-        void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             gameStateMachine = FindObjectOfType<GameStateMachine>();
             gameStatsController = FindObjectOfType<GameStatsController>();
         }

@@ -17,8 +17,8 @@ namespace Gallerist.UI
 
         void OnStateChanged(object sender, string e)
         {
-            if (Debug.isDebugBuild)
-                Debug.Log($"GameStateObserver:  Evaluating {e.ToLower()} against {typeof(SchmoozeState).Name}");
+            //if (Debug.isDebugBuild)
+            //    Debug.Log($"GameStateObserver:  Evaluating {e.ToLower()} against {typeof(SchmoozeState).Name}");
 
             string mod = e.ToLower();
             if (mod == typeof(SchmoozeState).Name.ToLower())

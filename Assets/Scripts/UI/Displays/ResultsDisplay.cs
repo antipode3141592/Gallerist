@@ -5,47 +5,38 @@ using UnityEngine.UI;
 
 namespace Gallerist.UI
 {
-    public class ResultsDisplay : MonoBehaviour
+    public class ResultsDisplay : Display
     {
         EvaluationController evaluationController;
-
-        Vector3 originalPosition;
 
         [SerializeField] TextMeshProUGUI descriptionText;
         [SerializeField] TextMeshProUGUI resultsText;
 
         [SerializeField] Button continueButton;
 
-        void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             evaluationController = FindObjectOfType<EvaluationController>();
-            originalPosition = transform.position;
-
             evaluationController.EvaluationResultsReady += DisplayResults;
-            MoveOffscreen();
         }
 
         private void DisplayResults(object sender, ResultsArgs e)
         {
-            MoveOnScreen();
+            Show();
             descriptionText.text = e.Description;
             resultsText.text = e.Summary;
         }
 
         public void Continue()
         {
-            MoveOffscreen();
+            Hide();
             evaluationController.ShowResults = false;
         }
 
-        void MoveOffscreen()
+        public override void Show()
         {
-            transform.position = originalPosition + new Vector3(0f, 2000f);
-        }
-
-        void MoveOnScreen()
-        {
-            transform.position = originalPosition;
+            base.Show();
             continueButton.Select();
         }
     }

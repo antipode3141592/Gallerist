@@ -3,15 +3,16 @@ using UnityEngine;
 
 namespace Gallerist.UI
 {
-    public class ClosingDisplay : MonoBehaviour
+    public class ClosingDisplay : Display
     {
         EvaluationController evaluationController;
 
         [SerializeField] TextMeshProUGUI evaluationsText;
         [SerializeField] TextMeshProUGUI evaluationResultsText;
 
-        void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             evaluationController = FindObjectOfType<EvaluationController>();
             evaluationController.EvaluationResultUpdated += OnResultsUpdated;
             evaluationController.EvaluationsTotalUpdated += OnTotalsUpdated;

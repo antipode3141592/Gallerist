@@ -4,7 +4,7 @@ using TMPro;
 
 namespace Gallerist.UI
 {
-    public class MainEventDisplay : MonoBehaviour
+    public class MainEventDisplay : Display
     {
         [SerializeField] Image mainEvent;
         [SerializeField] Image foodAndDrink;
@@ -21,14 +21,16 @@ namespace Gallerist.UI
         GameStateMachine gameStateMachine;
         GameStatsController gameStatsController;
 
-        void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             gameStateMachine = FindObjectOfType<GameStateMachine>();
             gameStatsController = FindObjectOfType<GameStatsController>();
         }
 
-        void OnEnable()
+        public override void Show()
         {
+            base.Show();
             continueButton.Select();
             DisplayMidPartyStats();
         }

@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace Gallerist.UI
 {
-    public class PreparationDisplay : MonoBehaviour
+    public class PreparationDisplay : Display
     {
         ArtistManager artistManager;
         PreparationController preparationController;
@@ -15,10 +15,11 @@ namespace Gallerist.UI
         [SerializeField] PreparationItems mainEventItems;
 
         [SerializeField] Button continueButton;
-        
 
-        void Awake()
+
+        protected override void Awake()
         {
+            base.Awake();
             artistManager = FindObjectOfType<ArtistManager>();
             preparationController = FindObjectOfType<PreparationController>();
 
@@ -30,8 +31,9 @@ namespace Gallerist.UI
 
         }
 
-        void OnEnable()
+        public override void Show()
         {
+            base.Show();
             continueButton.interactable = false;
             for (int i = 0; i < preparationController.OptionsPerMonth; i++)
             {

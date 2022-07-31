@@ -8,6 +8,7 @@ namespace Gallerist.UI
     public class ArtCard : MonoBehaviour
     {
         ArtManager artManager;
+        ArtistManager artistManager;
 
         [SerializeField] List<TraitDisplay> aestheticTraitDisplays;
         [SerializeField] List<TraitDisplay> emotiveTraitDisplays;
@@ -25,12 +26,12 @@ namespace Gallerist.UI
         void Awake()
         {
             artManager = FindObjectOfType<ArtManager>();
+            artistManager = FindObjectOfType<ArtistManager>();
         }
 
         public void LoadArtCardData()
         {
-            Art art = artManager.SelectedObject;
-            artManager.SelectedObject = art;
+            Art art = artManager.CurrentObject;
 
             titleText.text = art.Name;
             artistText.text = art.ArtistName;
@@ -44,12 +45,12 @@ namespace Gallerist.UI
             for (int i = 0; i < aestheticTraitDisplays.Count; i++)
             {
                 var trait = art.AestheticTraits[i];
-                aestheticTraitDisplays[i].UpdateText(trait);
+                aestheticTraitDisplays[i].UpdateText(trait, isShared: artistManager.ArtistTraits.Contains(trait.Name));
             }
             for (int i = 0; i < emotiveTraitDisplays.Count; i++)
             {
                 var trait = art.EmotiveTraits[i];
-                emotiveTraitDisplays[i].UpdateText(trait);
+                emotiveTraitDisplays[i].UpdateText(trait, isShared: artistManager.ArtistTraits.Contains(trait.Name));
             }
         }
     }

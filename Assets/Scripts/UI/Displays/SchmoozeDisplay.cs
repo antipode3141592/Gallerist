@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace Gallerist.UI
 {
-    public class SchmoozeDisplay : MonoBehaviour
+    public class SchmoozeDisplay : Display
     {
         ArtistManager artistManager;
         SchmoozeController schmoozeController;
@@ -19,8 +19,9 @@ namespace Gallerist.UI
         [SerializeField] Button introductionButton;
 
 
-        void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             gameStateMachine = FindObjectOfType<GameStateMachine>();
             artistManager = FindObjectOfType<ArtistManager>();
             schmoozeController = FindObjectOfType<SchmoozeController>();
@@ -35,27 +36,28 @@ namespace Gallerist.UI
             introductionButton.onClick.AddListener(schmoozeController.Introduce);
         }
 
-        private void OnEnableIntroduction(object sender, bool e)
+        public override void Show()
         {
-            introductionButton.interactable = e;
-        }
-
-        private void OnEnableNudge(object sender, bool e)
-        {
-            nudgeButton.interactable = e;
-        }
-
-        private void OnEnableChat(object sender, bool e)
-        {
-            chatButton.interactable = e;
-        }
-
-        void OnEnable()
-        {
+            base.Show();
             timeTracker.Reset(schmoozeController.TotalSchmoozingTime);
             introductionButton.interactable = true;
             nudgeButton.interactable = true;
             chatButton.interactable = true;
+        }
+
+        void OnEnableIntroduction(object sender, bool e)
+        {
+            introductionButton.interactable = e;
+        }
+
+        void OnEnableNudge(object sender, bool e)
+        {
+            nudgeButton.interactable = e;
+        }
+
+        void OnEnableChat(object sender, bool e)
+        {
+            chatButton.interactable = e;
         }
 
         void SchmoozeActionTaken(object sender, EventArgs e)

@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace Gallerist.UI
 {
-    public class EndDisplay : MonoBehaviour
+    public class EndDisplay : Display
     {
         GameStateMachine gameStateMachine;
         GameStatsController gameStatsController;
@@ -18,14 +18,16 @@ namespace Gallerist.UI
 
         [SerializeField] Button continueButton;
 
-        void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             gameStateMachine = FindObjectOfType<GameStateMachine>();
             gameStatsController = FindObjectOfType<GameStatsController>();
         }
 
-        void OnEnable()
+        public override void Show()
         {
+            base.Show();
             continueButton.Select();
             SummarizeNight();
         }
