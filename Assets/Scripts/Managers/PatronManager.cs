@@ -69,7 +69,7 @@ namespace Gallerist
             int bored = gameStatsController.Stats.BoredGuests;
             if (Debug.isDebugBuild)
                 Debug.Log($"There are {bored} patrons that have left");
-            int incoming = bored + Random.Range(0, 5);
+            int incoming = Random.Range(bored/2 , bored*2) + Random.Range(0, 5);
             gameStatsController.Stats.MidPartyEntrances = incoming;
             GeneratePatrons(incoming);
         }
@@ -90,20 +90,24 @@ namespace Gallerist
             artManager.GetRandomTraits(out aesthetic, out emotive);
 
             var newPatron = new Patron(
-                name: nameDataSource.GenerateRandomPatronName(),
+                firstName: nameDataSource.GenerateRandomFirstName(),
+                lastInitial: nameDataSource.RandomLastNameLetter(),
                 portrait: spriteDataSource.GeneratePortrait(),
                 isSubscriber: false,
                 aestheticTraits: traitDataSource.GenerateAestheticTraits(5, typeof(PatronTrait), new() { aesthetic.Name }),
                 emotiveTraits: traitDataSource.GenerateEmotiveTraits(5, typeof(PatronTrait), new() { emotive.Name }),
                 acquisitions: new(),
                 aestheticThreshold: Random.Range(8, 13),
-                emotiveThreshold: Random.Range(8, 13));
+                emotiveThreshold: Random.Range(8, 13),
+                boredomThreshold: Random.Range(0, 3));
             //  add a check for duplicates before adding to Patrons list
             newPatron.TraitModified += PatronTraitModified;
+            if (ChanceOfInitialSubscription())
+                newPatron.SetSubscription();
             CurrentObjects.Add(newPatron);
         }
 
-        private void PatronTraitModified(object sender, TraitModified e)
+        void PatronTraitModified(object sender, TraitModified e)
         {
             ObjectTraitModified?.Invoke(sender, e);
         }
@@ -145,6 +149,13 @@ namespace Gallerist
                         traitNames.Add(trait2.Name);
             }
             return traitNames;
+        }
+
+        bool ChanceOfInitialSubscription()
+        {
+            int chance = Random.Range(gameStatsController.Stats.TotalRenown * 10, 100);
+            return chance >= 50 ? true : false;
+
         }
     }
 }
