@@ -9,9 +9,10 @@ namespace Gallerist
 {
     public class Patron: IThumbnail
     {
-        public Patron(string name, Sprite portrait, bool isSubscriber, List<ITrait> aestheticTraits, List<ITrait> emotiveTraits, List<Art> acquisitions, int aestheticThreshold, int emotiveThreshold)
+        public Patron(string firstName, string lastInitial, Sprite portrait, bool isSubscriber, List<ITrait> aestheticTraits, List<ITrait> emotiveTraits, List<Art> acquisitions, int aestheticThreshold, int emotiveThreshold, int boredomThreshold)
         {
-            Name = name;
+            FirstName = firstName;
+            LastInitial = lastInitial;
             Image = portrait;
             IsSubscriber = isSubscriber;
             Acquisitions = acquisitions;
@@ -20,11 +21,13 @@ namespace Gallerist
             PerceptionRange = Random.Range(-1, 2);
             AestheticThreshold = aestheticThreshold;
             EmotiveThreshold = emotiveThreshold;
-            BoredomThreshold = Random.Range(3,7);
+            BoredomThreshold = boredomThreshold;
         }
 
         public Sprite Image { get; private set; }
-        public string Name { get; private set; }
+        public string Name => $"{FirstName} {LastInitial}";
+        public string FirstName { get; private set; }
+        public string LastInitial { get; private set; }
         public bool IsSubscriber { get; set; }
         public List<Art> Acquisitions { get; private set; }
         public List<ITrait> AestheticTraits { get; private set; }
@@ -57,9 +60,9 @@ namespace Gallerist
                 Debug.Log($"A: {aestheticTotal} At: {AestheticThreshold}, E: {emotiveTotal} Et: {EmotiveThreshold}");
             if (aestheticTotal >= AestheticThreshold && emotiveTotal >= EmotiveThreshold)
                 return EvaluationResultTypes.Original;
-            else if (aestheticTotal >= AestheticThreshold || emotiveTotal >= EmotiveThreshold)
+            else if (aestheticTotal >= AestheticThreshold / 2 && emotiveTotal >= EmotiveThreshold / 2)
                 return EvaluationResultTypes.Print;
-            else if (aestheticTotal > 0 && emotiveTotal > 0)
+            else if (aestheticTotal >= BoredomThreshold && emotiveTotal >= BoredomThreshold)
                 return EvaluationResultTypes.Subscribe;
             return EvaluationResultTypes.None;
         }
@@ -72,13 +75,13 @@ namespace Gallerist
             return 0;
         }
 
-        public string RevealTrait()
+        public ITrait RevealTrait()
         {
             List<ITrait> unknownTraits = new();
             unknownTraits = EmotiveTraits.FindAll(x => x.IsKnown == false);
             unknownTraits.AddRange(AestheticTraits.FindAll(x => x.IsKnown == false));
             if (unknownTraits.Count == 0)
-                return "";
+                return null;
             int randomIndex = Random.Range(0, unknownTraits.Count);
             unknownTraits[randomIndex].IsKnown = true;
 
@@ -86,7 +89,7 @@ namespace Gallerist
             TraitRevealed?.Invoke(this, $"{unknownTraits[randomIndex].Name}");
             if (Debug.isDebugBuild)
                 Debug.Log($"{Name} has a preference for {unknownTraits[randomIndex].Name} at {unknownTraits[randomIndex].Value}");
-            return unknownTraits[randomIndex].Name;
+            return unknownTraits[randomIndex];
         }
 
         public void ModifyRandomTrait(int modifier)
@@ -125,15 +128,12 @@ namespace Gallerist
                 Debug.Log($"{trait.Name} not found, no modifications made");
         }
 
-        public void ModifyRandomMatchingTrait(List<ITrait> traits, int modifier)
+        public ITrait ModifyRandomMatchingTrait(List<ITrait> traits, int modifier)
         {
-            int i = 0; 
-            while(i < modifier)
-            {
-                ModifyTrait(traits[Random.Range(0, traits.Count)], 1);
-                i++;
-            }
+            var trait = traits[Random.Range(0, traits.Count)];
+            ModifyTrait(trait, modifier);
             PreferencesUpdated?.Invoke(this, EventArgs.Empty);
+            return trait;
         }
 
         public bool SetSubscription()

@@ -27,6 +27,12 @@ namespace Gallerist
             return FirstNames[randomIndex].Trim() + " " + RandomLastNameLetter();
         }
 
+        public string GenerateRandomFirstName()
+        {
+            int randomIndex = Random.Range(0, FirstNames.Count);
+            return FirstNames[randomIndex].Trim();
+        }
+
         public string GenerateRandomArtistName()
         {
             int randomIndex1 = Random.Range(0, FirstNames.Count);
