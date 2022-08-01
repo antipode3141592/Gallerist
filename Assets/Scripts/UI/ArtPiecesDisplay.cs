@@ -10,8 +10,9 @@ namespace Gallerist.UI
         [SerializeField] List<ClickableImage> ArtThumbnails;
 
         ArtManager _artManager;
-        Pagination _pagination;       
-        
+        Pagination _pagination;
+
+        public Pagination Pagination => _pagination;
 
         void Awake()
         {

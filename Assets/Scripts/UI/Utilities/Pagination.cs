@@ -37,11 +37,6 @@ namespace Gallerist.UI
             }
         }
 
-        void OnEnable()
-        {
-            SelectPage(0);
-        }
-
         void OnPageSelected(object sender, int e)
         {
             SelectPage(e);

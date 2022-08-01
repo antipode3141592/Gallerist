@@ -8,6 +8,7 @@ namespace Gallerist.UI
         SchmoozeController _schmoozeController;
         IObjectManager<Patron> _patronManager;
         Pagination _pagination;
+        public Pagination Pagination => _pagination;
 
         [SerializeField] PatronCard PatronCard;
 

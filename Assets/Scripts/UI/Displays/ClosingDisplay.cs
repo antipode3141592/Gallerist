@@ -7,6 +7,9 @@ namespace Gallerist.UI
     {
         EvaluationController evaluationController;
 
+        ArtPiecesDisplay artPiecesDisplay;
+        PatronsDisplay patronsDisplay;
+
         [SerializeField] TextMeshProUGUI evaluationsText;
         [SerializeField] TextMeshProUGUI evaluationResultsText;
 
@@ -14,6 +17,9 @@ namespace Gallerist.UI
         {
             base.Awake();
             evaluationController = FindObjectOfType<EvaluationController>();
+            artPiecesDisplay = GetComponentInChildren<ArtPiecesDisplay>();
+            patronsDisplay = GetComponentInChildren<PatronsDisplay>();
+
             evaluationController.EvaluationResultUpdated += OnResultsUpdated;
             evaluationController.EvaluationsTotalUpdated += OnTotalsUpdated;
 
@@ -31,6 +37,11 @@ namespace Gallerist.UI
             evaluationResultsText.text = e;
         }
 
-
+        public override void Show()
+        {
+            base.Show();
+            artPiecesDisplay.Pagination.SelectPage(0);
+            patronsDisplay.Pagination.SelectPage(0);
+        }
     }
 }

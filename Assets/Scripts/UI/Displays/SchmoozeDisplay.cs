@@ -8,6 +8,7 @@ namespace Gallerist.UI
     {
         ArtistManager artistManager;
         SchmoozeController schmoozeController;
+        PatronsDisplay patronsDisplay;
         
         GameStateMachine gameStateMachine;
 
@@ -25,6 +26,7 @@ namespace Gallerist.UI
             gameStateMachine = FindObjectOfType<GameStateMachine>();
             artistManager = FindObjectOfType<ArtistManager>();
             schmoozeController = FindObjectOfType<SchmoozeController>();
+            patronsDisplay = GetComponentInChildren<PatronsDisplay>();
             schmoozeController.ActionTaken += SchmoozeActionTaken;
             gameStateMachine.Schmooze.StateEntered += OnSchmoozingStart;
             schmoozeController.EnableChat += OnEnableChat;
@@ -43,6 +45,7 @@ namespace Gallerist.UI
             introductionButton.interactable = true;
             nudgeButton.interactable = true;
             chatButton.interactable = true;
+            patronsDisplay.Pagination.SelectPage(0);
         }
 
         void OnEnableIntroduction(object sender, bool e)

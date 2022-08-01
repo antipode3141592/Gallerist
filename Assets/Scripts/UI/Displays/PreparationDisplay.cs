@@ -9,6 +9,7 @@ namespace Gallerist.UI
         ArtistManager artistManager;
         PreparationController preparationController;
         [SerializeField] ArtistCard artistCard;
+        ArtPiecesDisplay artPiecesDisplay;
 
         [SerializeField] PreparationItems ambientMusicItems;
         [SerializeField] PreparationItems foodAndDrinkItems;
@@ -22,6 +23,7 @@ namespace Gallerist.UI
             base.Awake();
             artistManager = FindObjectOfType<ArtistManager>();
             preparationController = FindObjectOfType<PreparationController>();
+            artPiecesDisplay = GetComponentInChildren<ArtPiecesDisplay>();
 
             preparationController.AllOptionsSelected += EnableContinue;
 
@@ -47,6 +49,7 @@ namespace Gallerist.UI
                     mainEventItems.PreparationItemsList[i].SetItem(preparationController.Centerpieces[i].Name,
                     preparationController.Centerpieces[i].Modifiers);
             }
+            artPiecesDisplay.Pagination.SelectPage(0);
         }
 
         void EnableContinue(object sender, EventArgs e)
