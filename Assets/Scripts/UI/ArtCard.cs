@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Gallerist.Data;
 
 namespace Gallerist.UI
 {
@@ -45,12 +46,14 @@ namespace Gallerist.UI
             for (int i = 0; i < aestheticTraitDisplays.Count; i++)
             {
                 var trait = art.AestheticTraits[i];
-                aestheticTraitDisplays[i].UpdateText(trait, isShared: artistManager.ArtistTraits.Contains(trait.Name));
+                aestheticTraitDisplays[i].UpdateText(trait, 
+                    trait.IsKnown ? $"{ArtTraitLevelDescriptions.GetDescription(trait.Value)} {trait.Name}" : $"(unknown)");
             }
             for (int i = 0; i < emotiveTraitDisplays.Count; i++)
             {
                 var trait = art.EmotiveTraits[i];
-                emotiveTraitDisplays[i].UpdateText(trait, isShared: artistManager.ArtistTraits.Contains(trait.Name));
+                emotiveTraitDisplays[i].UpdateText(trait, 
+                    trait.IsKnown ? $"{ArtTraitLevelDescriptions.GetDescription(trait.Value)} {trait.Name}" : $"(unknown)");
             }
         }
     }

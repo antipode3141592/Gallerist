@@ -2,6 +2,8 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Gallerist.Data;
+using System;
 
 namespace Gallerist.UI
 {
@@ -27,11 +29,10 @@ namespace Gallerist.UI
             backgroundImage.color = Color.grey;
         }
 
-        public void UpdateText(ITrait trait, bool reveal = false, bool isShared = false)
+        public void UpdateText(ITrait trait, string text)
         {
             currentTrait = trait;
-            displayText.text = reveal || trait.IsKnown ? $"{trait.Name} {trait.Value}" : $"(unknown)";
-            FocusTrait(isShared);
+            displayText.text = text;
         }
 
         public void FocusTrait(bool showFocus)

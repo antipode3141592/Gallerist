@@ -5,20 +5,33 @@ namespace Gallerist.States
 {
     public class Preparation : IState
     {
-        PreparationController preparationController;
+        ArtManager _artManager;
+        ArtistManager _artistManager;
+        PreparationController _preparationController;
 
         public event EventHandler StateEntered;
+
+
         public event EventHandler StateExited;
         public bool IsComplete = false;
 
-        public Preparation(PreparationController preparationController)
+        public Preparation(PreparationController preparationController, ArtManager artManager, ArtistManager artistManager)
         {
-            this.preparationController = preparationController;
+            _preparationController = preparationController;
+            _artManager = artManager;
+            _artistManager = artistManager;
+
+            _artManager.SelectedObjectChanged += OnSelectedArtChanged;
+        }
+
+        void OnSelectedArtChanged(object sender, EventArgs e)
+        {
+            
         }
 
         public void OnEnter()
         {
-            preparationController.OnPreparationEntered();
+            _preparationController.OnPreparationEntered();
             StateEntered?.Invoke(this, EventArgs.Empty);
             IsComplete = false;
         }

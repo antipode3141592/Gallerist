@@ -1,16 +1,16 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Gallerist.UI
 {
-    public class DialogueDisplay : MonoBehaviour
+    public class DialogueDisplay : Display
     {
         [SerializeField] List<DialogueChoice> dialogueChoices;
 
-        void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             foreach(DialogueChoice choice in dialogueChoices)
             {
                 choice.OnDialogueSelect += DialogueSelected;

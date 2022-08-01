@@ -11,10 +11,10 @@ namespace Gallerist
         GameStateMachine gameStateMachine;
 
         [SerializeField] List<Display> displayList;
-
-        [SerializeField] DialogueDisplay _dialogueDisplay;
+        [SerializeField] List<Display> overlayDisplayList;
 
         Dictionary<Type, Display> _displays = new();
+        Dictionary<Type, Display> _overlays = new();
 
         void Awake()
         {
@@ -33,8 +33,10 @@ namespace Gallerist
             {
                 _displays.Add(display.GetType(), display);
             }
-
-            _dialogueDisplay.gameObject.SetActive(false);
+            foreach (var display in overlayDisplayList)
+            {
+                _overlays.Add(display.GetType(), display);
+            }
         }
 
         void LoadDisplay(Type displayType)
@@ -42,6 +44,17 @@ namespace Gallerist
             foreach (var display in _displays)
             {
                 if (display.Key == displayType)
+                    display.Value.Show();
+                else
+                    display.Value.Hide();
+            }
+        }
+
+        void LoadOverlay(Type overlayType)
+        {
+            foreach (var display in _overlays)
+            {
+                if (display.Key == overlayType)
                     display.Value.Show();
                 else
                     display.Value.Hide();

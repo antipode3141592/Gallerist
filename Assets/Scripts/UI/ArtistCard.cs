@@ -1,3 +1,4 @@
+using Gallerist.Data;
 using System;
 using System.Collections.Generic;
 using TMPro;
@@ -75,13 +76,13 @@ namespace Gallerist.UI
                 var trait = artist.FavoredAestheticTraits[i];
 
                 aestheticTraits[i].UpdateText(trait, 
-                    isShared: comparisonSet.Contains(trait.Name));
+                    $"{TraitLevelDescriptions.GetDescription(trait.Value)} {trait.Name}");
             }
             for (int i = 0; i < artist.FavoredEmotiveTraits.Count; i++)
             {
                 var trait = artist.FavoredEmotiveTraits[i];
-                emotiveTraits[i].UpdateText(trait, 
-                    isShared: comparisonSet.Contains(trait.Name));
+                emotiveTraits[i].UpdateText(trait,
+                    $"{TraitLevelDescriptions.GetDescription(trait.Value)} {trait.Name}");
             }
         }
     }

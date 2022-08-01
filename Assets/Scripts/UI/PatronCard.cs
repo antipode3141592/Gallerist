@@ -1,3 +1,4 @@
+using Gallerist.Data;
 using Gallerist.Events;
 using System.Collections.Generic;
 using TMPro;
@@ -94,12 +95,12 @@ namespace Gallerist.UI
             for (int i = 0; i < patron.AestheticTraits.Count; i++)
             {
                 var trait = patron.AestheticTraits[i];
-                aestheticTraits[i].UpdateText(trait, revealToggle);
+                aestheticTraits[i].UpdateText(trait, revealToggle || trait.IsKnown ? $"{TraitLevelDescriptions.GetDescription(trait.Value)} {trait.Name}" : $"(unknown)");
             }
             for (int i = 0; i < patron.EmotiveTraits.Count; i++)
             {
                 var trait = patron.EmotiveTraits[i];
-                emotiveTraits[i].UpdateText(trait, revealToggle);
+                emotiveTraits[i].UpdateText(trait, revealToggle || trait.IsKnown ? $"{TraitLevelDescriptions.GetDescription(trait.Value)} {trait.Name}" : $"(unknown)");
             }
         }
 
