@@ -1,5 +1,9 @@
+using Gallerist.Data;
 using Gallerist.States;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Gallerist
@@ -23,6 +27,9 @@ namespace Gallerist
         public event EventHandler<bool> EnableNudge;
         public event EventHandler<bool> EnableIntroduction;
 
+        public event EventHandler<ResultsArgs> ResultsReady;
+        public bool ShowResults = false;
+
         SchmoozeState SchmoozeState;
 
         void Awake()
@@ -35,25 +42,72 @@ namespace Gallerist
 
         public void Chat()
         {
-            Schmooze.Chat(_patronManager.SelectedObject);
+            List<ITrait> chatResult = Schmooze.Chat(_patronManager.CurrentObject);
             SchmoozeState.ElapsedTime += ChatTime;
             PatronUpdated?.Invoke(this, EventArgs.Empty);
             ActionTaken?.Invoke(this, EventArgs.Empty);
             CheckActionEnable();
+            StartCoroutine(Chatting(chatResult));
+        }
+
+        IEnumerator Chatting(List<ITrait> chatResults)
+        {
+            string description = "\"";
+            ShowResults = true;
+            if (ShowResults)
+            {
+
+                for (int i = 0; i <  chatResults.Count; i++)
+                {
+                    description += GenerateChatResultText(chatResults[i]);
+                }
+                description.Trim();
+                description += "\"";
+                ResultsReady?.Invoke(this, new ResultsArgs(
+                    description: description,
+                    summary: $"Reveal {chatResults.Count} traits"));
+            }
+            while (ShowResults)
+                yield return null;
+        }
+
+        string GenerateChatResultText(ITrait trait)
+        {
+            string description = "";
+            description = $"I {TraitLevelDescriptions.GetDescription(trait.Value).ToLower()} art that ";
+            if (trait.TraitType == TraitType.Emotive)
+                description += $"makes me feel {trait.Name.ToLower()}.  ";
+            else
+                description += $"has {trait.Name.ToLower()} qualities.  ";
+            return description;
         }
 
         public void Introduce()
         {
-            Schmooze.Introduce(_artistManager.Artist, _patronManager.SelectedObject);
+            string introductionDescription = Schmooze.Introduce(_artistManager.Artist, _patronManager.CurrentObject);
             SchmoozeState.ElapsedTime += IntroductionTime;            
             PatronUpdated?.Invoke(this, EventArgs.Empty);
             ActionTaken?.Invoke(this, EventArgs.Empty);
             CheckActionEnable();
+            StartCoroutine(Introducing(introductionDescription));
+        }
+
+        IEnumerator Introducing(string description)
+        {
+            ShowResults = true;
+            if (ShowResults)
+            {
+                ResultsReady?.Invoke(this, new ResultsArgs(
+                    description: description,
+                    summary: $""));
+            }
+            while (ShowResults)
+                yield return null;
         }
 
         public void Nudge()
         {
-            Schmooze.Nudge(_patronManager.SelectedObject);
+            Schmooze.Nudge(_patronManager.CurrentObject);
             SchmoozeState.ElapsedTime += NudgeTime;
             PatronUpdated?.Invoke(this, EventArgs.Empty);
             ActionTaken?.Invoke(this, EventArgs.Empty);

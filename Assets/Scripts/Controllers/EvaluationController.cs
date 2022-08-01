@@ -54,8 +54,8 @@ namespace Gallerist
 
         public void ClosingEvaluation()
         {
-            var currentPatron = patronManager.SelectedObject;
-            var currentArt = artManager.SelectedObject;
+            var currentPatron = patronManager.CurrentObject;
+            var currentArt = artManager.CurrentObject;
 
             //if currentPatron hasn't bought an original and currentArt hasn't been sold, continue
 
