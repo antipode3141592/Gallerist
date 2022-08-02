@@ -16,9 +16,10 @@ namespace Gallerist.UI
         [SerializeField] List<TraitDisplay> emotiveTraits;
 
         [SerializeField] TextMeshProUGUI nameText;
-        [SerializeField] Toggle isSubscriberToggle;  //noninteractable 
+        [SerializeField] TextMeshProUGUI subscriberText;
         [SerializeField] Image portraitImage;
 
+        [SerializeField] GameObject ArtAcquisitionsGroup;
         [SerializeField] Image ArtAcquisitionsBackground;
         List<AcquiredArtEntry> acquiredArtEntries;
         [SerializeField] AcquiredArtEntry acquiredArtEntryPrefab;
@@ -41,6 +42,7 @@ namespace Gallerist.UI
             acquiredArtEntries = new();
 
             patronManager.ObjectTraitModified += OnObjectTraitModified;
+            ArtAcquisitionsGroup.SetActive(false);
         }
 
         void OnObjectTraitModified(object sender, TraitModified e)
@@ -59,7 +61,7 @@ namespace Gallerist.UI
         {
             Patron patron = patronManager.CurrentObject;
             nameText.text = patron.Name;
-            isSubscriberToggle.isOn = patron.IsSubscriber;
+            subscriberText.text = patron.IsSubscriber ? $"Mailing List Subscriber" : "";
             portraitImage.sprite = patron.Image;
             if (Debug.isDebugBuild)
                 perceptionRangeText.text = $"Perception: {patron.PerceptionRange}";
@@ -69,6 +71,12 @@ namespace Gallerist.UI
 
         public void DisplayAcquiredArt()
         {
+            if (acquiredArtEntries.Count == 0)
+            {
+                ArtAcquisitionsGroup.SetActive(false);
+                return;
+            }
+            ArtAcquisitionsGroup.SetActive(true);
             Patron patron = patronManager.CurrentObject;
             for(int i = 0; i < acquiredArtEntries.Count; i++)
             {
