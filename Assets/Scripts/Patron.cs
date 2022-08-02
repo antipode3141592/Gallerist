@@ -1,3 +1,4 @@
+using Gallerist.Data;
 using Gallerist.Events;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ namespace Gallerist
 {
     public class Patron: IThumbnail
     {
-        public Patron(string firstName, string lastInitial, Sprite portrait, bool isSubscriber, List<ITrait> aestheticTraits, List<ITrait> emotiveTraits, List<Art> acquisitions, int aestheticThreshold, int emotiveThreshold, int boredomThreshold)
+        public Patron(string firstName, string lastInitial, Sprite portrait, bool isSubscriber, List<ITrait> aestheticTraits, List<ITrait> emotiveTraits, List<ArtAcquisition> acquisitions, int aestheticThreshold, int emotiveThreshold, int boredomThreshold)
         {
             FirstName = firstName;
             LastInitial = lastInitial;
@@ -18,7 +19,7 @@ namespace Gallerist
             Acquisitions = acquisitions;
             AestheticTraits = aestheticTraits;
             EmotiveTraits = emotiveTraits;
-            PerceptionRange = Random.Range(-1, 2);
+            PerceptionRange = Random.Range(5, 8);
             AestheticThreshold = aestheticThreshold;
             EmotiveThreshold = emotiveThreshold;
             BoredomThreshold = boredomThreshold;
@@ -29,7 +30,7 @@ namespace Gallerist
         public string FirstName { get; private set; }
         public string LastInitial { get; private set; }
         public bool IsSubscriber { get; set; }
-        public List<Art> Acquisitions { get; private set; }
+        public List<ArtAcquisition> Acquisitions { get; private set; }
         public List<ITrait> AestheticTraits { get; private set; }
         public List<ITrait> EmotiveTraits { get; private set; }
         public int PerceptionRange { get; private set; }
@@ -92,7 +93,7 @@ namespace Gallerist
             return unknownTraits[randomIndex];
         }
 
-        public void ModifyRandomTrait(int modifier)
+        public ITrait ModifyRandomTrait(int modifier)
         {
             ITrait _trait = Utilities.RandomBool() ?
                 AestheticTraits[Random.Range(0,AestheticTraits.Count)] :
@@ -100,6 +101,7 @@ namespace Gallerist
             if (Debug.isDebugBuild)
                 Debug.Log($"randomly chosen trait: {_trait.Name}");
             ModifyTrait(_trait, modifier);
+            return _trait;
         }
 
         public void ModifyTrait(ITrait trait, int modifier)

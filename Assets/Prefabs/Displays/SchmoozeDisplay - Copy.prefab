@@ -239,7 +239,7 @@ GameObject:
   - component: {fileID: 5987079260144295530}
   - component: {fileID: 6069362262703336790}
   m_Layer: 5
-  m_Name: SchmoozeDisplay
+  m_Name: SchmoozeDisplay - Copy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

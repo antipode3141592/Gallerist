@@ -1,3 +1,4 @@
+using Gallerist.Data;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -38,7 +39,11 @@ namespace Gallerist
             {
                 foreach (var art in artManager.CurrentObjects)
                 {
-                    Evaluate(patron, art);   
+                    var result = Evaluate(patron, art);
+                    if(result == EvaluationResultTypes.Original 
+                        || result == EvaluationResultTypes.Print)
+                        break;
+
                 }
                 //after evaluating all art, check patron satisfaction
                 // if bored, mark for exit
@@ -82,7 +87,7 @@ namespace Gallerist
             
         }
 
-        void Evaluate(Patron currentPatron, Art currentArt)
+        EvaluationResultTypes Evaluate(Patron currentPatron, Art currentArt)
         {
             //current Patron selection evaluates current Art selection
             var result = currentPatron.EvaluateArt(currentArt);
@@ -91,7 +96,7 @@ namespace Gallerist
             {
                 ResultsText = $"Patron {currentPatron.Name} finds {currentArt.Name} boring.";
                 SummaryText = $"";
-                return;
+                return result;
             }
 
             if (result == EvaluationResultTypes.Subscribe ||
@@ -108,37 +113,39 @@ namespace Gallerist
                 }
             }
 
-                if (result == EvaluationResultTypes.Print)
+            if (result == EvaluationResultTypes.Print)
             {
-                currentPatron.Satisfaction += 5;
-                ResultsText = $"Patron {currentPatron.Name} likes {currentArt.Name} and will buy a print!";
-                SummaryText = $"+1 Print Sale";
-                currentArt.PrintsSold++;
-                gameStatsController.Stats.PrintsThisMonth++;
-                return;
+                BuyPrint(currentPatron, currentArt);
+                return result;
             }
 
             if (result == EvaluationResultTypes.Original)
             {
+                if (currentArt.IsSold)
+                {
+                    BuyPrint(currentPatron, currentArt);
+                    return EvaluationResultTypes.Print;
+                }
                 currentPatron.Satisfaction += 10;
                 ResultsText = $"Patron {currentPatron.Name} loves {currentArt.Name} and will buy the original!";
                 SummaryText = $"+1 Original Sale";
                 currentArt.IsSold = true;
-                currentPatron.Acquisitions.Add(currentArt);
+                currentPatron.Acquisitions.Add(new ArtAcquisition(
+                    currentArt, true, gameStatsController.Stats.CurrentMonth));
                 gameStatsController.Stats.OriginalsThisMonth++;
             }
+            return result;
         }
-    }
 
-    public class ResultsArgs : EventArgs
-    {
-        public string Description;
-        public string Summary;
-
-        public ResultsArgs(string description, string summary)
+        private void BuyPrint(Patron currentPatron, Art currentArt)
         {
-            Description = description;
-            Summary = summary;
+            currentPatron.Satisfaction += 5;
+            ResultsText = $"Patron {currentPatron.Name} likes {currentArt.Name} and will buy a print!";
+            SummaryText = $"+1 Print Sale";
+            currentArt.PrintsSold++;
+            currentPatron.Acquisitions.Add(new ArtAcquisition(
+                currentArt, false, gameStatsController.Stats.CurrentMonth));
+            gameStatsController.Stats.PrintsThisMonth++;
         }
     }
 }

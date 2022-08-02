@@ -47,71 +47,82 @@ namespace Gallerist
             PatronUpdated?.Invoke(this, EventArgs.Empty);
             ActionTaken?.Invoke(this, EventArgs.Empty);
             CheckActionEnable();
-            StartCoroutine(Chatting(chatResult));
-        }
-
-        IEnumerator Chatting(List<ITrait> chatResults)
-        {
             string description = "\"";
+            string summary = chatResult.Count >= 2 ? $"Revealed {chatResult.Count} traits" : $"Revealed {chatResult.Count} trait";
             ShowResults = true;
             if (ShowResults)
             {
 
-                for (int i = 0; i <  chatResults.Count; i++)
+                for (int i = 0; i < chatResult.Count; i++)
                 {
-                    description += GenerateChatResultText(chatResults[i]);
+                    description += GenerateChatResultText(chatResult[i]);
                 }
-                description.Trim();
+                description.TrimEnd();
                 description += "\"";
+
                 ResultsReady?.Invoke(this, new ResultsArgs(
                     description: description,
-                    summary: $"Reveal {chatResults.Count} traits"));
+                    summary: summary));
             }
-            while (ShowResults)
-                yield return null;
+            StartCoroutine(AwaitResultsClose());
         }
 
         string GenerateChatResultText(ITrait trait)
         {
-            string description = "";
-            description = $"I {TraitLevelDescriptions.GetDescription(trait.Value).ToLower()} art that ";
+            string description = $"I {TraitLevelDescriptions.GetDescription(trait.Value).ToLower()} art that ";
             if (trait.TraitType == TraitType.Emotive)
+                
                 description += $"makes me feel {trait.Name.ToLower()}.  ";
             else
                 description += $"has {trait.Name.ToLower()} qualities.  ";
             return description;
         }
 
+        static List<string> ChatResultsEmotive = new List<string>()
+        {
+            "I [trait.Value] makes me feel [trait.Name]",
+
+        };
+
+        static List<string> ChatResultsAesthetic = new List<string>()
+        {
+            "I [trait.Value] art that has a [trait.Name] quality."
+        };
+
         public void Introduce()
         {
-            string introductionDescription = Schmooze.Introduce(_artistManager.Artist, _patronManager.CurrentObject);
+            ResultsArgs results = Schmooze.Introduce(_artistManager.Artist, _patronManager.CurrentObject);
             SchmoozeState.ElapsedTime += IntroductionTime;            
             PatronUpdated?.Invoke(this, EventArgs.Empty);
             ActionTaken?.Invoke(this, EventArgs.Empty);
             CheckActionEnable();
-            StartCoroutine(Introducing(introductionDescription));
-        }
-
-        IEnumerator Introducing(string description)
-        {
             ShowResults = true;
             if (ShowResults)
             {
-                ResultsReady?.Invoke(this, new ResultsArgs(
-                    description: description,
-                    summary: $""));
+                ResultsReady?.Invoke(this, results);
             }
+            StartCoroutine(AwaitResultsClose());
+        }
+
+        IEnumerator AwaitResultsClose()
+        {
             while (ShowResults)
                 yield return null;
         }
 
         public void Nudge()
         {
-            Schmooze.Nudge(_patronManager.CurrentObject);
+            ResultsArgs results = Schmooze.Nudge(_patronManager.CurrentObject);
             SchmoozeState.ElapsedTime += NudgeTime;
             PatronUpdated?.Invoke(this, EventArgs.Empty);
             ActionTaken?.Invoke(this, EventArgs.Empty);
             CheckActionEnable();
+            ShowResults = true;
+            if (ShowResults)
+            {
+                ResultsReady?.Invoke(this, results);
+            }
+            StartCoroutine(AwaitResultsClose());
         }
 
         void CheckActionEnable()
