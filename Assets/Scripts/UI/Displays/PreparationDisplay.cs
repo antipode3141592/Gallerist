@@ -50,6 +50,7 @@ namespace Gallerist.UI
                     preparationController.Centerpieces[i].Modifiers);
             }
             artPiecesDisplay.Pagination.SelectPage(0);
+            ambientMusicItems.PreparationItemsList[0].button.Select();
         }
 
         void EnableContinue(object sender, EventArgs e)

@@ -1871,6 +1871,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: DialogueChoice (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 6159149119857858101, guid: be3322319dae8104f902365a63dd4352, type: 3}
+      propertyPath: m_Navigation.m_SelectOnUp
+      value: 
+      objectReference: {fileID: 1339917889}
+    - target: {fileID: 6159149119857858101, guid: be3322319dae8104f902365a63dd4352, type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 1801837313}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: be3322319dae8104f902365a63dd4352, type: 3}
 --- !u!1 &907733247
@@ -2342,7 +2350,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
@@ -2882,6 +2890,17 @@ Transform:
   m_Father: {fileID: 104610313}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1339917889 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6159149119857858101, guid: be3322319dae8104f902365a63dd4352, type: 3}
+  m_PrefabInstance: {fileID: 4378275499343197875}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1344606332
 GameObject:
   m_ObjectHideFlags: 0
@@ -3504,6 +3523,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: DialogueChoice (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 6159149119857858101, guid: be3322319dae8104f902365a63dd4352, type: 3}
+      propertyPath: m_Navigation.m_SelectOnUp
+      value: 
+      objectReference: {fileID: 1533130597}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: be3322319dae8104f902365a63dd4352, type: 3}
 --- !u!1 &1483154462
@@ -3550,6 +3573,17 @@ Transform:
   m_Father: {fileID: 1101470583}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1533130597 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6159149119857858101, guid: be3322319dae8104f902365a63dd4352, type: 3}
+  m_PrefabInstance: {fileID: 893538985}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1546912310
 GameObject:
   m_ObjectHideFlags: 0
@@ -3846,6 +3880,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1783174976}
   m_CullTransparentMesh: 1
+--- !u!114 &1801837313 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6159149119857858101, guid: be3322319dae8104f902365a63dd4352, type: 3}
+  m_PrefabInstance: {fileID: 1465006496}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1847796865
 GameObject:
   m_ObjectHideFlags: 0
@@ -7213,6 +7258,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: DialogueChoice
       objectReference: {fileID: 0}
+    - target: {fileID: 6159149119857858101, guid: be3322319dae8104f902365a63dd4352, type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 1533130597}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: be3322319dae8104f902365a63dd4352, type: 3}
 --- !u!1001 &4645445329062034757
