@@ -47,13 +47,13 @@ namespace Gallerist.UI
             {
                 var trait = art.AestheticTraits[i];
                 aestheticTraitDisplays[i].UpdateText(trait, 
-                    trait.IsKnown ? $"{ArtTraitLevelDescriptions.GetDescription(trait.Value)} {trait.Name}" : $"(unknown)");
+                    trait.IsKnown ? $"{ArtTraitLevelDescriptions.GetDescription(trait.Value).ToLower()} {trait.Name} ({trait.Value:+#;-#;0})" : $"(unknown)");
             }
             for (int i = 0; i < emotiveTraitDisplays.Count; i++)
             {
                 var trait = art.EmotiveTraits[i];
                 emotiveTraitDisplays[i].UpdateText(trait, 
-                    trait.IsKnown ? $"{ArtTraitLevelDescriptions.GetDescription(trait.Value)} {trait.Name}" : $"(unknown)");
+                    trait.IsKnown ? $"{ArtTraitLevelDescriptions.GetDescription(trait.Value).ToLower()} {trait.Name} ({trait.Value:+#;-#;0})" : $"(unknown)");
             }
         }
     }

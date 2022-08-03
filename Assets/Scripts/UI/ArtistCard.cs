@@ -76,13 +76,13 @@ namespace Gallerist.UI
                 var trait = artist.FavoredAestheticTraits[i];
 
                 aestheticTraits[i].UpdateText(trait, 
-                    $"{TraitLevelDescriptions.GetDescription(trait.Value)} {trait.Name}");
+                    $"{TraitLevelDescriptions.GetDescription(trait.Value).ToLower()} {trait.Name}");
             }
             for (int i = 0; i < artist.FavoredEmotiveTraits.Count; i++)
             {
                 var trait = artist.FavoredEmotiveTraits[i];
                 emotiveTraits[i].UpdateText(trait,
-                    $"{TraitLevelDescriptions.GetDescription(trait.Value)} {trait.Name}");
+                    $"{TraitLevelDescriptions.GetDescription(trait.Value).ToLower()} {trait.Name}");
             }
         }
     }
