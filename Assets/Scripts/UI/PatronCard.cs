@@ -109,12 +109,12 @@ namespace Gallerist.UI
             for (int i = 0; i < patron.AestheticTraits.Count; i++)
             {
                 var trait = patron.AestheticTraits[i];
-                aestheticTraits[i].UpdateText(trait, revealToggle || trait.IsKnown ? $"{TraitLevelDescriptions.GetDescription(trait.Value)} {trait.Name}" : $"(unknown)");
+                aestheticTraits[i].UpdateText(trait, revealToggle || trait.IsKnown ? $"{TraitLevelDescriptions.GetDescription(trait.Value).ToLower()} {trait.Name} ({trait.Value:+#;-#;0})" : $"(unknown)");
             }
             for (int i = 0; i < patron.EmotiveTraits.Count; i++)
             {
                 var trait = patron.EmotiveTraits[i];
-                emotiveTraits[i].UpdateText(trait, revealToggle || trait.IsKnown ? $"{TraitLevelDescriptions.GetDescription(trait.Value)} {trait.Name}" : $"(unknown)");
+                emotiveTraits[i].UpdateText(trait, revealToggle || trait.IsKnown ? $"{TraitLevelDescriptions.GetDescription(trait.Value).ToLower()} {trait.Name} ({trait.Value:+#;-#;0})" : $"(unknown)");
             }
         }
 
