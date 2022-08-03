@@ -37,7 +37,7 @@ namespace Gallerist
                 var _trait = artist.FavoredAestheticTraits.FirstOrDefault(x => x.Name == trait.Name);
                 if (_trait is not null)
                 {
-                    distaste = _trait.Value >= 0;
+                    distaste = _trait.Value < 0;
                     matchingTraits.Add(_trait);
                 }
             }
@@ -46,7 +46,7 @@ namespace Gallerist
                 var _trait = artist.FavoredEmotiveTraits.FirstOrDefault(x => x.Name == trait.Name);
                 if (_trait is not null)
                 {
-                    distaste = _trait.Value >= 0;
+                    distaste = _trait.Value < 0;
                     matchingTraits.Add(_trait);
                 }
             }
