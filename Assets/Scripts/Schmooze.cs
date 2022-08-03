@@ -18,7 +18,7 @@ namespace Gallerist
             {
                 ITrait _trait = patron.RevealTrait();
                 if (_trait is not null)
-                    result.Add(patron.RevealTrait());
+                    result.Add(_trait);
                 else
                     return null;
             }
