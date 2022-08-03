@@ -28,6 +28,7 @@ namespace Gallerist.UI
             schmoozeController = FindObjectOfType<SchmoozeController>();
             patronsDisplay = GetComponentInChildren<PatronsDisplay>();
             schmoozeController.ActionTaken += SchmoozeActionTaken;
+            schmoozeController.ActionComplete += SchmoozeActionComplete;
             gameStateMachine.Schmooze.StateEntered += OnSchmoozingStart;
             schmoozeController.EnableChat += OnEnableChat;
             schmoozeController.EnableNudge += OnEnableNudge;
@@ -38,6 +39,16 @@ namespace Gallerist.UI
             introductionButton.onClick.AddListener(schmoozeController.Introduce);
         }
 
+        void SchmoozeActionComplete(object sender, EventArgs e)
+        {
+            if (chatButton.IsInteractable())
+                chatButton.Select();
+            else if (nudgeButton.IsInteractable())
+                nudgeButton.Select();
+            else if (introductionButton.IsInteractable())
+                introductionButton.Select();
+        }
+
         public override void Show()
         {
             base.Show();
@@ -46,6 +57,7 @@ namespace Gallerist.UI
             nudgeButton.interactable = true;
             chatButton.interactable = true;
             patronsDisplay.Pagination.SelectPage(0);
+            chatButton.Select();
         }
 
         void OnEnableIntroduction(object sender, bool e)

@@ -22,12 +22,14 @@ namespace Gallerist
         public event EventHandler PatronUpdated;
         public event EventHandler SchmoozingCompleted;
         public event EventHandler ActionTaken;
+        public event EventHandler ActionComplete;
         public event EventHandler<bool> EnableChat;
         public event EventHandler<bool> EnableNudge;
         public event EventHandler<bool> EnableIntroduction;
 
         public event EventHandler<ResultsArgs> ResultsReady;
         public bool ShowResults = false;
+
 
         SchmoozeState SchmoozeState;
 
@@ -129,6 +131,7 @@ namespace Gallerist
                 Debug.Log($"{SchmoozeState.ElapsedTime} elapsed of {SchmoozeState.TotalTime}");
                 SchmoozeState.IsComplete = true;
             }
+            ActionComplete?.Invoke(this, EventArgs.Empty);
         }
 
         public void Nudge()

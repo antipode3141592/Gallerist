@@ -17,7 +17,7 @@ namespace Gallerist
         ArtistManager artistManager;
         ArtManager artManager;
 
-        
+        [SerializeField] GameSettings gameSettings;
 
         public List<Patron> CurrentObjects { get; } = new List<Patron>();
         public List<Patron> PastObjects { get; } = new List<Patron>();
@@ -97,9 +97,9 @@ namespace Gallerist
                 aestheticTraits: traitDataSource.GenerateAestheticTraits(5, typeof(PatronTrait), new() { aesthetic.Name }),
                 emotiveTraits: traitDataSource.GenerateEmotiveTraits(5, typeof(PatronTrait), new() { emotive.Name }),
                 acquisitions: new(),
-                aestheticThreshold: Random.Range(8, 13),
-                emotiveThreshold: Random.Range(8, 13),
-                boredomThreshold: Random.Range(0, 3));
+                aestheticThreshold: Random.Range(gameSettings.PatronThresholdLowerValue, gameSettings.PatronThresholdUpperValue),
+                emotiveThreshold: Random.Range(gameSettings.PatronThresholdLowerValue, gameSettings.PatronThresholdUpperValue),
+                boredomThreshold: Random.Range(gameSettings.PatronBoredomLower, gameSettings.PatronBoredomUpper));
             //  add a check for duplicates before adding to Patrons list
             newPatron.TraitModified += PatronTraitModified;
             if (ChanceOfInitialSubscription())

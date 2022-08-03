@@ -19,7 +19,7 @@ namespace Gallerist
             Acquisitions = acquisitions;
             AestheticTraits = aestheticTraits;
             EmotiveTraits = emotiveTraits;
-            PerceptionRange = Random.Range(5, 8);
+            PerceptionRange = Random.Range(-1, 2);
             AestheticThreshold = aestheticThreshold;
             EmotiveThreshold = emotiveThreshold;
             BoredomThreshold = boredomThreshold;

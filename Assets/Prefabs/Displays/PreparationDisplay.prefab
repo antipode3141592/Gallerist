@@ -2518,6 +2518,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a46ccbf7be8570c4aa2df96176e777d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &7950235959419263505 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3324508172291112467, guid: 2eb55395b4203744fb25dc0d6876e4da, type: 3}
+  m_PrefabInstance: {fileID: 4645445329896055810}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &4645445330251008741
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2864,6 +2875,10 @@ PrefabInstance:
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
       objectReference: {fileID: 8849658578227864628}
+    - target: {fileID: 1070159074713404463, guid: 05ce2cc1de1362d4c955481a165410f1, type: 3}
+      propertyPath: m_Navigation.m_SelectOnRight
+      value: 
+      objectReference: {fileID: 7950235959419263505}
     - target: {fileID: 1132205548927297303, guid: 05ce2cc1de1362d4c955481a165410f1, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
@@ -2876,6 +2891,10 @@ PrefabInstance:
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
       objectReference: {fileID: 8917078224324724492}
+    - target: {fileID: 1132205548927297303, guid: 05ce2cc1de1362d4c955481a165410f1, type: 3}
+      propertyPath: m_Navigation.m_SelectOnRight
+      value: 
+      objectReference: {fileID: 7950235959419263505}
     - target: {fileID: 1749629211788764662, guid: 05ce2cc1de1362d4c955481a165410f1, type: 3}
       propertyPath: m_fontSize
       value: 21.1
@@ -2888,6 +2907,10 @@ PrefabInstance:
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
       objectReference: {fileID: 6793543678303389891}
+    - target: {fileID: 3048433850308454616, guid: 05ce2cc1de1362d4c955481a165410f1, type: 3}
+      propertyPath: m_Navigation.m_SelectOnRight
+      value: 
+      objectReference: {fileID: 7950235959419263505}
     - target: {fileID: 4048976066259463428, guid: 05ce2cc1de1362d4c955481a165410f1, type: 3}
       propertyPath: m_text
       value: Main Event
@@ -3196,9 +3219,13 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 4645445330237681163}
     - target: {fileID: 1132205548927297303, guid: 05ce2cc1de1362d4c955481a165410f1, type: 3}
-      propertyPath: m_Navigation.m_SelectOnRight
+      propertyPath: m_Navigation.m_SelectOnLeft
       value: 
       objectReference: {fileID: 5747025339860807154}
+    - target: {fileID: 1132205548927297303, guid: 05ce2cc1de1362d4c955481a165410f1, type: 3}
+      propertyPath: m_Navigation.m_SelectOnRight
+      value: 
+      objectReference: {fileID: 5747025339490958019}
     - target: {fileID: 1749629211788764662, guid: 05ce2cc1de1362d4c955481a165410f1, type: 3}
       propertyPath: m_fontSize
       value: 21.1
