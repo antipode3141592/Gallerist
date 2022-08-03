@@ -1,5 +1,6 @@
 using Gallerist.Data;
 using System;
+using System.Linq;
 using System.Collections;
 using UnityEngine;
 
@@ -139,8 +140,14 @@ namespace Gallerist
             return result;
         }
 
-        private void BuyPrint(Patron currentPatron, Art currentArt)
+        void BuyPrint(Patron currentPatron, Art currentArt)
         {
+            if (currentPatron.Acquisitions.Find(x => x.Art.Name == currentArt.Name) is not null)
+            {
+                ResultsText = $"{currentPatron.Name} all ready has a copy of {currentArt.Name}.";
+                SummaryText = $"No Sale";
+                return;
+            }
             currentPatron.Satisfaction += 5;
             ResultsText = $"Patron {currentPatron.Name} likes {currentArt.Name} and will buy a print!";
             SummaryText = $"+1 Print Sale";

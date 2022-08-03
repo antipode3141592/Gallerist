@@ -80,6 +80,8 @@ namespace Gallerist
 
         public ITrait RevealTrait()
         {
+            if (AllTraitsKnown)
+                return null;
             List<ITrait> unknownTraits = new();
             unknownTraits = EmotiveTraits.FindAll(x => x.IsKnown == false);
             unknownTraits.AddRange(AestheticTraits.FindAll(x => x.IsKnown == false));
@@ -95,7 +97,19 @@ namespace Gallerist
             TraitRevealed?.Invoke(this, $"{unknownTraits[randomIndex].Name}");
             if (Debug.isDebugBuild)
                 Debug.Log($"{Name} has a preference for {unknownTraits[randomIndex].Name} at {unknownTraits[randomIndex].Value}");
+            CheckAllTraitsRevealed();
             return unknownTraits[randomIndex];
+        }
+
+        public bool CheckAllTraitsRevealed()
+        {
+            List<ITrait> unknownTraits = new();
+            unknownTraits = EmotiveTraits.FindAll(x => x.IsKnown == false);
+            unknownTraits.AddRange(AestheticTraits.FindAll(x => x.IsKnown == false));
+            if (unknownTraits.Count > 0)
+                return false;
+            AllTraitsKnown = true;
+            return true;
         }
 
         public ITrait ModifyRandomTrait(int modifier)
