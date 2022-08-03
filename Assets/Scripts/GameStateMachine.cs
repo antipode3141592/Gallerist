@@ -78,9 +78,9 @@ namespace Gallerist
             Func<bool> NewGameComplete() => () => newGame.IsComplete;
             Func<bool> StartComplete() => () => startState.IsComplete;
             Func<bool> PreparationComplete() => () => preparation.IsComplete;
-            Func<bool> Schmooze1Complete() => () => schmooze.ElapsedTime >= schmooze.TotalTime && schmooze.SchmoozeCounter == 0;
+            Func<bool> Schmooze1Complete() => () => schmooze.ElapsedTime >= schmooze.TotalTime && schmooze.SchmoozeCounter == 0 && schmooze.IsComplete;
             Func<bool> MainEventComplete() => () => mainEvent.IsComplete;
-            Func<bool> Schmooze2Complete() => () => schmooze.ElapsedTime >= schmooze.TotalTime && schmooze.SchmoozeCounter >= 1;
+            Func<bool> Schmooze2Complete() => () => schmooze.ElapsedTime >= schmooze.TotalTime && schmooze.SchmoozeCounter >= 1 && schmooze.IsComplete;
             Func<bool> ClosingComplete() => () => closing.Evaluations >= closing.TotalEvaluations;
             Func<bool> NextMonth() => () => end.IsComplete;
             Func<bool> YearComplete() => () => gameStatsController.Stats.CurrentMonth > gameStatsController.BaseGameStats.TotalMonths;

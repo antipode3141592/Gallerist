@@ -34,6 +34,7 @@ namespace Gallerist.UI
         {
             Hide();
             evaluationController.ShowResults = false;
+            schmoozeController.ShowResults = false;
         }
 
         public override void Show()

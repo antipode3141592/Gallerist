@@ -37,9 +37,11 @@ namespace Gallerist
         {
             foreach (var patron in patronManager.CurrentObjects)
             {
-                foreach (var art in artManager.CurrentObjects)
+                Bag artBag = new Bag(artManager.CurrentObjects.Count);
+                for (int i = 0; i < artManager.CurrentObjects.Count; i++)
                 {
-                    var result = Evaluate(patron, art);
+                    var result = Evaluate(patron, 
+                        artManager.CurrentObjects[artBag.DrawFromBag()]);
                     if(result == EvaluationResultTypes.Original 
                         || result == EvaluationResultTypes.Print)
                         break;

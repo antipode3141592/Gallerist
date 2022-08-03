@@ -16,7 +16,11 @@ namespace Gallerist
             //reveal 1-3 random unknown traits
             for (int i = 0; i < Random.Range(1, 4); i++)
             {
-                result.Add(patron.RevealTrait());
+                ITrait _trait = patron.RevealTrait();
+                if (_trait is not null)
+                    result.Add(patron.RevealTrait());
+                else
+                    return null;
             }
             return result;
         }

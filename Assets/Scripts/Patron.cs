@@ -39,6 +39,8 @@ namespace Gallerist
         public int BoredomThreshold { get; set; }
         public int Satisfaction { get; set; } = 0;
 
+        public bool AllTraitsKnown { get; set; } = false;
+        public bool HasMetArtist { get; set; } = false;
 
         public event EventHandler PreferencesUpdated;
         public event EventHandler<string> TraitRevealed;
@@ -82,7 +84,10 @@ namespace Gallerist
             unknownTraits = EmotiveTraits.FindAll(x => x.IsKnown == false);
             unknownTraits.AddRange(AestheticTraits.FindAll(x => x.IsKnown == false));
             if (unknownTraits.Count == 0)
+            {
+                AllTraitsKnown = true;
                 return null;
+            }
             int randomIndex = Random.Range(0, unknownTraits.Count);
             unknownTraits[randomIndex].IsKnown = true;
 

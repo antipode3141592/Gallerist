@@ -14,7 +14,6 @@ namespace Gallerist
         ArtistManager _artistManager;
         PatronManager _patronManager; 
 
-        public int ElapsedTime { get; set; }
         public int TotalSchmoozingTime => 60;    //Schmooze for sixty minutes
         public int ChatTime => 5;
         public int IntroductionTime => 10;
@@ -38,15 +37,28 @@ namespace Gallerist
             SchmoozeState = _gameStateMachine.Schmooze;
             _artistManager = FindObjectOfType<ArtistManager>();
             _patronManager = FindObjectOfType<PatronManager>();
+
+        }
+
+        void Start()
+        {
+            _patronManager.SelectedObjectChanged += CurrentPatronChanged;
+        }
+
+        void CurrentPatronChanged(object sender, EventArgs e)
+        {
+            CheckActionEnable();
         }
 
         public void Chat()
         {
             List<ITrait> chatResult = Schmooze.Chat(_patronManager.CurrentObject);
-            SchmoozeState.ElapsedTime += ChatTime;
             PatronUpdated?.Invoke(this, EventArgs.Empty);
+            
+            if (chatResult is null)
+                return;
+            SchmoozeState.ElapsedTime += ChatTime;
             ActionTaken?.Invoke(this, EventArgs.Empty);
-            CheckActionEnable();
             string description = "\"";
             string summary = chatResult.Count >= 2 ? $"Revealed {chatResult.Count} traits" : $"Revealed {chatResult.Count} trait";
             ShowResults = true;
@@ -92,10 +104,11 @@ namespace Gallerist
         public void Introduce()
         {
             ResultsArgs results = Schmooze.Introduce(_artistManager.Artist, _patronManager.CurrentObject);
+            _patronManager.CurrentObject.HasMetArtist = true;
             SchmoozeState.ElapsedTime += IntroductionTime;            
             PatronUpdated?.Invoke(this, EventArgs.Empty);
             ActionTaken?.Invoke(this, EventArgs.Empty);
-            CheckActionEnable();
+            //CheckActionEnable();
             ShowResults = true;
             if (ShowResults)
             {
@@ -106,8 +119,16 @@ namespace Gallerist
 
         IEnumerator AwaitResultsClose()
         {
+            Debug.Log($"AwaitResultsClose():  {SchmoozeState.ElapsedTime} elapsed of {SchmoozeState.TotalTime}");
             while (ShowResults)
                 yield return null;
+            Debug.Log($"Checking for action enable state");
+            CheckActionEnable();
+            if (SchmoozeState.ElapsedTime >= SchmoozeState.TotalTime)
+            {
+                Debug.Log($"{SchmoozeState.ElapsedTime} elapsed of {SchmoozeState.TotalTime}");
+                SchmoozeState.IsComplete = true;
+            }
         }
 
         public void Nudge()
@@ -116,7 +137,7 @@ namespace Gallerist
             SchmoozeState.ElapsedTime += NudgeTime;
             PatronUpdated?.Invoke(this, EventArgs.Empty);
             ActionTaken?.Invoke(this, EventArgs.Empty);
-            CheckActionEnable();
+            //CheckActionEnable();
             ShowResults = true;
             if (ShowResults)
             {
@@ -128,8 +149,10 @@ namespace Gallerist
         void CheckActionEnable()
         {
             int remainingTime = SchmoozeState.TotalTime - SchmoozeState.ElapsedTime;
-            EnableChat?.Invoke(this, remainingTime >= ChatTime);
-            EnableIntroduction?.Invoke(this, remainingTime >= IntroductionTime);
+            EnableChat?.Invoke(this, remainingTime >= ChatTime 
+                && !_patronManager.CurrentObject.AllTraitsKnown);
+            EnableIntroduction?.Invoke(this, remainingTime >= IntroductionTime 
+                && !_patronManager.CurrentObject.HasMetArtist);
             EnableNudge?.Invoke(this, remainingTime >= NudgeTime);
         }
     }

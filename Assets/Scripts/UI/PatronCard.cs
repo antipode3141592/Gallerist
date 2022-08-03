@@ -24,6 +24,9 @@ namespace Gallerist.UI
         List<AcquiredArtEntry> acquiredArtEntries;
         [SerializeField] AcquiredArtEntry acquiredArtEntryPrefab;
 
+        [SerializeField] TextMeshProUGUI HasMetArtistText;
+        [SerializeField] TextMeshProUGUI AllTraitsRevealedText;
+
         [SerializeField] Image aestheticTraitsBackground;
         [SerializeField] Image emotiveTraitsBackground;
 
@@ -67,17 +70,20 @@ namespace Gallerist.UI
                 perceptionRangeText.text = $"Perception: {patron.PerceptionRange}";
             DisplayAcquiredArt();
             DisplayKnownTraits();
+
+            HasMetArtistText.text = patron.HasMetArtist ? $"Has Met Artist" : "";
+            AllTraitsRevealedText.text = patron.AllTraitsKnown ? "All Traits Known!" : "";
         }
 
         public void DisplayAcquiredArt()
         {
-            if (acquiredArtEntries.Count == 0)
+            Patron patron = patronManager.CurrentObject;
+            if (patron.Acquisitions.Count == 0)
             {
                 ArtAcquisitionsGroup.SetActive(false);
                 return;
             }
             ArtAcquisitionsGroup.SetActive(true);
-            Patron patron = patronManager.CurrentObject;
             for(int i = 0; i < acquiredArtEntries.Count; i++)
             {
                 Destroy(acquiredArtEntries[i].gameObject);
