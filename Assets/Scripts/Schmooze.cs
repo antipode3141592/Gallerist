@@ -94,14 +94,17 @@ namespace Gallerist
 
         public static ResultsArgs Nudge(Patron patron)
         {
+            int bonus = 1;
+            if (patron.Acquisitions.Count > 0)
+                bonus = 2;
             if (Utilities.RandomBool()) 
             {
-                patron.EmotiveThreshold--;
-                return new ResultsArgs($"{patron.Name} is now more open to purchasing art with a wider range of emotive qualities.", $"-1 Emotive Threshold");
+                patron.EmotiveThreshold -= bonus;
+                return new ResultsArgs($"{patron.Name} is now more open to purchasing art with a wider range of emotive qualities.", $"-{bonus} Emotive Threshold");
             } else
             {
-                patron.AestheticThreshold--;
-                return new ResultsArgs($"{patron.Name} is now more open to purchasing art with a wider range of aesthetic qualities.", $"-1 Aesthetic Threshold");
+                patron.AestheticThreshold -= bonus;
+                return new ResultsArgs($"{patron.Name} is now more open to purchasing art with a wider range of aesthetic qualities.", $"-{bonus} Aesthetic Threshold");
             }
             
         }

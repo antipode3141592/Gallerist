@@ -166,5 +166,11 @@ namespace Gallerist
                 RevealTrait();
             return true;
         }
+
+        public bool BuyArt(Art art)
+        {
+
+            return false;
+        }
     }
 }

@@ -56,6 +56,7 @@ namespace Gallerist.UI
         void EnableContinue(object sender, EventArgs e)
         {
             continueButton.interactable = true;
+            continueButton.Select();
         }
 
         void MainEventSelected(object sender, EventArgs e)
