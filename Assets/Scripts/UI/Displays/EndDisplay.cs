@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -25,39 +26,29 @@ namespace Gallerist.UI
             gameStatsController = FindObjectOfType<GameStatsController>();
         }
 
+        void Start()
+        {
+            gameStateMachine.End.EndResultsReady += DisplayEndResults;
+        }
+
+        private void DisplayEndResults(object sender, ResultsArgs e)
+        {
+            SummaryResultText.text = e.Summary;
+            NightDescriptionText.text = e.Description;
+            SummarizeNight();
+        }
+
         public override void Show()
         {
             base.Show();
             continueButton.Select();
-            SummarizeNight();
         }
 
-        public void SummarizeNight()
+        void SummarizeNight()
         {
-            int originalsSold = gameStatsController.Stats.OriginalsThisMonth;
-            int printsSold = gameStatsController.Stats.PrintsThisMonth;
-            int subscribers = gameStatsController.Stats.SubscribersThisMonth;
-
-            if (originalsSold == gameStateMachine.Closing.TotalEvaluations)
-            {
-                SummaryResultText.text = $"The night was a roaring success!";
-            }
-            else if (originalsSold > 0)
-            {
-                SummaryResultText.text = $"The night was a great success!";
-            }
-            else if (originalsSold == 0 && printsSold > 0)
-            {
-                SummaryResultText.text = $"The night was a moderate success.";
-            }
-            else
-            {
-                SummaryResultText.text = $"The night was a dissapointment.";
-            }
-
-            OriginalsSoldText.text = $"Originals Sold: {originalsSold}";
-            PrintsSoldText.text = $"Prints Sold: {printsSold}";
-            NewSubscribers.text = $"New Subscribers: {subscribers}";
+            OriginalsSoldText.text = $"Originals Sold: {gameStatsController.Stats.OriginalsThisMonth}";
+            PrintsSoldText.text = $"Prints Sold: {gameStatsController.Stats.PrintsThisMonth}";
+            NewSubscribers.text = $"New Subscribers: {gameStatsController.Stats.SubscribersThisMonth}";
         }
 
         public void CompleteEnd()

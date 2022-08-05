@@ -56,7 +56,7 @@ namespace Gallerist
             schmooze = new(salesController);
             mainEvent = new(patronManager, gameStatsController);
             closing = new();
-            end = new();
+            end = new(gameStatsController);
             final = new();
 
             _stateMachine.OnStateChange += OnStateChangeHandler;

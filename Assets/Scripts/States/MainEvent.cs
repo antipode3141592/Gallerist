@@ -44,15 +44,15 @@ namespace Gallerist.States
         void GenerateMidPartyReport()
         {
             GameStats gameStats = gameStatsController.Stats;
-            string reportText = $"{gameStats.MidPartyExits} guest{PluralS(gameStats.MidPartyExits)} left before the main event.\n";
+            string reportText = $"{gameStats.MidPartyExits} guest{PluralHelpers.PluralS(gameStats.MidPartyExits)} left before the main event.\n";
 
             //reportText += $"{gameStats.BoredGuests} guest{PluralS(gameStats.BoredGuests)} {WasWere(gameStats.BoredGuests)} disinterested.\n";
 
             if (gameStats.PrintsThisMonth > 0)
-                reportText += $"{gameStats.PrintsThisMonth} print{PluralS(gameStats.PrintsThisMonth)} {WasWere(gameStats.PrintsThisMonth)} purchased.\n";
+                reportText += $"{gameStats.PrintsThisMonth} print{PluralHelpers.PluralS(gameStats.PrintsThisMonth)} {PluralHelpers.WasWere(gameStats.PrintsThisMonth)} purchased.\n";
 
             if (gameStats.OriginalsThisMonth > 1)
-                reportText += $"{gameStats.OriginalsThisMonth} original{PluralS(gameStats.OriginalsThisMonth)} {HasHave(gameStats.OriginalsThisMonth)} been sold!\n";
+                reportText += $"{gameStats.OriginalsThisMonth} original{PluralHelpers.PluralS(gameStats.OriginalsThisMonth)} {PluralHelpers.HasHave(gameStats.OriginalsThisMonth)} been sold!\n";
 
             reportText += $"{gameStats.SubscribersThisMonth} patrons have joined {gameStats.GalleryName}'s mailing list!\n";
 
@@ -61,19 +61,6 @@ namespace Gallerist.States
             MidPartyReportTextReady?.Invoke(this, reportText);
         }
 
-        string PluralS(int value)
-        {
-            return value == 1 ? "" : "s";
-        }
-
-        string WasWere(int value)
-        {
-            return value <= 1 ? "was" : "were";
-        }
-
-        string HasHave(int value)
-        {
-            return value <= 1 ? "has" : "have";
-        }
+        
     }
 }

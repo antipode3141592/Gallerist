@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Gallerist.Data;
 
 namespace Gallerist.UI
 {
@@ -40,10 +41,10 @@ namespace Gallerist.UI
             switch (gameStatsController.Stats.CurrentMonth)
             {
                 case 0:
-                    output = $"{gameStatsController.Stats.GalleryName} is nearing its grand opening.  Time to finalize preparations for the first opening night!";
+                    output = $"{gameStatsController.Stats.GalleryName} is nearing its grand opening.  As a {RenownLevelDescriptions.GetDescription(gameStatsController.Stats.TotalRenown).ToLower()} gallery in the town of Randomville, you are aiming to make a splash and draw the attention of more renowned artists and bigger crowds. Time to finalize preparations for the first opening night!";
                     break;
                 case 1:
-                    output = $"{gameStatsController.Stats.GalleryName} is becoming more well known in the community and you expect this month's show should have a larger turnout.";
+                    output = $"{gameStatsController.Stats.GalleryName} is now a {RenownLevelDescriptions.GetDescription(gameStatsController.Stats.TotalRenown).ToLower()} gallery in the community. You expect this month's show should have a larger turnout than last month's show.";
                     break;
                 case 2:
                     output = $"Month 3 Text";
@@ -66,7 +67,9 @@ namespace Gallerist.UI
 
         void SetSummary()
         {
-            SummaryText.text = $"{gameStatsController.Stats.CurrentMonth + 1} of {gameStatsController.BaseGameStats.TotalMonths}";
+            SummaryText.text = $"{(MonthNames)gameStatsController.Stats.CurrentMonth} with {gameStatsController.BaseGameStats.TotalMonths - gameStatsController.Stats.CurrentMonth} months remaining in year";
         }
     }
+
+    public enum MonthNames { Flonuary, Goblinary, Tromily, Konluth, Drokunary, Unover}
 }
