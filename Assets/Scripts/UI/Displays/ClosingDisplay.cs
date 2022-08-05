@@ -5,7 +5,7 @@ namespace Gallerist.UI
 {
     public class ClosingDisplay : Display
     {
-        EvaluationController evaluationController;
+        SalesController salesController;
 
         ArtPiecesDisplay artPiecesDisplay;
         PatronsDisplay patronsDisplay;
@@ -16,12 +16,12 @@ namespace Gallerist.UI
         protected override void Awake()
         {
             base.Awake();
-            evaluationController = FindObjectOfType<EvaluationController>();
+            salesController = FindObjectOfType<SalesController>();
             artPiecesDisplay = GetComponentInChildren<ArtPiecesDisplay>();
             patronsDisplay = GetComponentInChildren<PatronsDisplay>();
 
-            evaluationController.EvaluationResultUpdated += OnResultsUpdated;
-            evaluationController.EvaluationsTotalUpdated += OnTotalsUpdated;
+            salesController.SalesResultUpdated += OnResultsUpdated;
+            salesController.SalesTimeUpdated += OnTotalsUpdated;
 
             evaluationsText.text = "";
             evaluationResultsText.text = "";

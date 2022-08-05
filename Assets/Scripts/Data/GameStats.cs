@@ -37,14 +37,14 @@ namespace Gallerist
 
         public void SaveMonth()
         {
-            MonthStats.Add(new MonthStats(CurrentMonth, PrintsThisMonth, OriginalsThisMonth, SubscribersThisMonth));
-
-            CurrentMonth++;
             PrintsSold += PrintsThisMonth;
             OriginalsSold += OriginalsThisMonth;
             TotalSubscribers += SubscribersThisMonth;
             TotalRenown += RenownThisMonth;
 
+            MonthStats.Add(new MonthStats(CurrentMonth, PrintsThisMonth, OriginalsThisMonth, SubscribersThisMonth, TotalRenown));
+
+            CurrentMonth++;
             ResetMonth();
         }
 
@@ -67,13 +67,15 @@ namespace Gallerist
         public int PrintsSold;
         public int OriginalsSold;
         public int TotalSubscribers;
+        public int TotalRenown;
 
-        public MonthStats(int month, int printsSold, int originalsSold, int totalSubscribers)
+        public MonthStats(int month, int printsSold, int originalsSold, int totalSubscribers, int renown)
         {
             Month = month;
             PrintsSold = printsSold;
             OriginalsSold = originalsSold;
             TotalSubscribers = totalSubscribers;
+            TotalRenown = renown;
         }
     }
 

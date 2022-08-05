@@ -6,7 +6,7 @@ namespace Gallerist.UI
 {
     public class ResultsDisplay : Display
     {
-        EvaluationController evaluationController;
+        SalesController salesController;
         SchmoozeController schmoozeController;
 
         [SerializeField] TextMeshProUGUI descriptionText;
@@ -17,9 +17,9 @@ namespace Gallerist.UI
         protected override void Awake()
         {
             base.Awake();
-            evaluationController = FindObjectOfType<EvaluationController>();
+            salesController = FindObjectOfType<SalesController>();
             schmoozeController = FindObjectOfType<SchmoozeController>();
-            evaluationController.EvaluationResultsReady += DisplayResults;
+            salesController.SalesAttemptResultsReady += DisplayResults;
             schmoozeController.ResultsReady += DisplayResults;
         }
 
@@ -33,7 +33,7 @@ namespace Gallerist.UI
         public void Continue()
         {
             Hide();
-            evaluationController.ShowResults = false;
+            salesController.ShowResults = false;
             schmoozeController.ShowResults = false;
         }
 

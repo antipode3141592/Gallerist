@@ -10,7 +10,7 @@ namespace Gallerist.UI
     public class PatronCard : MonoBehaviour
     {
         PatronManager patronManager;
-        EvaluationController evaluationController;
+        SalesController salesController;
 
         [SerializeField] List<TraitDisplay> aestheticTraits;
         [SerializeField] List<TraitDisplay> emotiveTraits;
@@ -26,6 +26,9 @@ namespace Gallerist.UI
 
         [SerializeField] TextMeshProUGUI HasMetArtistText;
         [SerializeField] TextMeshProUGUI AllTraitsRevealedText;
+        [SerializeField] TextMeshProUGUI SatisfactionLevelText;
+        [SerializeField] TextMeshProUGUI BuyingLevelText;
+
 
         [SerializeField] Image aestheticTraitsBackground;
         [SerializeField] Image emotiveTraitsBackground;
@@ -38,10 +41,10 @@ namespace Gallerist.UI
         void Awake()
         {
             patronManager = FindObjectOfType<PatronManager>();
-            evaluationController = FindObjectOfType<EvaluationController>();
+            salesController = FindObjectOfType<SalesController>();
             if (!Debug.isDebugBuild)
                 revealTraitsButton.gameObject.SetActive(false);
-            evaluationController.EvaluationResultUpdated += OnEvaluationResultUpdated;
+            salesController.SalesResultUpdated += OnEvaluationResultUpdated;
             acquiredArtEntries = new();
 
             patronManager.ObjectTraitModified += OnObjectTraitModified;

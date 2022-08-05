@@ -8,7 +8,7 @@ using Random = UnityEngine.Random;
 
 namespace Gallerist
 {
-    public class Patron: IThumbnail
+    public class Patron : IThumbnail
     {
         public Patron(string firstName, string lastInitial, Sprite portrait, bool isSubscriber, List<ITrait> aestheticTraits, List<ITrait> emotiveTraits, List<ArtAcquisition> acquisitions, int aestheticThreshold, int emotiveThreshold, int boredomThreshold)
         {
@@ -46,28 +46,34 @@ namespace Gallerist
         public event EventHandler<string> TraitRevealed;
         public event EventHandler<TraitModified> TraitModified;
 
-        public EvaluationResultTypes EvaluateArt(Art art)
+        public EvaluationResults EvaluateArt(Art art)
         {
             int aestheticTotal = PerceptionRange;
             int emotiveTotal = PerceptionRange;
 
-            foreach(var trait in art.AestheticTraits)
+            EvaluationResults results = new();
+
+            foreach (var trait in art.AestheticTraits)
             {
                 aestheticTotal += AddTraitsIfMatched(trait, AestheticTraits);
             }
-            foreach(var trait in art.EmotiveTraits)
+            foreach (var trait in art.EmotiveTraits)
             {
                 emotiveTotal += AddTraitsIfMatched(trait, EmotiveTraits);
             }
+            results.SatisfactionRating = Mathf.CeilToInt((aestheticTotal + emotiveTotal) / 2f);
+
             if (Debug.isDebugBuild)
-                Debug.Log($"A: {aestheticTotal} At: {AestheticThreshold}, E: {emotiveTotal} Et: {EmotiveThreshold}");
+                Debug.Log($"A: {aestheticTotal}/{AestheticThreshold}, E: {emotiveTotal}/{EmotiveThreshold}, S: {results.SatisfactionRating}");
             if (aestheticTotal >= AestheticThreshold && emotiveTotal >= EmotiveThreshold)
-                return EvaluationResultTypes.Original;
+                results.ResultType = EvaluationResultTypes.Original;
             else if (aestheticTotal >= AestheticThreshold / 2 && emotiveTotal >= EmotiveThreshold / 2)
-                return EvaluationResultTypes.Print;
+                results.ResultType = EvaluationResultTypes.Print;
             else if (aestheticTotal >= BoredomThreshold && emotiveTotal >= BoredomThreshold)
-                return EvaluationResultTypes.Subscribe;
-            return EvaluationResultTypes.None;
+                results.ResultType = EvaluationResultTypes.Subscribe;
+            else
+                results.ResultType = EvaluationResultTypes.None;
+            return results;
         }
 
         int AddTraitsIfMatched(ITrait artTrait, List<ITrait> patronTraits)
@@ -115,8 +121,8 @@ namespace Gallerist
         public ITrait ModifyRandomTrait(int modifier)
         {
             ITrait _trait = Utilities.RandomBool() ?
-                AestheticTraits[Random.Range(0,AestheticTraits.Count)] :
-                EmotiveTraits[Random.Range(0,EmotiveTraits.Count)];
+                AestheticTraits[Random.Range(0, AestheticTraits.Count)] :
+                EmotiveTraits[Random.Range(0, EmotiveTraits.Count)];
             if (Debug.isDebugBuild)
                 Debug.Log($"randomly chosen trait: {_trait.Name}");
             ModifyTrait(_trait, modifier);
@@ -167,10 +173,65 @@ namespace Gallerist
             return true;
         }
 
+        public ResultsArgs BuyArt(Art artToBuy, bool isOriginal, GameStats gameStats)
+        {
+            ArtAcquisition _acquiredArt = Acquisitions.Find(x => x.Art.Name == artToBuy.Name);
+            //check if owned
+            if (_acquiredArt is not null)
+            {
+                //if original owned
+                if (_acquiredArt.IsOriginal)
+                {
+                    return new ResultsArgs($"{Name} all ready owns \"{_acquiredArt.Art.Name}\".", "(No sale)");
+                }
+
+                //if print owned
+                if (!_acquiredArt.IsOriginal && isOriginal)
+                {
+                    Acquisitions.Add(new ArtAcquisition(artToBuy, isOriginal, gameStats.CurrentMonth));
+                    artToBuy.IsSold = true;
+                    gameStats.OriginalsThisMonth++;
+                    return new ResultsArgs($"Noting that {Name} picked up a print of \"{_acquiredArt.Art.Name}\", it did not take much convincing for them to buy the original!", $"(+1 Original Sale)");
+                }
+
+                return new ResultsArgs($"\"I don't really need a new copy of {_acquiredArt.Art.Name}\".", $"(no sale)");
+            }
+            //if not previously owned, add to list of acquisitions
+            Acquisitions.Add(new ArtAcquisition(artToBuy, isOriginal, gameStats.CurrentMonth));
+            if (isOriginal)
+            {
+                artToBuy.IsSold = true;
+                gameStats.OriginalsThisMonth++;
+                return new ResultsArgs(
+                    description: $"{Name} loves {artToBuy.Name} and has decided to buy the orignal!",
+                    summary: $"(+1 Original Sale)");
+            }
+            artToBuy.PrintsSold++;
+            gameStats.PrintsThisMonth++;
+            return new ResultsArgs(
+                description: $"{Name} likes {artToBuy.Name} and will buy a print!",
+                summary: $"(+1 Print Sale)");
+
+        }
+    }
+
+    public class EvaluationResults
+    {
+        public EvaluationResultTypes ResultType;
+        public int SatisfactionRating;
+    }
+
+    public class Acquisition 
+    {
+        public List<ArtAcquisition> Acquisitions;
+
+        public event EventHandler<ResultsArgs> BuyArtResults;
+
         public bool BuyArt(Art art)
         {
 
             return false;
         }
     }
+
 }

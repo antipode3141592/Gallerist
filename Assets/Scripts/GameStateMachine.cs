@@ -12,7 +12,7 @@ namespace Gallerist
         PatronManager patronManager;
         GameStatsController gameStatsController;
         PreparationController preparationController;
-        EvaluationController evaluationController;
+        SalesController salesController;
 
         StateMachine _stateMachine;
 
@@ -46,15 +46,15 @@ namespace Gallerist
 
             gameStatsController = FindObjectOfType<GameStatsController>();
             preparationController = FindObjectOfType<PreparationController>();
-            evaluationController = FindObjectOfType<EvaluationController>();
+            salesController = FindObjectOfType<SalesController>();
 
             _stateMachine = new StateMachine();
 
             newGame = new();
             startState = new START(artManager, artistManager, patronManager);
             preparation = new(preparationController, artManager, artistManager);
-            schmooze = new(evaluationController);
-            mainEvent = new(patronManager);
+            schmooze = new(salesController);
+            mainEvent = new(patronManager, gameStatsController);
             closing = new();
             end = new();
             final = new();

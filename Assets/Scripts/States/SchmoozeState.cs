@@ -5,7 +5,7 @@ namespace Gallerist.States
 {
     public class SchmoozeState : IState
     {
-        EvaluationController evaluationController;
+        SalesController evaluationController;
         public event EventHandler StateEntered;
         public event EventHandler StateExited;
         public bool IsComplete = false;
@@ -14,7 +14,7 @@ namespace Gallerist.States
         public int ElapsedTime = 0;
         public int TotalTime = 60;
 
-        public SchmoozeState(EvaluationController evaluationController)
+        public SchmoozeState(SalesController evaluationController)
         {
             this.evaluationController = evaluationController;
         }
