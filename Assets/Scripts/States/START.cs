@@ -1,4 +1,5 @@
 using FiniteStateMachine;
+using Gallerist.Data;
 using System;
 
 namespace Gallerist.States
@@ -13,23 +14,19 @@ namespace Gallerist.States
         ArtistManager _artistManager;
         PatronManager _patronManager;
 
-        public START(ArtManager artManager, ArtistManager artistManager, PatronManager patronManager)
+        GameStatsController _gameStatsController;
+
+        public event EventHandler<string> StartReportReady;
+
+        public START(ArtManager artManager, ArtistManager artistManager, PatronManager patronManager, GameStatsController gameStatsController)
         {
             _artManager = artManager;
             _artManager.ObjectsGenerated += OnArtPiecesGenerated;
             _artistManager = artistManager;
             _artistManager.ArtistGenerated += OnArtistGenerated;
             _patronManager = patronManager;
-        }
-
-        void OnArtPiecesGenerated(object sender, EventArgs e)
-        {
-            _patronManager.NewPatrons(20);
-        }
-
-        void OnArtistGenerated(object sender, EventArgs e)
-        {
-            _artManager.GenerateArtpieces(10);
+            _patronManager.ObjectsGenerated += OnPatronsGenerated;
+            _gameStatsController = gameStatsController;
         }
 
         public void OnEnter()
@@ -38,6 +35,21 @@ namespace Gallerist.States
             IsComplete = false;
 
             _artistManager.NewArtist();
+        }
+
+        void OnArtistGenerated(object sender, EventArgs e)
+        {
+            _artManager.GenerateArtpieces(10 + _artistManager.Artist.Experience * 2);
+        }
+
+        void OnArtPiecesGenerated(object sender, EventArgs e)
+        {
+            _patronManager.NewPatrons(20 + 5 * _gameStatsController.Stats.TotalRenown);
+        }
+
+        void OnPatronsGenerated(object sender, EventArgs e)
+        {
+            GenerateMonthDescription();
         }
 
         public void OnExit()
@@ -50,5 +62,28 @@ namespace Gallerist.States
 
         }
 
+        void GenerateMonthDescription()
+        {
+            int renownChange = CheckRenownChange();
+            string monthDescription = MonthStartingReportDescriptions.MonthStartingReports[_gameStatsController.Stats.CurrentMonth][renownChange];
+            monthDescription = monthDescription.Replace("[GalleryName]", _gameStatsController.Stats.GalleryName);
+            monthDescription = monthDescription.Replace("[TotalRenown]", RenownLevelDescriptions.GetDescription(_gameStatsController.Stats.TotalRenown).ToLower());
+            monthDescription = monthDescription.Replace("[MailingListSubscribers]", $"{_gameStatsController.Stats.TotalSubscribers}");
+            monthDescription = monthDescription.Replace("[TownName]", $"Randomville");
+            monthDescription = monthDescription.Replace("[ArtistExperience]", $"{ArtistExperienceLevelDescription.GetDesciption(_artistManager.Artist.Experience).ToLower()}");
+            monthDescription = monthDescription.Replace("[OriginalsSold]", $"{_gameStatsController.Stats.OriginalsSold}");
+            monthDescription = monthDescription.Replace("[PrintsSold]", $"{_gameStatsController.Stats.PrintsSold}");
+            StartReportReady?.Invoke(this, monthDescription);
+        }
+
+        int CheckRenownChange()
+        {
+            if (_gameStatsController.Stats.CurrentMonth == 0)
+                return 0;
+            return _gameStatsController.Stats.TotalRenown - 
+                _gameStatsController.Stats.MonthStats.Find(x => x.Month ==_gameStatsController.Stats.CurrentMonth-1).TotalRenown;
+        }
+
+        
     }
 }

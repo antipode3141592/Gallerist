@@ -51,7 +51,7 @@ namespace Gallerist
             _stateMachine = new StateMachine();
 
             newGame = new();
-            startState = new START(artManager, artistManager, patronManager);
+            startState = new START(artManager, artistManager, patronManager, gameStatsController);
             preparation = new(preparationController, artManager, artistManager);
             schmooze = new(salesController);
             mainEvent = new(patronManager, gameStatsController);

@@ -1,4 +1,4 @@
-namespace Gallerist
+namespace Gallerist.Data
 {
     public static class PluralHelpers
     {
