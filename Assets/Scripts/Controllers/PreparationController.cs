@@ -9,7 +9,6 @@ namespace Gallerist
     public class PreparationController : MonoBehaviour
     {
         GameStateMachine gameStateMachine;
-        TraitDataSource traitDataSource;
         AmbientMusicDataSource ambientMusicDataSource;
         FoodAndDrinkDataSource foodAndDrinkDataSource;
         CenterpieceDataSource centerpieceDataSource;
@@ -39,7 +38,6 @@ namespace Gallerist
         {
             gameStateMachine = FindObjectOfType<GameStateMachine>();
             artManager = FindObjectOfType<ArtManager>();
-            traitDataSource = FindObjectOfType<TraitDataSource>();
             ambientMusicDataSource = FindObjectOfType<AmbientMusicDataSource>();
             foodAndDrinkDataSource = FindObjectOfType<FoodAndDrinkDataSource>();
             centerpieceDataSource = FindObjectOfType<CenterpieceDataSource>();
