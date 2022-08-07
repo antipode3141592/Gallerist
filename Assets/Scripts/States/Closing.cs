@@ -9,13 +9,12 @@ namespace Gallerist.States
         public event EventHandler StateEntered;
         public event EventHandler StateExited;
         public int Evaluations = 0;
-        public int TotalEvaluations = 5;
+        public int TotalSalesAttempts = 5;
 
         public Closing(int totalEvaluations = 5)
         {
-            TotalEvaluations = totalEvaluations;
+            TotalSalesAttempts = totalEvaluations;
         }
-
 
         public void OnEnter()
         {

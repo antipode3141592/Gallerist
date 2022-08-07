@@ -1,4 +1,5 @@
 using FiniteStateMachine;
+using Gallerist.Data;
 using System;
 
 namespace Gallerist.States

@@ -56,7 +56,7 @@ namespace Gallerist
             schmooze = new(salesController);
             mainEvent = new(patronManager, gameStatsController);
             closing = new();
-            end = new(gameStatsController);
+            end = new(gameStatsController, artistManager, patronManager, artManager);
             final = new();
 
             _stateMachine.OnStateChange += OnStateChangeHandler;
@@ -81,7 +81,7 @@ namespace Gallerist
             Func<bool> Schmooze1Complete() => () => schmooze.ElapsedTime >= schmooze.TotalTime && schmooze.SchmoozeCounter == 0 && schmooze.IsComplete;
             Func<bool> MainEventComplete() => () => mainEvent.IsComplete;
             Func<bool> Schmooze2Complete() => () => schmooze.ElapsedTime >= schmooze.TotalTime && schmooze.SchmoozeCounter >= 1 && schmooze.IsComplete;
-            Func<bool> ClosingComplete() => () => closing.Evaluations >= closing.TotalEvaluations;
+            Func<bool> ClosingComplete() => () => closing.Evaluations >= closing.TotalSalesAttempts;
             Func<bool> NextMonth() => () => end.IsComplete;
             Func<bool> YearComplete() => () => gameStatsController.Stats.CurrentMonth > gameStatsController.BaseGameStats.TotalMonths;
         }
