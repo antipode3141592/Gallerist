@@ -8,7 +8,7 @@ using Random = UnityEngine.Random;
 
 namespace Gallerist
 {
-    public class Patron : IThumbnail
+    public class Patron : IThumbnail, IModifyTrait
     {
         public Patron(string firstName, string lastInitial, Sprite portrait, bool isSubscriber, List<ITrait> aestheticTraits, List<ITrait> emotiveTraits, List<ArtAcquisition> acquisitions, int aestheticThreshold, int emotiveThreshold, int boredomThreshold)
         {
@@ -38,7 +38,6 @@ namespace Gallerist
         public int EmotiveThreshold { get; set; }
         public int BoredomThreshold { get; set; }
         public int Satisfaction { get; set; } = 0;
-
         public bool AllTraitsKnown { get; set; } = false;
         public bool HasMetArtist { get; set; } = false;
 
@@ -125,40 +124,41 @@ namespace Gallerist
                 EmotiveTraits[Random.Range(0, EmotiveTraits.Count)];
             if (Debug.isDebugBuild)
                 Debug.Log($"randomly chosen trait: {_trait.Name}");
-            ModifyTrait(_trait, modifier);
+            ModifyTrait(_trait.Name, modifier);
             return _trait;
         }
 
-        public void ModifyTrait(ITrait trait, int modifier)
+        public bool ModifyTrait(string traitName, int modifier)
         {
-            var patronTrait = EmotiveTraits.FirstOrDefault(x => x.Name == trait.Name);
+            var patronTrait = EmotiveTraits.FirstOrDefault(x => x.Name == traitName);
             if (patronTrait is not null)
             {
                 if (Debug.isDebugBuild)
                     Debug.Log($"modifying {patronTrait.Name} {patronTrait.Value} by {modifier}");
                 patronTrait.Value += modifier;
                 PreferencesUpdated?.Invoke(this, EventArgs.Empty);
-                TraitModified?.Invoke(this, new TraitModified(trait.Name, modifier));
-                return;
+                TraitModified?.Invoke(this, new TraitModified(traitName, modifier));
+                return true;
             }
-            patronTrait = AestheticTraits.FirstOrDefault(x => x.Name == trait.Name);
+            patronTrait = AestheticTraits.FirstOrDefault(x => x.Name == traitName);
             if (patronTrait is not null)
             {
                 if (Debug.isDebugBuild)
                     Debug.Log($"modifying {patronTrait.Name} {patronTrait.Value} by {modifier}");
                 patronTrait.Value += modifier;
                 PreferencesUpdated?.Invoke(this, EventArgs.Empty);
-                TraitModified?.Invoke(this, new TraitModified(trait.Name, modifier));
-                return;
+                TraitModified?.Invoke(this, new TraitModified(traitName, modifier));
+                return true;
             }
             if (Debug.isDebugBuild)
-                Debug.Log($"{trait.Name} not found, no modifications made");
+                Debug.Log($"{traitName} not found, no modifications made");
+            return false;
         }
 
         public ITrait ModifyRandomMatchingTrait(List<ITrait> traits, int modifier)
         {
             var trait = traits[Random.Range(0, traits.Count)];
-            ModifyTrait(trait, modifier);
+            ModifyTrait(trait.Name, modifier);
             PreferencesUpdated?.Invoke(this, EventArgs.Empty);
             return trait;
         }
@@ -189,6 +189,7 @@ namespace Gallerist
                 if (!_acquiredArt.IsOriginal && isOriginal)
                 {
                     Acquisitions.Add(new ArtAcquisition(artToBuy, isOriginal, gameStats.CurrentMonth));
+                    RevealMatchingTraits(artToBuy);
                     artToBuy.IsSold = true;
                     gameStats.OriginalsThisMonth++;
                     return new ResultsArgs($"Noting that {Name} picked up a print of \"{_acquiredArt.Art.Name}\", it did not take much convincing for them to buy the original!", $"(+1 Original Sale)");
@@ -202,6 +203,7 @@ namespace Gallerist
             {
                 artToBuy.IsSold = true;
                 gameStats.OriginalsThisMonth++;
+                RevealMatchingTraits(artToBuy);
                 return new ResultsArgs(
                     description: $"{Name} loves {artToBuy.Name} and has decided to buy the orignal!",
                     summary: $"(+1 Original Sale)");
@@ -212,6 +214,22 @@ namespace Gallerist
                 description: $"{Name} likes {artToBuy.Name} and will buy a print!",
                 summary: $"(+1 Print Sale)");
 
+        }
+
+        void RevealMatchingTraits(Art art)
+        {
+            foreach (var trait in art.EmotiveTraits)
+            {
+                var patronTrait = EmotiveTraits.Find(x => x.Name == trait.Name);
+                if (patronTrait is not null)
+                    patronTrait.IsKnown = true;
+            }    
+            foreach (var trait in art.AestheticTraits)
+            {
+                var patronTrait = AestheticTraits.Find(x => x.Name == trait.Name);
+                if (patronTrait is not null)
+                    patronTrait.IsKnown = true;
+            }
         }
     }
 

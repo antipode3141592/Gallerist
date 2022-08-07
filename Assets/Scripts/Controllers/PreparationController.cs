@@ -135,8 +135,23 @@ namespace Gallerist
             OptionsCreated?.Invoke(this, EventArgs.Empty);
         }
 
+        public void ApplyAllPreparations()
+        {
+            foreach (var art in artManager.CurrentObjects)
+            {
+                //for each trait in preparations, add +1 if art has matching trait
+                foreach (var trait in currentAmbientMusic.IdsToModify)
+                    art.ModifyTrait(trait, +1);
+                foreach (var trait in currentFoodAndDrink.IdsToModify)
+                    art.ModifyTrait(trait, +1);
+                foreach (var trait in currentCenterpiece.IdsToModify)
+                    art.ModifyTrait(trait, +1);
+            }
+        }
+
         public void PreparationsComplete()
         {
+            ApplyAllPreparations();
             gameStateMachine.Preparation.IsComplete = true;
         }
     }

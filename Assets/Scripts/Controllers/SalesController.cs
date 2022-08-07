@@ -113,7 +113,7 @@ namespace Gallerist
 
             gameStateMachine.Closing.Evaluations++;
 
-            SalesTimeUpdated?.Invoke(this, $"{gameStateMachine.Closing.Evaluations} of {gameStateMachine.Closing.TotalEvaluations} Closing Sale Attempts");
+            SalesTimeUpdated?.Invoke(this, $"{gameStateMachine.Closing.Evaluations} of {gameStateMachine.Closing.TotalSalesAttempts} Closing Sale Attempts");
 
             SalesResultUpdated?.Invoke(this, $"Originals Sold: {gameStatsController.Stats.OriginalsThisMonth} , Prints Sold: {gameStatsController.Stats.PrintsThisMonth}");
 
@@ -136,12 +136,16 @@ namespace Gallerist
 
             if (result.ResultType == EvaluationResultTypes.Print)
             {
+                currentPatron.SetSubscription();
+                gameStatsController.Stats.SubscribersThisMonth++;
                 var retval = currentPatron.BuyArt(currentArt, isOriginal: false, gameStatsController.Stats);
                 return retval;
             }
 
             if (result.ResultType == EvaluationResultTypes.Original)
             {
+                currentPatron.SetSubscription();
+                gameStatsController.Stats.SubscribersThisMonth++;
                 var retval = currentPatron.BuyArt(currentArt, true, gameStatsController.Stats);
                 return retval;
             }
