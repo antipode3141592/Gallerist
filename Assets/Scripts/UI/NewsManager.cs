@@ -10,11 +10,11 @@ namespace Gallerist.UI
 
         public Queue<News> NewsQueue { get; } = new();
 
-        EvaluationController evaluationController;
+        SalesController evaluationController;
 
         void Awake()
         {
-            evaluationController = FindObjectOfType<EvaluationController>();
+            evaluationController = FindObjectOfType<SalesController>();
         }
 
     }

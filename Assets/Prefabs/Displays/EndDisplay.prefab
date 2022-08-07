@@ -631,7 +631,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SummaryResultText: {fileID: 6101729672829417955}
   NightDescriptionText: {fileID: 6101729673083335110}
-  OverallEnjoymentText: {fileID: 6101729674193457204}
+  RenownLevelText: {fileID: 6101729674193457204}
   OriginalsSoldText: {fileID: 6101729672763414482}
   PrintsSoldText: {fileID: 6101729674297252894}
   NewSubscribers: {fileID: 6101729672309480907}
@@ -1110,7 +1110,7 @@ GameObject:
   - component: {fileID: 6101729674193457205}
   - component: {fileID: 6101729674193457204}
   m_Layer: 5
-  m_Name: Overall Enjoyment
+  m_Name: RenownText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1164,7 +1164,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Overall Enjoyment: [Adjective] / [Value]%'
+  m_text: 'Renown Change: NN (adjective)'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

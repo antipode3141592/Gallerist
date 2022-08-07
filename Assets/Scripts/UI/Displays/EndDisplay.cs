@@ -1,7 +1,7 @@
-using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Gallerist.Data;
 
 namespace Gallerist.UI
 {
@@ -12,7 +12,7 @@ namespace Gallerist.UI
 
         [SerializeField] TextMeshProUGUI SummaryResultText;
         [SerializeField] TextMeshProUGUI NightDescriptionText;
-        [SerializeField] TextMeshProUGUI OverallEnjoymentText;
+        [SerializeField] TextMeshProUGUI RenownLevelText;
         [SerializeField] TextMeshProUGUI OriginalsSoldText;
         [SerializeField] TextMeshProUGUI PrintsSoldText;
         [SerializeField] TextMeshProUGUI NewSubscribers;
@@ -46,6 +46,7 @@ namespace Gallerist.UI
 
         void SummarizeNight()
         {
+            RenownLevelText.text = $"Renown: {gameStatsController.Stats.TotalRenown + gameStatsController.Stats.RenownThisMonth} ({RenownLevelDescriptions.GetDescription(gameStatsController.Stats.TotalRenown + gameStatsController.Stats.RenownThisMonth)})";
             OriginalsSoldText.text = $"Originals Sold: {gameStatsController.Stats.OriginalsThisMonth}";
             PrintsSoldText.text = $"Prints Sold: {gameStatsController.Stats.PrintsThisMonth}";
             NewSubscribers.text = $"New Subscribers: {gameStatsController.Stats.SubscribersThisMonth}";

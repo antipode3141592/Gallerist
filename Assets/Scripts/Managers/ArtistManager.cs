@@ -1,3 +1,4 @@
+using Gallerist.Data;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -48,6 +49,7 @@ namespace Gallerist
             ArtistTraits.Clear();
             Artist = new Artist(
                 name: nameDataSource.GenerateRandomArtistName(),
+                bio: ArtistBios.Bios["default"],
                 favoredAestheticTraits: traitDataSource.GenerateAestheticTraits(3, typeof(ArtistTrait)),
                 favoredEmotiveTraits: traitDataSource.GenerateEmotiveTraits(3, typeof(ArtistTrait)),
                 portrait: spriteDataSource.GeneratePortrait()

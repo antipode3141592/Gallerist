@@ -53,6 +53,11 @@ namespace Gallerist
             traitDataSource = FindObjectOfType<TraitDataSource>();
         }
 
+        void Start()
+        {
+            
+        }
+
         public void NewPatrons(int total)
         {
             if (CurrentObjects.Count > 0)
@@ -79,8 +84,29 @@ namespace Gallerist
             if (Debug.isDebugBuild)
                 Debug.Log($"Generating {total} new patrons");
             for (int i = 0; i < total; i++)
-                GeneratePatron();
+            {
+                if (PastObjects.Count > 0 && ReturningPatronChance())
+                    PatronReturns();
+                else
+                    GeneratePatron();
+            }
             ObjectsGenerated?.Invoke(this, EventArgs.Empty);
+        }
+
+        bool ReturningPatronChance()
+        {
+            float random = .1f * (1 * gameStatsController.Stats.TotalRenown);
+            return Random.value < random;
+        }
+
+        void PatronReturns()
+        {
+            var patron = PastObjects[Random.Range(0, PastObjects.Count)];
+            if (Debug.isDebugBuild)
+                Debug.Log($"{patron.Name} has returned to the gallery!");
+            CurrentObjects.Add(patron);
+            PastObjects.Remove(patron);
+
         }
 
         public void GeneratePatron()
@@ -118,7 +144,11 @@ namespace Gallerist
             for (int i = 0; i < ExitingPatrons.Count; i++)
             {
                 if (CurrentObjects.Contains(ExitingPatrons[i]))
+                {
+                    ExitingPatrons[i].TraitModified -= PatronTraitModified;
                     CurrentObjects.Remove(ExitingPatrons[i]);
+                }
+
                 ExitingPatrons[i] = null;
             }
             ExitingPatrons.Clear();
