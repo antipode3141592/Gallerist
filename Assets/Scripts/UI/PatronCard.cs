@@ -74,6 +74,9 @@ namespace Gallerist.UI
             DisplayAcquiredArt();
             DisplayKnownTraits();
 
+            //SatisfactionLevelText.text = $"(unknown)";
+            //BuyingLevelText.text = $"";
+
             HasMetArtistText.text = patron.HasMetArtist ? $"Has Met Artist" : "";
             AllTraitsRevealedText.text = patron.AllTraitsKnown ? "All Traits Known!" : "";
         }

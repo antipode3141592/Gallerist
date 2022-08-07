@@ -68,7 +68,7 @@ namespace Gallerist.States
             string monthDescription = MonthStartingReportDescriptions.MonthStartingReports[_gameStatsController.Stats.CurrentMonth][renownChange];
             monthDescription = monthDescription.Replace("[GalleryName]", _gameStatsController.Stats.GalleryName);
             monthDescription = monthDescription.Replace("[RenownDescription]", RenownLevelDescriptions.GetDescription(_gameStatsController.Stats.TotalRenown).ToLower());
-            monthDescription = monthDescription.Replace("[MailingListSubscribers]", $"{_gameStatsController.Stats.TotalSubscribers}");
+            monthDescription = monthDescription.Replace("[SubscriberCount]", $"{_gameStatsController.Stats.TotalSubscribers}");
             monthDescription = monthDescription.Replace("[TownName]", $"Randomville");
             monthDescription = monthDescription.Replace("[ArtistExperience]", $"{ArtistExperienceLevelDescription.GetDesciption(_artistManager.Artist.Experience).ToLower()}");
             monthDescription = monthDescription.Replace("[OriginalsSold]", $"{_gameStatsController.Stats.OriginalsSold}");
@@ -80,8 +80,7 @@ namespace Gallerist.States
         {
             if (_gameStatsController.Stats.CurrentMonth == 0)
                 return 0;
-            return _gameStatsController.Stats.TotalRenown - 
-                _gameStatsController.Stats.MonthStats.Find(x => x.Month ==_gameStatsController.Stats.CurrentMonth-1).TotalRenown;
+            return _gameStatsController.Stats.MonthStats.Find(x => x.Month == _gameStatsController.Stats.CurrentMonth-1).RenownGain;
         }
 
         

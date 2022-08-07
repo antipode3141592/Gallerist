@@ -3,7 +3,6 @@ using Gallerist.States;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace Gallerist
@@ -13,6 +12,7 @@ namespace Gallerist
         GameStateMachine _gameStateMachine;
         ArtistManager _artistManager;
         PatronManager _patronManager; 
+        GameStatsController _gameStatsController;
 
         public int TotalSchmoozingTime => 60;    //Schmooze for sixty minutes
         public int ChatTime => 5;
@@ -39,7 +39,7 @@ namespace Gallerist
             SchmoozeState = _gameStateMachine.Schmooze;
             _artistManager = FindObjectOfType<ArtistManager>();
             _patronManager = FindObjectOfType<PatronManager>();
-
+            _gameStatsController = FindObjectOfType<GameStatsController>();
         }
 
         void Start()
@@ -54,7 +54,7 @@ namespace Gallerist
 
         public void Chat()
         {
-            List<ITrait> chatResult = Schmooze.Chat(_patronManager.CurrentObject);
+            List<ITrait> chatResult = Schmooze.Chat(_patronManager.CurrentObject, bonus: _gameStatsController.Stats.TotalRenown);
             PatronUpdated?.Invoke(this, EventArgs.Empty);
             
             if (chatResult is null)
@@ -71,7 +71,7 @@ namespace Gallerist
                 {
                     description += GenerateChatResultText(chatResult[i]);
                 }
-                description.TrimEnd();
+                description.TrimEnd(' ');
                 description += "\"";
 
                 ResultsReady?.Invoke(this, new ResultsArgs(
@@ -86,15 +86,15 @@ namespace Gallerist
             string description = $"I {TraitLevelDescriptions.GetDescription(trait.Value).ToLower()} art that ";
             if (trait.TraitType == TraitType.Emotive)
                 
-                description += $"makes me feel {trait.Name.ToLower()}.  ";
+                description += $"makes me feel {trait.Name.ToLower()}. ";
             else
-                description += $"has {trait.Name.ToLower()} qualities.  ";
+                description += $"has {trait.Name.ToLower()} qualities. ";
             return description;
         }
 
         static List<string> ChatResultsEmotive = new List<string>()
         {
-            "I [trait.Value] makes me feel [trait.Name]",
+            "[trait.Value] makes me feel [trait.Name]",
 
         };
 

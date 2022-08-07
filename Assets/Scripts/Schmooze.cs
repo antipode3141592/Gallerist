@@ -10,11 +10,11 @@ namespace Gallerist
     public class Schmooze
     {
         //reveal information about Patron
-        public static List<ITrait> Chat(Patron patron)
+        public static List<ITrait> Chat(Patron patron, int bonus = 0)
         {
             List<ITrait> result = new List<ITrait>();
             //reveal 1-3 random unknown traits
-            for (int i = 0; i < Random.Range(1, 4); i++)
+            for (int i = 0; i < Random.Range(1 + bonus, 4 + bonus); i++)
             {
                 ITrait _trait = patron.RevealTrait();
                 if (_trait is not null)

@@ -42,7 +42,7 @@ namespace Gallerist
             TotalSubscribers += SubscribersThisMonth;
             TotalRenown += RenownThisMonth;
 
-            MonthStats.Add(new MonthStats(CurrentMonth, PrintsThisMonth, OriginalsThisMonth, SubscribersThisMonth, TotalRenown));
+            MonthStats.Add(new MonthStats(CurrentMonth, PrintsThisMonth, OriginalsThisMonth, SubscribersThisMonth, TotalRenown, RenownThisMonth));
 
             CurrentMonth++;
             ResetMonth();
@@ -57,38 +57,6 @@ namespace Gallerist
 
             MidPartyExits = 0;
             BoredGuests = 0;
-        }
-    }
-
-    [Serializable]
-    public class MonthStats
-    {
-        public int Month;
-        public int PrintsSold;
-        public int OriginalsSold;
-        public int TotalSubscribers;
-        public int TotalRenown;
-
-        public MonthStats(int month, int printsSold, int originalsSold, int totalSubscribers, int renown)
-        {
-            Month = month;
-            PrintsSold = printsSold;
-            OriginalsSold = originalsSold;
-            TotalSubscribers = totalSubscribers;
-            TotalRenown = renown;
-        }
-    }
-
-    [Serializable]
-    public class BaseGameStats
-    {
-        public int TotalMonths;
-        public int StartingRenown;
-
-        public BaseGameStats(int totalMonths, int startingRenown)
-        {
-            TotalMonths = totalMonths;
-            StartingRenown = startingRenown;
         }
     }
 }

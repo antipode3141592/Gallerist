@@ -7,7 +7,9 @@ namespace Gallerist.UI
     public class MainEventDisplay : Display
     {
         [SerializeField] Image mainEvent;
+        [SerializeField] string mainEventText;
         [SerializeField] Image foodAndDrink;
+        [SerializeField] string foodAndDrinkText;
 
         [SerializeField] TextMeshProUGUI reportText;
 

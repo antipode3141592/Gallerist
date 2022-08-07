@@ -11,7 +11,7 @@ public class GameStatsController : MonoBehaviour
     void Awake()
     {
         gameStats = new GameStats();
-        baseGameStats = new BaseGameStats(totalMonths: 6, startingRenown: 1);
+        baseGameStats = new BaseGameStats(totalMonths: 3, startingRenown: 1);
         gameStats.CurrentMonth = 0;
     }
 }

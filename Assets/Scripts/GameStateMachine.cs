@@ -82,8 +82,8 @@ namespace Gallerist
             Func<bool> MainEventComplete() => () => mainEvent.IsComplete;
             Func<bool> Schmooze2Complete() => () => schmooze.ElapsedTime >= schmooze.TotalTime && schmooze.SchmoozeCounter >= 1 && schmooze.IsComplete;
             Func<bool> ClosingComplete() => () => closing.Evaluations >= closing.TotalSalesAttempts;
-            Func<bool> NextMonth() => () => end.IsComplete;
-            Func<bool> YearComplete() => () => gameStatsController.Stats.CurrentMonth > gameStatsController.BaseGameStats.TotalMonths;
+            Func<bool> NextMonth() => () => end.IsComplete && gameStatsController.Stats.CurrentMonth < gameStatsController.BaseGameStats.TotalMonths;
+            Func<bool> YearComplete() => () => end.IsComplete && gameStatsController.Stats.CurrentMonth >= gameStatsController.BaseGameStats.TotalMonths;
         }
 
         void Start()

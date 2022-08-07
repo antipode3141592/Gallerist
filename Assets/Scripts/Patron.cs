@@ -186,7 +186,7 @@ namespace Gallerist
                 }
 
                 //if print owned
-                if (!_acquiredArt.IsOriginal && isOriginal)
+                if (!artToBuy.IsSold && !_acquiredArt.IsOriginal && isOriginal)
                 {
                     Acquisitions.Add(new ArtAcquisition(artToBuy, isOriginal, gameStats.CurrentMonth));
                     RevealMatchingTraits(artToBuy);
@@ -199,7 +199,7 @@ namespace Gallerist
             }
             //if not previously owned, add to list of acquisitions
             Acquisitions.Add(new ArtAcquisition(artToBuy, isOriginal, gameStats.CurrentMonth));
-            if (isOriginal)
+            if (isOriginal && !artToBuy.IsSold)
             {
                 artToBuy.IsSold = true;
                 gameStats.OriginalsThisMonth++;

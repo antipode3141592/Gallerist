@@ -28,7 +28,7 @@ namespace Gallerist.Data
                 {
                     {-1, "[GalleryName] underperformed last month, but [MonthName] begins with renewed hope!" },
                     {0, "[GalleryName] continues as a [RenownDescription] in the community." },
-                    {1, "[GalleryName] is building its reputation and is now known as a [RenownDescription] in [TownName].  With [SubscriberCount] subscribers, you expect to see familiar faces and a larger crowd than last month." }
+                    {1, "[GalleryName] is building its reputation and is now known as a [RenownDescription] gallery in [TownName].  With [SubscriberCount] subscribers, you expect to see familiar faces and a larger crowd than last month." }
                 }
             },
             { 3, new Dictionary<int, string>()
@@ -42,7 +42,7 @@ namespace Gallerist.Data
                 {
                     {-1, "Going into one of the last shows of the year, [GalleryName] is losing momentum." },
                     {0, "[GalleryName] continues as a [RenownDescription] in the community." },
-                    {1, "[GalleryName] is gaining momentum as a [ReputationDescription] in [TownName] and you have grown your mailing list to [MailingListSubscribers] members!  The crowd should be large with plenty of familiar faces.  With a [ArtistExperience] artist and a good reputation, conditions are good for connecting originals with patrons." }
+                    {1, "[GalleryName] is gaining momentum as a [ReputationDescription] in [TownName] and you have grown your mailing list to [SubscriberCount] members!  The crowd should be large with plenty of familiar faces.  With a [ArtistExperience] artist and a good reputation, conditions are good for connecting originals with patrons." }
                 }
             },
             { 5, new Dictionary<int, string>()
