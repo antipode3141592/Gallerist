@@ -67,6 +67,7 @@ namespace Testing.EditMode
         public static Artist GetArtist()
         {
             return new Artist(name: defaultArtistName,
+                bio: "",
                 favoredAestheticTraits: new()
                 {
                     new ArtistTrait(

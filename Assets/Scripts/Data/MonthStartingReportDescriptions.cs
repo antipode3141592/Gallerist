@@ -20,8 +20,8 @@ namespace Gallerist.Data
             { 1, new Dictionary<int, string>()
                 {
                     {-1, "[GalleryName] has had some setbacks, but it's the start of a brand new month!" },
-                    {0, "Still seen as a [RenownDescription], [GalleryName] is hoping for better performance at this month's show." },
-                    {1, "[GalleryName] is now a [RenownDescription] in the community.  You expect a a larger turnout this month and hope to see some familiar faces!" }
+                    {0, "Still seen as a [RenownDescription] space, [GalleryName] is hoping for better performance at this month's show." },
+                    {1, "[GalleryName] is now a [RenownDescription] gallery in the community.  You expect a larger turnout this month and hope to see some familiar faces!" }
                 }
             },
             { 2, new Dictionary<int, string>()
