@@ -1,8 +1,9 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Gallerist.Data
 {
-    public class TraitLevelDescriptions: ILevelDescription
+    public class TraitLevelDescriptions
     {
         public static Dictionary<int, string> LevelDescriptions = new()
         {
@@ -11,7 +12,7 @@ namespace Gallerist.Data
             { -3, "Loathe" },
             { -2, "Reject" },
             { -1, "Dislike" },
-            { 0, "Am ambivalent toward" },
+            { 0, "Ignore" },
             { 1, "Like" },
             { 2, "Enjoy" },
             { 3, "Cherish" },
@@ -27,27 +28,29 @@ namespace Gallerist.Data
         }
     }
 
-    public class ArtTraitLevelDescriptions: ILevelDescription
+    public class ArtTraitLevelDescriptions
     {
-        public static Dictionary<int, string> LevelDescriptions = new()
+        public static Dictionary<int, List<string>> LevelDescriptions = new()
         {
-            { 1, "Exhibits" },
-            { 2, "Emanates" },
-            { 3, "Exudes" },
-            { 4, "Manifests" },
-            { 5, "Embodies" }
+            { 1, new() { "Exhibits", "Incorporates" , "Demonstrates"} },
+            { 2, new() { "Emanates", "Expresses", "Illustrates"} },
+            { 3, new() { "Exudes", "Exemplifies", "Typifies" } },
+            { 4, new() { "Manifests" , "Concretizes", "Realizes"} },
+            { 5, new() { "Embodies" , "Reifies", "Epitomizes" } }
         };
 
         public static string GetDescription(int level)
         {
             if (LevelDescriptions.ContainsKey(level))
-                return LevelDescriptions[level];
+                return LevelDescriptions[level][Random.Range(0, LevelDescriptions[level].Count)];
             return "";
         }
     }
 
-    public class RenownLevelDescriptions: ILevelDescription
+    public class RenownLevelDescriptions
     {
+
+        //"A [adf] 
         public static Dictionary<int, string> LevelDescriptions = new()
         {
             { -5, "Relic" },
@@ -71,8 +74,24 @@ namespace Gallerist.Data
         }
     }
 
-    public interface ILevelDescription
+    public class ArtistExperienceLevelDescription
     {
-        public static Dictionary<int, string> LevelDescriptions;
+        public static Dictionary<int, string> LevelDescriptions = new()
+        {
+            { 0, "Inexperienced"},
+            { 1, "Capable"},
+            { 2, "Experienced"},
+            { 3, "Professional"},
+            { 4, "Seasoned"},
+            { 5, "Local Legend"}
+        };
+
+        public static string GetDesciption(int level)
+        {
+            if (LevelDescriptions.ContainsKey(level))
+                return LevelDescriptions[level];
+            return "";
+        }
+
     }
 }

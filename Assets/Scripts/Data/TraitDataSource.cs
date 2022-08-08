@@ -6,7 +6,7 @@ using Random = UnityEngine.Random;
 
 namespace Gallerist
 {
-    public class TraitDataSource : MonoBehaviour
+    public class TraitDataSource : MonoBehaviour, ITraitDataSource
     {
         public List<string> AestheticTraits { get; set; }
         public List<string> EmotiveTraits { get; set; }
@@ -47,7 +47,7 @@ namespace Gallerist
                     while (traitNames.Contains(traitName));
                     traitNames.Add(traitName);
                 }
-                
+
                 if (traitType == typeof(ArtTrait))
                 {
                     traitValue = Random.Range(1, 5) + bonus;
@@ -61,7 +61,7 @@ namespace Gallerist
                 else if (traitType == typeof(PatronTrait))
                 {
                     //first trait is negative, others are positive
-                    traitValue = i == totalTraits - 1 ? Random.Range(-5,-1) : Random.Range(1, 5) + bonus;
+                    traitValue = i == totalTraits - 1 ? Random.Range(-5, -1) : Random.Range(1, 5) + bonus;
                     traits.Add(new PatronTrait(traitNames[i], traitValue, false, TraitType.Aesthetic));
                 }
                 else
@@ -86,7 +86,7 @@ namespace Gallerist
                     while (traitNames.Contains(traitName));
                     traitNames.Add(traitName);
                 }
-                
+
 
                 if (traitType == typeof(ArtTrait))
                 {
@@ -118,8 +118,11 @@ namespace Gallerist
             for (int i = 0; i < totalTraits; i++)
             {
                 string traitName;
-                do { traitName = GetRandomTraitName(
-                    traitType == TraitType.Emotive ? EmotiveTraits : AestheticTraits); }
+                do
+                {
+                    traitName = GetRandomTraitName(
+                   traitType == TraitType.Emotive ? EmotiveTraits : AestheticTraits);
+                }
                 while (traitNames.Contains(traitName));
                 traitNames.Add(traitName);
             }
