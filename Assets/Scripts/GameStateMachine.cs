@@ -57,7 +57,7 @@ namespace Gallerist
             mainEvent = new(patronManager, gameStatsController);
             closing = new();
             end = new(gameStatsController, artistManager, patronManager, artManager);
-            final = new();
+            final = new(gameStatsController);
 
             _stateMachine.OnStateChange += OnStateChangeHandler;
 

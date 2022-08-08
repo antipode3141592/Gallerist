@@ -1,4 +1,6 @@
 using Gallerist.Data;
+using Gallerist.States;
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -8,6 +10,7 @@ namespace Gallerist.UI
     public class FinalDisplay : Display
     {
         GameStatsController gameStatsController;
+        GameStateMachine gameStateMachine;
 
         [SerializeField] TextMeshProUGUI SummaryText;
         [SerializeField] TextMeshProUGUI DescriptionText;
@@ -17,13 +20,23 @@ namespace Gallerist.UI
         {
             base.Awake();
             gameStatsController = FindObjectOfType<GameStatsController>();
+            gameStateMachine = FindObjectOfType<GameStateMachine>();
+        }
+
+        void Start()
+        {
+            gameStateMachine.Final.FinalReportReady += OnFinalReportReady;
+        }
+
+        void OnFinalReportReady(object sender, string e)
+        {
+            GenerateDescription(e);
         }
 
         public override void Show()
         {
             base.Show();
             GenerateSummary();
-            GenerateDescription();
             GenerateStatsBlock();
         }
 
@@ -32,9 +45,9 @@ namespace Gallerist.UI
             SummaryText.text = Summaries[gameStatsController.Stats.TotalRenown];
         }
 
-        void GenerateDescription()
+        void GenerateDescription(string report)
         {
-
+            DescriptionText.text = report;
         }
 
         void GenerateStatsBlock()
@@ -48,17 +61,17 @@ namespace Gallerist.UI
 
         static Dictionary<int, string> Summaries = new()
         {
-            { -5, $"Terrible, no good year." },
-            { -4, $"Rotten year." },
-            { -3, $"Dismal year." },
-            { -2, $"Bad year." },
-            { -1, $"Somewhat disappointing year."},
-            { 0, $"Year without growth."},
-            { 1, $"Moderate year." },
-            { 2, $"Good year."},
-            { 3, $"Great end to the year!"},
-            { 4, $"Fantastic year!"},
-            { 5, $"Perfect year!"}
+            { -5, $"Terrible, No Good Year." },
+            { -4, $"Rotten Year" },
+            { -3, $"Dismal Year" },
+            { -2, $"Bad Year" },
+            { -1, $"Disappointing Year"},
+            { 0, $"Year Without Growth"},
+            { 1, $"Moderate Year" },
+            { 2, $"Year of Growth"},
+            { 3, $"Great Year!"},
+            { 4, $"Fantastic Year!"},
+            { 5, $"Perfect Year!"}
         };
     }
 }
