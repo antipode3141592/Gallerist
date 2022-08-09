@@ -45,10 +45,10 @@ namespace Gallerist
         public event EventHandler<string> TraitRevealed;
         public event EventHandler<TraitModified> TraitModified;
 
-        public EvaluationResults EvaluateArt(Art art)
+        public EvaluationResults EvaluateArt(Art art, int bonus = 0)
         {
-            int aestheticTotal = PerceptionRange;
-            int emotiveTotal = PerceptionRange;
+            int aestheticTotal = PerceptionRange + bonus;
+            int emotiveTotal = PerceptionRange + bonus;
 
             EvaluationResults results = new();
 

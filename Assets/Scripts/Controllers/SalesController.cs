@@ -96,7 +96,7 @@ namespace Gallerist
 
         IEnumerator SalesAttempt(Patron currentPatron, Art currentArt)
         {
-            var saleResult = Sale(currentPatron, currentArt);
+            var saleResult = Sale(currentPatron, currentArt, bonus: 1 + gameStatsController.Stats.TotalRenown);
 
             ShowResults = true;
             if (ShowResults)
@@ -114,16 +114,15 @@ namespace Gallerist
 
         }
 
-        ResultsArgs Sale(Patron currentPatron, Art currentArt)
+        ResultsArgs Sale(Patron currentPatron, Art currentArt, int bonus = 0)
         {
             //current Patron selection evaluates current Art selection
-            var result = currentPatron.EvaluateArt(currentArt);
+            var result = currentPatron.EvaluateArt(currentArt, bonus);
 
             if (result.ResultType == EvaluationResultTypes.Subscribe)
             {
-                if (!currentPatron.IsSubscriber)
+                if (currentPatron.SetSubscription())
                 {
-                    currentPatron.SetSubscription();
                     gameStatsController.Stats.SubscribersThisMonth++;
                     return new ResultsArgs($"{currentPatron.Name} is uninterested in {currentArt.Name} but has joined the gallery's mailing list.", "(+1 Mailing List Subscription)");
                 }
@@ -131,22 +130,16 @@ namespace Gallerist
 
             if (result.ResultType == EvaluationResultTypes.Print)
             {
-                if (!currentPatron.IsSubscriber)
-                {
-                    currentPatron.SetSubscription();
+                if (currentPatron.SetSubscription())
                     gameStatsController.Stats.SubscribersThisMonth++;
-                }
                 var retval = currentPatron.BuyArt(currentArt, isOriginal: false, gameStatsController.Stats);
                 return retval;
             }
 
             if (result.ResultType == EvaluationResultTypes.Original)
             {
-                if (!currentPatron.IsSubscriber)
-                {
-                    currentPatron.SetSubscription();
+                if (currentPatron.SetSubscription())
                     gameStatsController.Stats.SubscribersThisMonth++;
-                }
                 var retval = currentPatron.BuyArt(currentArt, true, gameStatsController.Stats);
                 return retval;
             }

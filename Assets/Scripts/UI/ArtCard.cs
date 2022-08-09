@@ -3,13 +3,14 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Gallerist.Data;
+using System;
 
 namespace Gallerist.UI
 {
     public class ArtCard : MonoBehaviour
     {
         ArtManager artManager;
-        ArtistManager artistManager;
+        SalesController salesController;
 
         [SerializeField] List<TraitDisplay> aestheticTraitDisplays;
         [SerializeField] List<TraitDisplay> emotiveTraitDisplays;
@@ -27,7 +28,20 @@ namespace Gallerist.UI
         void Awake()
         {
             artManager = FindObjectOfType<ArtManager>();
-            artistManager = FindObjectOfType<ArtistManager>();
+            salesController = FindObjectOfType<SalesController>();
+        }
+
+        void Start()
+        {
+            salesController.SalesResultUpdated += OnSalesResultsUpdated;
+        }
+
+        void OnSalesResultsUpdated(object sender, string e)
+        {
+            Art art = artManager.CurrentObject;
+            availabilityText.text = art.IsSold ? "Sold" : "Available";
+            availabilityText.color = art.IsSold ? Color.red : Color.white;
+            printsSoldText.text = art.PrintsSold > 0 ? $"Prints Sold: {art.PrintsSold}" : "";
         }
 
         public void LoadArtCardData()

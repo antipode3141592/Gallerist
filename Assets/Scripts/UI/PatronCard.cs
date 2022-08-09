@@ -1,5 +1,6 @@
 using Gallerist.Data;
 using Gallerist.Events;
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -51,6 +52,16 @@ namespace Gallerist.UI
             ArtAcquisitionsGroup.SetActive(false);
         }
 
+        void Start()
+        {
+            salesController.SalesResultUpdated += OnSalesResultsUpdated;
+        }
+
+        void OnSalesResultsUpdated(object sender, string e)
+        {
+            DisplayAcquiredArt();
+        }
+
         void OnObjectTraitModified(object sender, TraitModified e)
         {
             Patron patron = sender as Patron;
@@ -74,8 +85,8 @@ namespace Gallerist.UI
             DisplayAcquiredArt();
             DisplayKnownTraits();
 
-            //SatisfactionLevelText.text = $"(unknown)";
-            //BuyingLevelText.text = $"";
+            SatisfactionLevelText.text = $"";
+            BuyingLevelText.text = $"";
 
             HasMetArtistText.text = patron.HasMetArtist ? $"Has Met Artist" : "";
             AllTraitsRevealedText.text = patron.AllTraitsKnown ? "All Traits Known!" : "";

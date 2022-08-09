@@ -1,8 +1,7 @@
-using System;
+using Gallerist.Data;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using Gallerist.Data;
 using Random = UnityEngine.Random;
 
 namespace Gallerist
@@ -97,7 +96,7 @@ namespace Gallerist
             int bonus = 1;
             if (patron.Acquisitions.Count > 0)
                 bonus = 2;
-            if (Utilities.RandomBool()) 
+            if (patron.EmotiveThreshold >= patron.AestheticThreshold) 
             {
                 patron.EmotiveThreshold -= bonus;
                 return new ResultsArgs($"{patron.Name} is now more open to purchasing art with a wider range of emotive qualities.", $"-{bonus} Emotive Threshold");
