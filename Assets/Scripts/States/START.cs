@@ -14,11 +14,13 @@ namespace Gallerist.States
         ArtistManager _artistManager;
         PatronManager _patronManager;
 
+        GameSettings _gameSettings;
+
         GameStatsController _gameStatsController;
 
         public event EventHandler<string> StartReportReady;
 
-        public START(ArtManager artManager, ArtistManager artistManager, PatronManager patronManager, GameStatsController gameStatsController)
+        public START(ArtManager artManager, ArtistManager artistManager, PatronManager patronManager, GameStatsController gameStatsController, GameSettings gameSettings)
         {
             _artManager = artManager;
             _artManager.ObjectsGenerated += OnArtPiecesGenerated;
@@ -27,6 +29,8 @@ namespace Gallerist.States
             _patronManager = patronManager;
             _patronManager.ObjectsGenerated += OnPatronsGenerated;
             _gameStatsController = gameStatsController;
+            _gameSettings = gameSettings;
+
         }
 
         public void OnEnter()
@@ -39,7 +43,8 @@ namespace Gallerist.States
 
         void OnArtistGenerated(object sender, EventArgs e)
         {
-            _artManager.GenerateArtpieces(10 + _artistManager.Artist.Experience * 2);
+            _artManager.GenerateArtpieces(GameSettings.ArtPieceGenerationCalc(_artistManager.Artist));
+            
         }
 
         void OnArtPiecesGenerated(object sender, EventArgs e)

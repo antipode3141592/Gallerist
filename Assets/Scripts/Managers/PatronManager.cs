@@ -1,3 +1,4 @@
+using Gallerist.Data;
 using Gallerist.Events;
 using System;
 using System.Collections.Generic;

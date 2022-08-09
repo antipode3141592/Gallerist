@@ -8,7 +8,7 @@ namespace Gallerist
 {
     public class ArtistManager : MonoBehaviour
     {
-        GameStateMachine gameStateMachine;
+        GameStatsController gameStatsController;
         NameDataSource nameDataSource;
         SpriteDataSource spriteDataSource;
         TraitDataSource traitDataSource;
@@ -23,11 +23,10 @@ namespace Gallerist
 
         void Awake()
         {
-            gameStateMachine = FindObjectOfType<GameStateMachine>();
+            gameStatsController = FindObjectOfType<GameStatsController>();
             nameDataSource = FindObjectOfType<NameDataSource>();
             spriteDataSource = FindObjectOfType<SpriteDataSource>();
             traitDataSource = FindObjectOfType<TraitDataSource>();
-            //gameStateMachine.StartState.StateEntered += OnNewGame;
         }
 
         public void NewArtist()
@@ -46,13 +45,19 @@ namespace Gallerist
 
         void GenerateArtist()
         {
-            ArtistTraits.Clear();
+            ITrait aesthetic = null;
+            ITrait emotive = null;
+            if (PreviousArtists.Count > 0)
+            {
+                GetRandomTraits(PreviousArtists[PreviousArtists.Count - 1], out aesthetic, out emotive);
+            }
             Artist = new Artist(
                 name: nameDataSource.GenerateRandomArtistName(),
                 bio: ArtistBios.Bios["default"],
-                favoredAestheticTraits: traitDataSource.GenerateAestheticTraits(3, typeof(ArtistTrait)),
-                favoredEmotiveTraits: traitDataSource.GenerateEmotiveTraits(3, typeof(ArtistTrait)),
-                portrait: spriteDataSource.GeneratePortrait()
+                favoredAestheticTraits: traitDataSource.GenerateAestheticTraits(3, typeof(ArtistTrait), requiredTraits: aesthetic is not null ? new() { aesthetic.Name } : null),
+                favoredEmotiveTraits: traitDataSource.GenerateEmotiveTraits(3, typeof(ArtistTrait), requiredTraits: emotive is not null ? new() { emotive.Name } : null),
+                portrait: spriteDataSource.GeneratePortrait(),
+                experience: gameStatsController.Stats.TotalRenown
                 );
             ArtistTraits = GetAllTraits();
         }
@@ -71,6 +76,12 @@ namespace Gallerist
         {
             aesthetic = Artist.FavoredAestheticTraits[Random.Range(0, Artist.FavoredAestheticTraits.Count)];
             emotive = Artist.FavoredEmotiveTraits[Random.Range(0, Artist.FavoredEmotiveTraits.Count)];
+        }
+
+        void GetRandomTraits(Artist artist, out ITrait aesthetic, out ITrait emotive)
+        {
+            aesthetic = artist.FavoredAestheticTraits[Random.Range(0, Artist.FavoredAestheticTraits.Count)];
+            emotive = artist.FavoredEmotiveTraits[Random.Range(0, Artist.FavoredEmotiveTraits.Count)];
         }
     }
 }

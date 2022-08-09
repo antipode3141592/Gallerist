@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8929a6d86e384144ea6fa7967c826a2f, type: 3}
   m_Name: DefaultGameSettings
   m_EditorClassIdentifier: 
-  PatronThresholdLowerValue: 9
-  PatronThresholdUpperValue: 14
+  PatronThresholdLowerValue: 4
+  PatronThresholdUpperValue: 12
   PatronBoredomLower: 0
   PatronBoredomUpper: 5

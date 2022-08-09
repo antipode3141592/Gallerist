@@ -1,4 +1,5 @@
 using FiniteStateMachine;
+using Gallerist.Data;
 using Gallerist.States;
 using System;
 using UnityEngine;
@@ -7,6 +8,8 @@ namespace Gallerist
 {
     public class GameStateMachine : MonoBehaviour
     {
+        [SerializeField] GameSettings gameSettings;
+
         ArtManager artManager;
         ArtistManager artistManager;
         PatronManager patronManager;
@@ -51,7 +54,7 @@ namespace Gallerist
             _stateMachine = new StateMachine();
 
             newGame = new();
-            startState = new START(artManager, artistManager, patronManager, gameStatsController);
+            startState = new START(artManager, artistManager, patronManager, gameStatsController, gameSettings);
             preparation = new(preparationController, artManager, artistManager);
             schmooze = new(salesController);
             mainEvent = new(patronManager, gameStatsController);

@@ -66,8 +66,8 @@ namespace Gallerist
                 name: nameDataSource.GenerateArtName(),
                 description: nameDataSource.GenerateArtDescription(),
                 artistName: artistManager.Artist.Name,
-                aestheticQualities: traitDataSource.GenerateAestheticTraits(3, typeof(ArtTrait), requiredTraits: new() { aesthetic.Name }),
-                emotiveQualities: traitDataSource.GenerateEmotiveTraits(3, typeof(ArtTrait), requiredTraits: new() { emotive.Name }),
+                aestheticQualities: traitDataSource.GenerateAestheticTraits(3, typeof(ArtTrait), requiredTraits: new() { aesthetic.Name }, artistManager.Artist.Experience),
+                emotiveQualities: traitDataSource.GenerateEmotiveTraits(3, typeof(ArtTrait), requiredTraits: new() { emotive.Name }, artistManager.Artist.Experience),
                 image: spriteDataSource.GenerateArtImage()
                 );
             //stats are based on Artist favoredTraits (ex: artist specializing in landscapes will tend to create landscapes)

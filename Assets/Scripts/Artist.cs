@@ -12,13 +12,14 @@ namespace Gallerist
         public List<ITrait> FavoredEmotiveTraits { get; private set; }
         public int Experience { get; set; } = 0;
 
-        public Artist(string name, string bio, List<ITrait> favoredAestheticTraits, List<ITrait> favoredEmotiveTraits, Sprite portrait)
+        public Artist(string name, string bio, List<ITrait> favoredAestheticTraits, List<ITrait> favoredEmotiveTraits, Sprite portrait, int experience = 0)
         {
             Name = name;
             Bio = bio;
             FavoredAestheticTraits = favoredAestheticTraits;
             FavoredEmotiveTraits = favoredEmotiveTraits;
             Image = portrait;
+            Experience = experience;
         }
     }
 }

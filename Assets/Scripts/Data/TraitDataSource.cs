@@ -50,18 +50,18 @@ namespace Gallerist
 
                 if (traitType == typeof(ArtTrait))
                 {
-                    traitValue = Random.Range(1, 5) + bonus;
+                    traitValue = Random.Range(1 + bonus, 5);
                     traits.Add(new ArtTrait(traitNames[i], traitValue, true, TraitType.Aesthetic));
                 }
                 else if (traitType == typeof(ArtistTrait))
                 {
-                    traitValue = Random.Range(1, 5) + bonus;
+                    traitValue = Random.Range(1 + bonus, 5);
                     traits.Add(new ArtistTrait(traitNames[i], traitValue, true, TraitType.Aesthetic));
                 }
                 else if (traitType == typeof(PatronTrait))
                 {
-                    //first trait is negative, others are positive
-                    traitValue = i == totalTraits - 1 ? Random.Range(-5, -1) : Random.Range(1, 5) + bonus;
+                    //last trait is negative, others are positive
+                    traitValue = i == totalTraits - 1 ? Random.Range(-5, -1) : Random.Range(1 + bonus, 5);
                     traits.Add(new PatronTrait(traitNames[i], traitValue, false, TraitType.Aesthetic));
                 }
                 else
