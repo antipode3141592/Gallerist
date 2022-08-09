@@ -9,6 +9,7 @@ namespace Gallerist
     public class PreparationController : MonoBehaviour
     {
         GameStateMachine gameStateMachine;
+        GameStatsController gameStatsController;
         AmbientMusicDataSource ambientMusicDataSource;
         FoodAndDrinkDataSource foodAndDrinkDataSource;
         CenterpieceDataSource centerpieceDataSource;
@@ -22,6 +23,10 @@ namespace Gallerist
         AmbientMusic currentAmbientMusic;
         FoodAndDrink currentFoodAndDrink;
         Centerpiece currentCenterpiece;
+
+        public AmbientMusic CurrentAmbientMusic => currentAmbientMusic;
+        public FoodAndDrink CurrentFoodAndDrink => currentFoodAndDrink;
+        public Centerpiece CurrentCenterpiece => currentCenterpiece;
 
         bool AmbientMusicSelected;
         bool FoodAndDrinkSelected;
@@ -37,6 +42,7 @@ namespace Gallerist
         void Awake()
         {
             gameStateMachine = FindObjectOfType<GameStateMachine>();
+            gameStatsController = FindObjectOfType<GameStatsController>();
             artManager = FindObjectOfType<ArtManager>();
             ambientMusicDataSource = FindObjectOfType<AmbientMusicDataSource>();
             foodAndDrinkDataSource = FindObjectOfType<FoodAndDrinkDataSource>();

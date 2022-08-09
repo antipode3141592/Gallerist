@@ -7,20 +7,25 @@ namespace Gallerist.UI
     public class MainEventDisplay : Display
     {
         [SerializeField] Image mainEvent;
-        [SerializeField] string mainEventText;
+        [SerializeField] TextMeshProUGUI mainEventText;
         [SerializeField] Image foodAndDrink;
-        [SerializeField] string foodAndDrinkText;
+        [SerializeField] TextMeshProUGUI foodAndDrinkText;
 
         [SerializeField] TextMeshProUGUI reportText;
 
         [SerializeField] Button continueButton;
 
         GameStateMachine gameStateMachine;
+        GameStatsController gameStatsController;
+        PreparationController preparationController;
+
 
         protected override void Awake()
         {
             base.Awake();
             gameStateMachine = FindObjectOfType<GameStateMachine>();
+            gameStatsController = FindObjectOfType<GameStatsController>();
+            preparationController = FindObjectOfType<PreparationController>();
         }
 
         void Start()
@@ -37,6 +42,8 @@ namespace Gallerist.UI
         {
             base.Show();
             continueButton.Select();
+            mainEventText.text = $"{preparationController.CurrentCenterpiece.Name}";
+            foodAndDrinkText.text = $"{preparationController.CurrentFoodAndDrink.Name}";
         }
 
         public void EndMainEvent()

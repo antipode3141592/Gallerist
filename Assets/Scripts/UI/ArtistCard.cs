@@ -21,6 +21,7 @@ namespace Gallerist.UI
 
         [SerializeField] TextMeshProUGUI nameText;
         [SerializeField] Image portraitImage;
+        [SerializeField] TextMeshProUGUI experienceText;
 
         [SerializeField] Image aestheticTraitsBackground;
         [SerializeField] Image emotiveTraitsBackground;
@@ -84,6 +85,7 @@ namespace Gallerist.UI
                 emotiveTraits[i].UpdateText(trait,
                     $"{TraitLevelDescriptions.GetDescription(trait.Value).ToLower()} {trait.Name}");
             }
+            experienceText.text = ArtistExperienceLevelDescription.GetDesciption(artist.Experience);
         }
     }
 }

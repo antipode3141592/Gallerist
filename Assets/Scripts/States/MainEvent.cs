@@ -6,16 +6,17 @@ namespace Gallerist.States
 {
     public class MainEvent : IState
     {
+        SalesController salesController;
         PatronManager patronManager;
         GameStatsController gameStatsController;
 
         public bool IsComplete;
 
-        public MainEvent(PatronManager patronManager, GameStatsController gameStatsController)
+        public MainEvent(PatronManager patronManager, GameStatsController gameStatsController, SalesController salesController)
         {
             this.patronManager = patronManager;
             this.gameStatsController = gameStatsController;
-
+            this.salesController = salesController;
         }
 
         public event EventHandler StateEntered;
@@ -25,6 +26,7 @@ namespace Gallerist.States
 
         public void OnEnter()
         {
+            salesController.CheckSalesForAllPatrons();
             patronManager.OnMainEventEntered();
             GenerateMidPartyReport();
             IsComplete = false;

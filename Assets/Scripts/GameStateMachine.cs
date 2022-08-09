@@ -56,9 +56,9 @@ namespace Gallerist
             newGame = new();
             startState = new START(artManager, artistManager, patronManager, gameStatsController, gameSettings);
             preparation = new(preparationController, artManager, artistManager);
-            schmooze = new(salesController);
-            mainEvent = new(patronManager, gameStatsController);
-            closing = new();
+            schmooze = new();
+            mainEvent = new(patronManager, gameStatsController, salesController);
+            closing = new(salesController);
             end = new(gameStatsController, artistManager, patronManager, artManager);
             final = new(gameStatsController);
 

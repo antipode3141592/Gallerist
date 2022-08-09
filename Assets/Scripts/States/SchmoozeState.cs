@@ -5,7 +5,6 @@ namespace Gallerist.States
 {
     public class SchmoozeState : IState
     {
-        SalesController evaluationController;
         public event EventHandler StateEntered;
         public event EventHandler StateExited;
         public bool IsComplete = false;
@@ -14,9 +13,9 @@ namespace Gallerist.States
         public int ElapsedTime = 0;
         public int TotalTime = 60;
 
-        public SchmoozeState(SalesController evaluationController)
+        public SchmoozeState()
         {
-            this.evaluationController = evaluationController;
+            
         }
 
         public void OnEnter()
@@ -29,7 +28,6 @@ namespace Gallerist.States
 
         public void OnExit()
         {
-            evaluationController.OnSchmoozeEnd();
             ElapsedTime = 0;
             SchmoozeCounter++;
             if (SchmoozeCounter >= 2)

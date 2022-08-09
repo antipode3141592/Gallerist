@@ -37,12 +37,7 @@ namespace Gallerist
             
         }
 
-        public void OnSchmoozeEnd()
-        {
-            CheckSalesForAllPatrons();
-        }
-
-        void CheckSalesForAllPatrons()
+        public void CheckSalesForAllPatrons()
         {
             foreach (var patron in patronManager.CurrentObjects)
             {
@@ -136,16 +131,22 @@ namespace Gallerist
 
             if (result.ResultType == EvaluationResultTypes.Print)
             {
-                currentPatron.SetSubscription();
-                gameStatsController.Stats.SubscribersThisMonth++;
+                if (!currentPatron.IsSubscriber)
+                {
+                    currentPatron.SetSubscription();
+                    gameStatsController.Stats.SubscribersThisMonth++;
+                }
                 var retval = currentPatron.BuyArt(currentArt, isOriginal: false, gameStatsController.Stats);
                 return retval;
             }
 
             if (result.ResultType == EvaluationResultTypes.Original)
             {
-                currentPatron.SetSubscription();
-                gameStatsController.Stats.SubscribersThisMonth++;
+                if (!currentPatron.IsSubscriber)
+                {
+                    currentPatron.SetSubscription();
+                    gameStatsController.Stats.SubscribersThisMonth++;
+                }
                 var retval = currentPatron.BuyArt(currentArt, true, gameStatsController.Stats);
                 return retval;
             }
