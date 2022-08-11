@@ -1,9 +1,4 @@
 ﻿using Gallerist;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Testing.EditMode
 {
@@ -102,7 +97,8 @@ namespace Testing.EditMode
                     isKnown: false,
                     traitType: TraitType.Emotive)
                 },
-                portrait: null);
+                portrait: null,
+                experience: 0);
         }
 
         public static Art GetArt()
