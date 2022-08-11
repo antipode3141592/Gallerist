@@ -10,6 +10,7 @@ namespace Gallerist.States
 
         public bool IsComplete = false;
 
+        public event EventHandler EnableContinue;
         
 
         public void OnEnter()
@@ -24,6 +25,7 @@ namespace Gallerist.States
 
         public void Tick()
         {
+
         }
     }
 }

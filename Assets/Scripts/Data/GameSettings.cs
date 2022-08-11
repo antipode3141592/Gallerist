@@ -11,6 +11,14 @@ namespace Gallerist.Data
         public int PatronBoredomLower;
         public int PatronBoredomUpper;
 
+        public int TotalSchmoozingTime;    //Schmooze for sixty minutes
+        public int ChatTime;
+        public int IntroductionTime;
+        public int NudgeTime;
+
+        public int TotalMonths;
+        public int StartingRenown;
+
         public static int ArtPieceGenerationCalc(Artist artist)
         {
             int x = 8 + artist.Experience * 2;

@@ -21,14 +21,14 @@ namespace Gallerist
 
         StateMachine _stateMachine;
 
-        NewGame newGame; //= new();
-        START startState;// = new();
-        Preparation preparation; // = new();
-        SchmoozeState schmooze; // = new();
-        MainEvent mainEvent; // = new();
-        Closing closing; // = new();
-        END end; // = new();
-        Final final; // = new();
+        NewGame newGame;
+        START startState;
+        Preparation preparation;
+        SchmoozeState schmooze;
+        MainEvent mainEvent;
+        Closing closing;
+        END end;
+        Final final;
 
         public NewGame NewGame => newGame;
         public START StartState => startState;
@@ -59,7 +59,7 @@ namespace Gallerist
             newGame = new();
             startState = new START(artManager, artistManager, patronManager, gameStatsController, gameSettings);
             preparation = new(preparationController, artManager);
-            schmooze = new(schmoozeController);
+            schmooze = new(patronManager, schmoozeController, gameSettings);
             mainEvent = new(patronManager, gameStatsController, salesController);
             closing = new(salesController);
             end = new(gameStatsController, artistManager, patronManager, artManager);
@@ -84,12 +84,12 @@ namespace Gallerist
             Func<bool> NewGameComplete() => () => newGame.IsComplete;
             Func<bool> StartComplete() => () => startState.IsComplete;
             Func<bool> PreparationComplete() => () => preparation.IsComplete;
-            Func<bool> Schmooze1Complete() => () => schmooze.ElapsedTime >= schmooze.TotalTime && schmooze.SchmoozeCounter == 0 && schmooze.IsComplete;
+            Func<bool> Schmooze1Complete() => () => schmooze.ElapsedTime >= gameSettings.TotalMonths && schmooze.SchmoozeCounter == 0 && schmooze.IsComplete;
             Func<bool> MainEventComplete() => () => mainEvent.IsComplete;
             Func<bool> Schmooze2Complete() => () => schmooze.ElapsedTime >= schmooze.TotalTime && schmooze.SchmoozeCounter >= 1 && schmooze.IsComplete;
             Func<bool> ClosingComplete() => () => closing.Evaluations >= closing.TotalSalesAttempts;
-            Func<bool> NextMonth() => () => end.IsComplete && gameStatsController.Stats.CurrentMonth < gameStatsController.BaseGameStats.TotalMonths;
-            Func<bool> YearComplete() => () => end.IsComplete && gameStatsController.Stats.CurrentMonth >= gameStatsController.BaseGameStats.TotalMonths;
+            Func<bool> NextMonth() => () => end.IsComplete && gameStatsController.Stats.CurrentMonth < gameSettings.TotalMonths;
+            Func<bool> YearComplete() => () => end.IsComplete && gameStatsController.Stats.CurrentMonth >= gameSettings.TotalMonths;
         }
 
         IEnumerator Start()
@@ -109,5 +109,7 @@ namespace Gallerist
         {
             _stateMachine.Tick();
         }
+
+        
     }
 }

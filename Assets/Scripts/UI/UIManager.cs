@@ -10,7 +10,10 @@ namespace Gallerist
     {
         GameStateMachine gameStateMachine;
 
-        [SerializeField] List<Display> displayList;
+        [SerializeField] RectTransform UITransform;
+
+        [SerializeField] List<Display> displayPrefabs;
+
         [SerializeField] List<Display> overlayDisplayList;
 
         Dictionary<Type, Display> _displays = new();
@@ -19,11 +22,6 @@ namespace Gallerist
         void Awake()
         {
             gameStateMachine = FindObjectOfType<GameStateMachine>();
-
-            foreach (var display in displayList)
-            {
-                _displays.Add(display.GetType(), display);
-            }
             foreach (var display in overlayDisplayList)
             {
                 _overlays.Add(display.GetType(), display);
@@ -66,7 +64,17 @@ namespace Gallerist
 
         public void LoadNewGameUI(object sender, EventArgs e)
         {
+            CreateDisplays();
             LoadDisplay(typeof(NewGameDisplay));
+        }
+
+        void CreateDisplays()
+        {
+            foreach(Display prefab in displayPrefabs)
+            {
+                Display go = Instantiate<Display>(prefab, UITransform);
+                _displays.Add(go.GetType(), go);
+            }
         }
 
         public void LoadStartUI(object sender, EventArgs e)

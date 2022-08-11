@@ -4,52 +4,29 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Gallerist
 {
     public class SchmoozeController : MonoBehaviour
     {
-        GameStateMachine _gameStateMachine;
         ArtistManager _artistManager;
         PatronManager _patronManager; 
         GameStatsController _gameStatsController;
 
-        public int TotalSchmoozingTime => 60;    //Schmooze for sixty minutes
-        public int ChatTime => 5;
-        public int IntroductionTime => 10;
-        public int NudgeTime => 15;
-
         public event EventHandler PatronUpdated;
         public event EventHandler SchmoozingCompleted;
-        public event EventHandler ActionTaken;
-        public event EventHandler ActionComplete;
-        public event EventHandler<bool> EnableChat;
-        public event EventHandler<bool> EnableNudge;
-        public event EventHandler<bool> EnableIntroduction;
+
+        public event EventHandler<string> ActionComplete;
 
         public event EventHandler<ResultsArgs> ResultsReady;
         public bool ShowResults = false;
 
-
-        SchmoozeState SchmoozeState;
-
         void Awake()
         {
-            _gameStateMachine = FindObjectOfType<GameStateMachine>();
-            SchmoozeState = _gameStateMachine.Schmooze;
             _artistManager = FindObjectOfType<ArtistManager>();
             _patronManager = FindObjectOfType<PatronManager>();
             _gameStatsController = FindObjectOfType<GameStatsController>();
-        }
-
-        void Start()
-        {
-            _patronManager.SelectedObjectChanged += CurrentPatronChanged;
-        }
-
-        void CurrentPatronChanged(object sender, EventArgs e)
-        {
-            CheckActionEnable();
         }
 
         public void Chat()
@@ -57,106 +34,76 @@ namespace Gallerist
             List<ITrait> chatResult = Schmooze.Chat(_patronManager.CurrentObject, bonus: _gameStatsController.Stats.TotalRenown);
             PatronUpdated?.Invoke(this, EventArgs.Empty);
             
-            if (chatResult is null)
-                return;
-            SchmoozeState.ElapsedTime += ChatTime;
-            ActionTaken?.Invoke(this, EventArgs.Empty);
             string description = "\"";
-            string summary = chatResult.Count >= 2 ? $"Revealed {chatResult.Count} traits" : $"Revealed {chatResult.Count} trait";
-            ShowResults = true;
-            if (ShowResults)
+            string summary = $"Revealed {chatResult.Count} trait{PluralHelpers.PluralS(chatResult.Count)}";
+            if (chatResult.Count == 0)
+                description += $"I think I'd rather look at the art for a while, thank you.";
+            for (int i = 0; i < chatResult.Count; i++)
             {
-
-                for (int i = 0; i < chatResult.Count; i++)
-                {
-                    description += GenerateChatResultText(chatResult[i]);
-                }
-                description.TrimEnd(' ');
-                description += "\"";
-
-                ResultsReady?.Invoke(this, new ResultsArgs(
-                    description: description,
-                    summary: summary));
+                description += GenerateChatResultText(chatResult[i]);
             }
-            StartCoroutine(AwaitResultsClose());
+            description.TrimEnd(' ');
+            description += "\"";
+
+            ResultsReady?.Invoke(this, new ResultsArgs(
+                description: description,
+                summary: summary));
+            ShowResults = true;
+            StartCoroutine(AwaitResultsClose("Chat"));
         }
 
         string GenerateChatResultText(ITrait trait)
         {
-            string description = $"I {TraitLevelDescriptions.GetDescription(trait.Value).ToLower()} art that ";
+            string description = "";
             if (trait.TraitType == TraitType.Emotive)
-                
-                description += $"makes me feel {trait.Name.ToLower()}. ";
+                description = ChatResultsEmotive[Random.Range(0, ChatResultsEmotive.Count)];
             else
-                description += $"has {trait.Name.ToLower()} qualities. ";
+                description = ChatResultsAesthetic[Random.Range(0, ChatResultsAesthetic.Count)];
+            description = description.Replace("[trait]", $"{trait.Name.ToLower()}");
+            description = description.Replace("[traitLevel]", $"{TraitLevelDescriptions.GetDescription(trait.Value).ToLower()}");
             return description;
         }
 
         static List<string> ChatResultsEmotive = new List<string>()
         {
-            "[trait.Value] makes me feel [trait.Name]",
-
+            "I [traitLevel] art that expresses [trait].",
+            "Art with [trait] feelings, I [traitLevel]."
         };
 
         static List<string> ChatResultsAesthetic = new List<string>()
         {
-            "I [trait.Value] art that has a [trait.Name] quality."
+            "I [traitLevel] art that has a [trait] quality.",
+            "I [traitLevel] art that expresses [trait].",
         };
 
         public void Introduce()
         {
             ResultsArgs results = Schmooze.Introduce(_artistManager.Artist, _patronManager.CurrentObject);
             _patronManager.CurrentObject.HasMetArtist = true;
-            SchmoozeState.ElapsedTime += IntroductionTime;            
+
             PatronUpdated?.Invoke(this, EventArgs.Empty);
-            ActionTaken?.Invoke(this, EventArgs.Empty);
-            //CheckActionEnable();
+
             ShowResults = true;
-            if (ShowResults)
-            {
-                ResultsReady?.Invoke(this, results);
-            }
-            StartCoroutine(AwaitResultsClose());
+            ResultsReady?.Invoke(this, results);
+
+            StartCoroutine(AwaitResultsClose("Introduce"));
         }
 
-        IEnumerator AwaitResultsClose()
+        IEnumerator AwaitResultsClose(string actionName)
         {
-            Debug.Log($"AwaitResultsClose():  {SchmoozeState.ElapsedTime} elapsed of {SchmoozeState.TotalTime}");
             while (ShowResults)
                 yield return null;
-            Debug.Log($"Checking for action enable state");
-            CheckActionEnable();
-            if (SchmoozeState.ElapsedTime >= SchmoozeState.TotalTime)
-            {
-                Debug.Log($"{SchmoozeState.ElapsedTime} elapsed of {SchmoozeState.TotalTime}");
-                SchmoozeState.IsComplete = true;
-            }
-            ActionComplete?.Invoke(this, EventArgs.Empty);
+            ActionComplete?.Invoke(this, actionName);
         }
 
         public void Nudge()
         {
             ResultsArgs results = Schmooze.Nudge(_patronManager.CurrentObject);
-            SchmoozeState.ElapsedTime += NudgeTime;
-            PatronUpdated?.Invoke(this, EventArgs.Empty);
-            ActionTaken?.Invoke(this, EventArgs.Empty);
-            //CheckActionEnable();
-            ShowResults = true;
-            if (ShowResults)
-            {
-                ResultsReady?.Invoke(this, results);
-            }
-            StartCoroutine(AwaitResultsClose());
-        }
 
-        void CheckActionEnable()
-        {
-            int remainingTime = SchmoozeState.TotalTime - SchmoozeState.ElapsedTime;
-            EnableChat?.Invoke(this, remainingTime >= ChatTime 
-                && !_patronManager.CurrentObject.AllTraitsKnown);
-            EnableIntroduction?.Invoke(this, remainingTime >= IntroductionTime 
-                && !_patronManager.CurrentObject.HasMetArtist);
-            EnableNudge?.Invoke(this, remainingTime >= NudgeTime);
+            PatronUpdated?.Invoke(this, EventArgs.Empty);
+            ShowResults = true;
+            ResultsReady?.Invoke(this, results);
+            StartCoroutine(AwaitResultsClose("Nudge"));
         }
     }
 }

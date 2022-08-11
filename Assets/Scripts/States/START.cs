@@ -37,7 +37,7 @@ namespace Gallerist.States
         public void OnEnter()
         {
             IsLoading = true;
-            StateEntered?.Invoke(this, EventArgs.Empty);
+            
             IsComplete = false;
 
             _artistManager.NewArtist();
@@ -56,8 +56,9 @@ namespace Gallerist.States
 
         void OnPatronsGenerated(object sender, EventArgs e)
         {
-            IsLoading = false;
+            IsLoading = false; StateEntered?.Invoke(this, EventArgs.Empty);
             GenerateMonthDescription();
+
         }
 
         public void OnExit()

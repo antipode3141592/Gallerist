@@ -7,6 +7,7 @@ namespace Gallerist.UI
 {
     public class StartDisplay : Display
     {
+        [SerializeField] GameSettings gameSettings;
         GameStateMachine gameStateMachine;
         GameStatsController gameStatsController;
 
@@ -46,7 +47,7 @@ namespace Gallerist.UI
 
         void SetSummary()
         {
-            SummaryText.text = $"{(MonthNames)gameStatsController.Stats.CurrentMonth} with {gameStatsController.BaseGameStats.TotalMonths - gameStatsController.Stats.CurrentMonth} months remaining in year\n" +
+            SummaryText.text = $"{(MonthNames)gameStatsController.Stats.CurrentMonth} with {gameSettings.TotalMonths - gameStatsController.Stats.CurrentMonth} months remaining in year\n" +
                 $"Sell {gameStatsController.Stats.TotalRenown + 1} original{PluralHelpers.PluralS(gameStatsController.Stats.TotalRenown + 1)} to increase Renown";
         }
     }

@@ -7,7 +7,6 @@ namespace Gallerist.UI
     public class SchmoozeDisplay : Display
     {
         ArtistManager artistManager;
-        SchmoozeController schmoozeController;
         PatronsDisplay patronsDisplay;
         
         GameStateMachine gameStateMachine;
@@ -19,33 +18,43 @@ namespace Gallerist.UI
         [SerializeField] Button nudgeButton;
         [SerializeField] Button introductionButton;
 
+        [SerializeField] Button continueButton;
+
 
         protected override void Awake()
         {
             base.Awake();
             gameStateMachine = FindObjectOfType<GameStateMachine>();
             artistManager = FindObjectOfType<ArtistManager>();
-            schmoozeController = FindObjectOfType<SchmoozeController>();
             patronsDisplay = GetComponentInChildren<PatronsDisplay>();
         }
 
         void Start()
         {
-            schmoozeController.ActionTaken += SchmoozeActionTaken;
-            schmoozeController.ActionComplete += SchmoozeActionComplete;
+            gameStateMachine.Schmooze.ActionTaken += SchmoozeActionTaken;
+            gameStateMachine.Schmooze.ActionComplete += SchmoozeActionComplete;
 
             gameStateMachine.Schmooze.StateEntered += OnSchmoozingStart;
 
-            schmoozeController.EnableChat += OnEnableChat;
-            schmoozeController.EnableNudge += OnEnableNudge;
-            schmoozeController.EnableIntroduction += OnEnableIntroduction;
+            gameStateMachine.Schmooze.EnableChat += OnEnableChat;
+            gameStateMachine.Schmooze.EnableNudge += OnEnableNudge;
+            gameStateMachine.Schmooze.EnableIntroduction += OnEnableIntroduction;
 
-            chatButton.onClick.AddListener(schmoozeController.Chat);
-            nudgeButton.onClick.AddListener(schmoozeController.Nudge);
-            introductionButton.onClick.AddListener(schmoozeController.Introduce);
+            gameStateMachine.Schmooze.EnableContinue += OnEnableContinue;
+
+            chatButton.onClick.AddListener(gameStateMachine.Schmooze.Chat);
+            nudgeButton.onClick.AddListener(gameStateMachine.Schmooze.Nudge);
+            introductionButton.onClick.AddListener(gameStateMachine.Schmooze.Introduce);
+
+            continueButton.onClick.AddListener(gameStateMachine.Schmooze.EndSchmoozing);
         }
 
-        void SchmoozeActionComplete(object sender, EventArgs e)
+        void OnEnableContinue(object sender, EventArgs e)
+        {
+            continueButton.interactable = true;
+        }
+
+        void SchmoozeActionComplete(object sender, string e)
         {
             if (chatButton.IsInteractable())
                 chatButton.Select();
@@ -58,10 +67,11 @@ namespace Gallerist.UI
         public override void Show()
         {
             base.Show();
-            timeTracker.Reset(schmoozeController.TotalSchmoozingTime);
+            timeTracker.Reset(gameStateMachine.Schmooze.TotalTime);
             introductionButton.interactable = true;
             nudgeButton.interactable = true;
             chatButton.interactable = true;
+            continueButton.interactable = false;
             patronsDisplay.Pagination.SelectPage(0);
             chatButton.Select();
         }
