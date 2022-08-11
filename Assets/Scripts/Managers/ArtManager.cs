@@ -7,7 +7,6 @@ namespace Gallerist
 {
     public class ArtManager : MonoBehaviour, IObjectManager<Art>
     {
-        GameStateMachine gameStateMachine;
         ArtistManager artistManager;
         NameDataSource nameDataSource;
         SpriteDataSource spriteDataSource;
@@ -35,7 +34,6 @@ namespace Gallerist
 
         void Awake()
         {
-            gameStateMachine = FindObjectOfType<GameStateMachine>();
             artistManager = FindObjectOfType<ArtistManager>();
             nameDataSource = FindObjectOfType<NameDataSource>();
             spriteDataSource = FindObjectOfType<SpriteDataSource>();

@@ -20,15 +20,6 @@ namespace Gallerist
         {
             gameStateMachine = FindObjectOfType<GameStateMachine>();
 
-            gameStateMachine.NewGame.StateEntered += LoadNewGameUI;
-            gameStateMachine.StartState.StateEntered += LoadStartUI;
-            gameStateMachine.Preparation.StateEntered += LoadPreparationUI;
-            gameStateMachine.Schmooze.StateEntered += LoadSchmoozeUI;
-            gameStateMachine.MainEvent.StateEntered += LoadMainEventUI;
-            gameStateMachine.Closing.StateEntered += LoadClosingUI;
-            gameStateMachine.End.StateEntered += LoadEndUI;
-            gameStateMachine.Final.StateEntered += LoadFinalUI;
-
             foreach (var display in displayList)
             {
                 _displays.Add(display.GetType(), display);
@@ -37,6 +28,18 @@ namespace Gallerist
             {
                 _overlays.Add(display.GetType(), display);
             }
+        }
+
+        void Start()
+        {
+            gameStateMachine.NewGame.StateEntered += LoadNewGameUI;
+            gameStateMachine.StartState.StateEntered += LoadStartUI;
+            gameStateMachine.Preparation.StateEntered += LoadPreparationUI;
+            gameStateMachine.Schmooze.StateEntered += LoadSchmoozeUI;
+            gameStateMachine.MainEvent.StateEntered += LoadMainEventUI;
+            gameStateMachine.Closing.StateEntered += LoadClosingUI;
+            gameStateMachine.End.StateEntered += LoadEndUI;
+            gameStateMachine.Final.StateEntered += LoadFinalUI;
         }
 
         void LoadDisplay(Type displayType)

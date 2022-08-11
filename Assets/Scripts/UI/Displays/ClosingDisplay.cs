@@ -20,11 +20,19 @@ namespace Gallerist.UI
             artPiecesDisplay = GetComponentInChildren<ArtPiecesDisplay>();
             patronsDisplay = GetComponentInChildren<PatronsDisplay>();
 
-            salesController.SalesResultUpdated += OnResultsUpdated;
-            salesController.SalesTimeUpdated += OnTotalsUpdated;
-
             evaluationsText.text = "";
             evaluationResultsText.text = "";
+        }
+
+        void Start()
+        {
+            salesController.SalesResultUpdated += OnResultsUpdated;
+            salesController.SalesTimeUpdated += OnTotalsUpdated;
+        }
+
+        public void ClosingSale()
+        {
+            salesController.ClosingEvaluation();
         }
 
         void OnTotalsUpdated(object sender, string e)

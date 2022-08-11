@@ -18,7 +18,10 @@ namespace Gallerist.UI
         {
             _artManager = FindObjectOfType<ArtManager>();
             _pagination = GetComponentInChildren<Pagination>();
+        }
 
+        void Start()
+        {
             _artManager.ObjectsGenerated += OnArtGenerated;
             _artManager.SelectedObjectChanged += OnSelectedArtChanged;
             _pagination.ThumbnailSelected += OnThumbnailSelected;

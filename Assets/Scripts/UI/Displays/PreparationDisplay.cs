@@ -24,13 +24,14 @@ namespace Gallerist.UI
             artistManager = FindObjectOfType<ArtistManager>();
             preparationController = FindObjectOfType<PreparationController>();
             artPiecesDisplay = GetComponentInChildren<ArtPiecesDisplay>();
+        }
 
+        void Start()
+        {
             preparationController.AllOptionsSelected += EnableContinue;
-
             ambientMusicItems.SelectedItemChanged += AmbientMusicSelected;
             foodAndDrinkItems.SelectedItemChanged += FoodAndDrinkSelected;
             mainEventItems.SelectedItemChanged += MainEventSelected;
-
         }
 
         public override void Show()

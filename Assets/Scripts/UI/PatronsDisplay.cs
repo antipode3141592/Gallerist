@@ -17,7 +17,10 @@ namespace Gallerist.UI
             _schmoozeController = FindObjectOfType<SchmoozeController>();
             _patronManager = FindObjectOfType<PatronManager>();
             _pagination = GetComponentInChildren<Pagination>();
+        }
 
+        void Start()
+        {
             _schmoozeController.PatronUpdated += UpdatePatronCard;
             _patronManager.ObjectsGenerated += OnPatronsGenerated;
             _pagination.ThumbnailSelected += OnThumbnailSelected;

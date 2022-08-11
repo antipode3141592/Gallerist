@@ -6,7 +6,6 @@ namespace Gallerist.States
     public class Preparation : IState
     {
         ArtManager _artManager;
-        ArtistManager _artistManager;
         PreparationController _preparationController;
 
         public event EventHandler StateEntered;
@@ -15,13 +14,18 @@ namespace Gallerist.States
         public event EventHandler StateExited;
         public bool IsComplete = false;
 
-        public Preparation(PreparationController preparationController, ArtManager artManager, ArtistManager artistManager)
+        public Preparation(PreparationController preparationController, ArtManager artManager)
         {
             _preparationController = preparationController;
             _artManager = artManager;
-            _artistManager = artistManager;
 
             _artManager.SelectedObjectChanged += OnSelectedArtChanged;
+            _preparationController.PreparationComplete += OnPreparationComplete;
+        }
+
+        void OnPreparationComplete(object sender, EventArgs e)
+        {
+            IsComplete = true;
         }
 
         void OnSelectedArtChanged(object sender, EventArgs e)

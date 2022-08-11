@@ -2,8 +2,6 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Gallerist.Data;
-using System;
 
 namespace Gallerist.UI
 {

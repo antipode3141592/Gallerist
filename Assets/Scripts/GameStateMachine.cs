@@ -2,6 +2,7 @@ using FiniteStateMachine;
 using Gallerist.Data;
 using Gallerist.States;
 using System;
+using System.Collections;
 using UnityEngine;
 
 namespace Gallerist
@@ -16,6 +17,7 @@ namespace Gallerist
         GameStatsController gameStatsController;
         PreparationController preparationController;
         SalesController salesController;
+        SchmoozeController schmoozeController;
 
         StateMachine _stateMachine;
 
@@ -50,13 +52,14 @@ namespace Gallerist
             gameStatsController = FindObjectOfType<GameStatsController>();
             preparationController = FindObjectOfType<PreparationController>();
             salesController = FindObjectOfType<SalesController>();
+            schmoozeController = FindObjectOfType<SchmoozeController>();
 
             _stateMachine = new StateMachine();
 
             newGame = new();
             startState = new START(artManager, artistManager, patronManager, gameStatsController, gameSettings);
-            preparation = new(preparationController, artManager, artistManager);
-            schmooze = new();
+            preparation = new(preparationController, artManager);
+            schmooze = new(schmoozeController);
             mainEvent = new(patronManager, gameStatsController, salesController);
             closing = new(salesController);
             end = new(gameStatsController, artistManager, patronManager, artManager);
@@ -89,8 +92,9 @@ namespace Gallerist
             Func<bool> YearComplete() => () => end.IsComplete && gameStatsController.Stats.CurrentMonth >= gameStatsController.BaseGameStats.TotalMonths;
         }
 
-        void Start()
+        IEnumerator Start()
         {
+            yield return null;
             _stateMachine.SetState(newGame);
         }
 

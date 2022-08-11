@@ -9,6 +9,7 @@ namespace Gallerist.States
         public event EventHandler StateEntered;
         public event EventHandler StateExited;
         public bool IsComplete = false;
+        public bool IsLoading = true;
 
         ArtManager _artManager;
         ArtistManager _artistManager;
@@ -35,6 +36,7 @@ namespace Gallerist.States
 
         public void OnEnter()
         {
+            IsLoading = true;
             StateEntered?.Invoke(this, EventArgs.Empty);
             IsComplete = false;
 
@@ -54,6 +56,7 @@ namespace Gallerist.States
 
         void OnPatronsGenerated(object sender, EventArgs e)
         {
+            IsLoading = false;
             GenerateMonthDescription();
         }
 

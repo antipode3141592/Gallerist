@@ -8,8 +8,6 @@ namespace Gallerist
 {
     public class PreparationController : MonoBehaviour
     {
-        GameStateMachine gameStateMachine;
-        GameStatsController gameStatsController;
         AmbientMusicDataSource ambientMusicDataSource;
         FoodAndDrinkDataSource foodAndDrinkDataSource;
         CenterpieceDataSource centerpieceDataSource;
@@ -38,11 +36,10 @@ namespace Gallerist
 
         public event EventHandler OptionsCreated;
         public event EventHandler AllOptionsSelected;
+        public event EventHandler PreparationComplete;
 
         void Awake()
         {
-            gameStateMachine = FindObjectOfType<GameStateMachine>();
-            gameStatsController = FindObjectOfType<GameStatsController>();
             artManager = FindObjectOfType<ArtManager>();
             ambientMusicDataSource = FindObjectOfType<AmbientMusicDataSource>();
             foodAndDrinkDataSource = FindObjectOfType<FoodAndDrinkDataSource>();
@@ -158,7 +155,7 @@ namespace Gallerist
         public void PreparationsComplete()
         {
             ApplyAllPreparations();
-            gameStateMachine.Preparation.IsComplete = true;
+            PreparationComplete?.Invoke(this, EventArgs.Empty);
         }
     }
 }

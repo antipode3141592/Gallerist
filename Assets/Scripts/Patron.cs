@@ -62,8 +62,8 @@ namespace Gallerist
             }
             results.SatisfactionRating = Mathf.CeilToInt((aestheticTotal + emotiveTotal) / 2f);
 
-            if (Debug.isDebugBuild)
-                Debug.Log($"A: {aestheticTotal}/{AestheticThreshold}, E: {emotiveTotal}/{EmotiveThreshold}, S: {results.SatisfactionRating}");
+            //if (Debug.isDebugBuild)
+            //    Debug.Log($"A: {aestheticTotal}/{AestheticThreshold}, E: {emotiveTotal}/{EmotiveThreshold}, S: {results.SatisfactionRating}");
             if (aestheticTotal >= AestheticThreshold && emotiveTotal >= EmotiveThreshold)
                 results.ResultType = EvaluationResultTypes.Original;
             else if (aestheticTotal >= AestheticThreshold / 2 && emotiveTotal >= EmotiveThreshold / 2)
@@ -100,8 +100,8 @@ namespace Gallerist
 
             PreferencesUpdated?.Invoke(this, EventArgs.Empty);
             TraitRevealed?.Invoke(this, $"{unknownTraits[randomIndex].Name}");
-            if (Debug.isDebugBuild)
-                Debug.Log($"{Name} has a preference for {unknownTraits[randomIndex].Name} at {unknownTraits[randomIndex].Value}");
+            //if (Debug.isDebugBuild)
+            //    Debug.Log($"{Name} has a preference for {unknownTraits[randomIndex].Name} at {unknownTraits[randomIndex].Value}");
             CheckAllTraitsRevealed();
             return unknownTraits[randomIndex];
         }
@@ -122,8 +122,8 @@ namespace Gallerist
             ITrait _trait = Utilities.RandomBool() ?
                 AestheticTraits[Random.Range(0, AestheticTraits.Count)] :
                 EmotiveTraits[Random.Range(0, EmotiveTraits.Count)];
-            if (Debug.isDebugBuild)
-                Debug.Log($"randomly chosen trait: {_trait.Name}");
+            //if (Debug.isDebugBuild)
+            //    Debug.Log($"randomly chosen trait: {_trait.Name}");
             ModifyTrait(_trait.Name, modifier);
             return _trait;
         }
@@ -133,8 +133,8 @@ namespace Gallerist
             var patronTrait = EmotiveTraits.FirstOrDefault(x => x.Name == traitName);
             if (patronTrait is not null)
             {
-                if (Debug.isDebugBuild)
-                    Debug.Log($"modifying {patronTrait.Name} {patronTrait.Value} by {modifier}");
+                //if (Debug.isDebugBuild)
+                //    Debug.Log($"modifying {patronTrait.Name} {patronTrait.Value} by {modifier}");
                 patronTrait.Value += modifier;
                 PreferencesUpdated?.Invoke(this, EventArgs.Empty);
                 TraitModified?.Invoke(this, new TraitModified(traitName, modifier));
@@ -143,8 +143,8 @@ namespace Gallerist
             patronTrait = AestheticTraits.FirstOrDefault(x => x.Name == traitName);
             if (patronTrait is not null)
             {
-                if (Debug.isDebugBuild)
-                    Debug.Log($"modifying {patronTrait.Name} {patronTrait.Value} by {modifier}");
+                //if (Debug.isDebugBuild)
+                //    Debug.Log($"modifying {patronTrait.Name} {patronTrait.Value} by {modifier}");
                 patronTrait.Value += modifier;
                 PreferencesUpdated?.Invoke(this, EventArgs.Empty);
                 TraitModified?.Invoke(this, new TraitModified(traitName, modifier));
@@ -182,7 +182,12 @@ namespace Gallerist
                 //if original owned
                 if (_acquiredArt.IsOriginal)
                 {
-                    return new ResultsArgs($"{Name} all ready owns \"{_acquiredArt.Art.Name}\".", "(No sale)");
+                    return new ResultsArgs($"{Name} all ready owns the original of \"{_acquiredArt.Art.Name}\".", "(No sale)");
+                }
+
+                if (!_acquiredArt.IsOriginal && !isOriginal)
+                {
+                    return new ResultsArgs($"{Name} all ready owns a print of \"{_acquiredArt.Art.Name}\".", "(No sale)");
                 }
 
                 //if print owned
@@ -232,24 +237,4 @@ namespace Gallerist
             }
         }
     }
-
-    public class EvaluationResults
-    {
-        public EvaluationResultTypes ResultType;
-        public int SatisfactionRating;
-    }
-
-    public class Acquisition 
-    {
-        public List<ArtAcquisition> Acquisitions;
-
-        public event EventHandler<ResultsArgs> BuyArtResults;
-
-        public bool BuyArt(Art art)
-        {
-
-            return false;
-        }
-    }
-
 }

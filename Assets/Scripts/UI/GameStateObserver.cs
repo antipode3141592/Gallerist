@@ -12,6 +12,10 @@ namespace Gallerist.UI
         void Awake()
         {
             gameStateMachine = FindObjectOfType<GameStateMachine>();
+        }
+
+        void Start()
+        {
             gameStateMachine.OnStateChanged += OnStateChanged;
         }
 

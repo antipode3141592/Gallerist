@@ -18,12 +18,16 @@ namespace Gallerist.UI
         {
             base.Awake();
             salesController = FindObjectOfType<SalesController>();
-            schmoozeController = FindObjectOfType<SchmoozeController>();
+            schmoozeController = FindObjectOfType<SchmoozeController>();   
+        }
+
+        void Start()
+        {
             salesController.SalesAttemptResultsReady += DisplayResults;
             schmoozeController.ResultsReady += DisplayResults;
         }
 
-        private void DisplayResults(object sender, ResultsArgs e)
+        void DisplayResults(object sender, ResultsArgs e)
         {
             Show();
             descriptionText.text = e.Description;

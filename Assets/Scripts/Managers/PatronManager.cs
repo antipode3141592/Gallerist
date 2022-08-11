@@ -12,10 +12,8 @@ namespace Gallerist
         NameDataSource nameDataSource;
         SpriteDataSource spriteDataSource;
         TraitDataSource traitDataSource;
-
-        GameStateMachine gameStateMachine;
         GameStatsController gameStatsController;
-        ArtistManager artistManager;
+
         ArtManager artManager;
 
         [SerializeField] GameSettings gameSettings;
@@ -45,9 +43,7 @@ namespace Gallerist
 
         void Awake()
         {
-            gameStateMachine = FindObjectOfType<GameStateMachine>();
             gameStatsController = FindObjectOfType<GameStatsController>();
-            artistManager = FindObjectOfType<ArtistManager>();
             artManager = FindObjectOfType<ArtManager>();
             nameDataSource = FindObjectOfType<NameDataSource>();
             spriteDataSource = FindObjectOfType<SpriteDataSource>();

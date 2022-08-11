@@ -27,9 +27,15 @@ namespace Gallerist.UI
             artistManager = FindObjectOfType<ArtistManager>();
             schmoozeController = FindObjectOfType<SchmoozeController>();
             patronsDisplay = GetComponentInChildren<PatronsDisplay>();
+        }
+
+        void Start()
+        {
             schmoozeController.ActionTaken += SchmoozeActionTaken;
             schmoozeController.ActionComplete += SchmoozeActionComplete;
+
             gameStateMachine.Schmooze.StateEntered += OnSchmoozingStart;
+
             schmoozeController.EnableChat += OnEnableChat;
             schmoozeController.EnableNudge += OnEnableNudge;
             schmoozeController.EnableIntroduction += OnEnableIntroduction;

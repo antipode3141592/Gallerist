@@ -22,7 +22,7 @@ namespace Gallerist.UI
 
         [SerializeField] GameObject ArtAcquisitionsGroup;
         [SerializeField] Image ArtAcquisitionsBackground;
-        List<AcquiredArtEntry> acquiredArtEntries;
+        List<AcquiredArtEntry> acquiredArtEntries = new();
         [SerializeField] AcquiredArtEntry acquiredArtEntryPrefab;
 
         [SerializeField] TextMeshProUGUI HasMetArtistText;
@@ -45,16 +45,14 @@ namespace Gallerist.UI
             salesController = FindObjectOfType<SalesController>();
             if (!Debug.isDebugBuild)
                 revealTraitsButton.gameObject.SetActive(false);
-            salesController.SalesResultUpdated += OnEvaluationResultUpdated;
-            acquiredArtEntries = new();
-
-            patronManager.ObjectTraitModified += OnObjectTraitModified;
             ArtAcquisitionsGroup.SetActive(false);
         }
 
         void Start()
         {
             salesController.SalesResultUpdated += OnSalesResultsUpdated;
+            patronManager.ObjectTraitModified += OnObjectTraitModified;
+            salesController.SalesResultUpdated += OnEvaluationResultUpdated;
         }
 
         void OnSalesResultsUpdated(object sender, string e)
